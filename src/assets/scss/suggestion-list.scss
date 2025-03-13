@@ -1,0 +1,22 @@
+/* Style the suggestion list and items */
+.suggestion-list {
+    position: absolute;
+    z-index: 10;
+    width: max-content;
+    max-height: 200px;
+    overflow-y: auto; /* Add scroll if the list is too long */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  
+    .suggestion-item {
+      cursor: pointer;
+      padding: 8px;
+      transition: background-color 0.2s ease-in-out;
+  
+      &:hover {
+        background-color: #f0f0f0; /* Change background color on hover */
+      }
+    }
+  }
+  
