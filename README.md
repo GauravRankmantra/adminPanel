@@ -11,25 +11,25 @@ Admin Bootstrap Dashboard React has multiple handpicked and optimized components
 
 It comes with 3 filter colors for the top navbar abd sidebar (`white`, `black`, `red`) and an option to have a background image. 4 layout variations (`vertical`, `horizontal`, `combo`, `dual nav`) to change the layout design.
 
--   <a title="demo-site" href="https://demo.reactadmin.com/bootstrap/admire"><strong>Demo Site</strong></a>
-    &#x2022;
-    <a title="quick-start" href="#quick-start"><strong>Quick Start</strong></a>
-    &#x2022;
-    <a title="installation" href="#installation"><strong>Installation</strong></a>
-    &#x2022;
-    <a title="documentation" href="https://demo.reactadmin.com/bootstrap/admire/docs/"><strong>Documentation</strong></a>
-    &#x2022;
-    <a title="built-with" href="#built-with"><strong>Built With</strong></a>
-    &#x2022;
-    <a title="built-with" href="#file-structure"><strong>File Structure</strong></a>
-    &#x2022;
-    <a title="license" href="#license"><strong>License</strong></a>
+- <a title="demo-site" href="https://demo.reactadmin.com/bootstrap/admire"><strong>Demo Site</strong></a>
+  &#x2022;
+  <a title="quick-start" href="#quick-start"><strong>Quick Start</strong></a>
+  &#x2022;
+  <a title="installation" href="#installation"><strong>Installation</strong></a>
+  &#x2022;
+  <a title="documentation" href="https://demo.reactadmin.com/bootstrap/admire/docs/"><strong>Documentation</strong></a>
+  &#x2022;
+  <a title="built-with" href="#built-with"><strong>Built With</strong></a>
+  &#x2022;
+  <a title="built-with" href="#file-structure"><strong>File Structure</strong></a>
+  &#x2022;
+  <a title="license" href="#license"><strong>License</strong></a>
 
 ### Quick Start
 
 Quick start options:
 
--   Clone the repo:
+- Clone the repo:
 
 ```
 git clone https://github.com/reactadmins/bootstrap-admire.git.com
@@ -79,25 +79,25 @@ run development server
 
 ### Built With
 
--   [React](https://react.dev/)
--   [React-Router-Dom](https://reactrouter.com/en/main)
--   [Vite](https://vitejs.dev/)
--   [Sass](http://sass-lang.com/)
--   [Bootstrap](http://getbootstrap.com/)
--   [React-Bootstrap](https://react-bootstrap.netlify.app/)
--   [React-Bootstrap](https://react-bootstrap.netlify.app/)
--   [React-Entypo](https://cox-auto-kc.github.io/react-entypo/#/)
--   [React-Entypo](https://cox-auto-kc.github.io/react-entypo/#/)
--   [React-Leaflet](https://react-leaflet.js.org/)
--   [React-Google-Maps](https://visgl.github.io/react-google-maps/)
--   [React-Apexcharts](https://apexcharts.com/docs/react-charts/)
--   [React-Chartjs-2](https://apexcharts.com/docs/react-charts/)
--   [Chart.js](https://www.chartjs.org/)
--   [Recharts](https://recharts.org/en-US/)
--   [React-Select](https://react-select.com/home)
--   [Iconify](https://iconify.design/docs/icon-components/react/)
--   [React-Countup](https://use-count-up.vercel.app/)
--   [Peity-React](https://snyk.io/advisor/npm-package/react-peity)
+- [React](https://react.dev/)
+- [React-Router-Dom](https://reactrouter.com/en/main)
+- [Vite](https://vitejs.dev/)
+- [Sass](http://sass-lang.com/)
+- [Bootstrap](http://getbootstrap.com/)
+- [React-Bootstrap](https://react-bootstrap.netlify.app/)
+- [React-Bootstrap](https://react-bootstrap.netlify.app/)
+- [React-Entypo](https://cox-auto-kc.github.io/react-entypo/#/)
+- [React-Entypo](https://cox-auto-kc.github.io/react-entypo/#/)
+- [React-Leaflet](https://react-leaflet.js.org/)
+- [React-Google-Maps](https://visgl.github.io/react-google-maps/)
+- [React-Apexcharts](https://apexcharts.com/docs/react-charts/)
+- [React-Chartjs-2](https://apexcharts.com/docs/react-charts/)
+- [Chart.js](https://www.chartjs.org/)
+- [Recharts](https://recharts.org/en-US/)
+- [React-Select](https://react-select.com/home)
+- [Iconify](https://iconify.design/docs/icon-components/react/)
+- [React-Countup](https://use-count-up.vercel.app/)
+- [Peity-React](https://snyk.io/advisor/npm-package/react-peity)
 
 ### File Structure
 
@@ -240,7 +240,7 @@ React Admin Dashboard Bootstrap
 │   │   ├── Alerts.jsx
 │   │   ├── ApexCharts.jsx
 │   │   ├── Badges.jsx
-│   │   ├── BasicForm.jsx
+│   │   ├── AddSong.jsx
 │   │   ├── Buttons.jsx
 │   │   ├── Cards.jsx
 │   │   ├── Chartjs.jsx

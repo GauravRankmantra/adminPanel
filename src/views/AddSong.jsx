@@ -2,13 +2,13 @@ import { Fragment, useEffect, useState, useRef } from "react";
 import { CardBody, Col, Row, Button } from "react-bootstrap";
 import Card from "../components/Card/Card";
 import axios from "axios";
-import Loading from "../views/Loading";
-import Error from "../views/Error";
-import Success from "../views/Success";
+import Loading from "./Loading";
+import Error from "./Error";
+import Success from "./Success";
 import "../assets/scss/suggestion-list.scss";
 
 
-const BasicForm = () => {
+const AddSong = () => {
   const [genres, setGenres] = useState([]);
   const [artistSuggestions, setArtistSuggestions] = useState([]);
   const [albumSuggestions, setAlbumSuggestions] = useState([]);
@@ -413,4 +413,4 @@ const BasicForm = () => {
   );
 };
 
-export default BasicForm;
+export default AddSong;
