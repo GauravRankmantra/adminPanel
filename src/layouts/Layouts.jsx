@@ -60,15 +60,7 @@ const Layouts = () => {
                             <span>Dashboard</span>
                         </MenuItem>
                        
-                        <SubMenu
-                            label="Components"
-                            icon={<i className="fa fa-puzzle-piece" />}
-                        >
-                            <MenuItem routeLink="/">
-                                <i className="fa fa-pencil-square" />
-                                <span>Likes</span>
-                            </MenuItem>   
-                        </SubMenu>
+
                         <MenuItem routeLink="/tables">
                             <i className="fa fa-table" />
                             <span>Users</span>
@@ -90,7 +82,24 @@ const Layouts = () => {
                                 <span>All Songs</span>
                             </MenuItem>
                         </SubMenu>
-                       
+                        <SubMenu
+                            label="Albums"
+                            icon={<i className="fa fa-pencil-square" />}
+                        >
+                            <MenuItem routeLink="/forms/all-album">
+                                <i className="fa fa-pencil-square" />
+                                <span>All Albums</span>
+                            </MenuItem>
+                            
+                            <MenuItem routeLink="/forms/add-album">
+                                <i className="fa fa-pencil-square" />
+                                <span>Add Album</span>
+                            </MenuItem>
+                            <MenuItem routeLink="/forms/all-songs">
+                                <i className="fa fa-pencil-square" />
+                                <span>Update Album</span>
+                            </MenuItem>
+                        </SubMenu>
                         
                         
                         <NavTitle>

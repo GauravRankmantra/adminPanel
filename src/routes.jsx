@@ -1,10 +1,10 @@
 import Dashboard from "./views/Dashboard";
-import Badges from "./views/Badges";
+
 import Tables from "./views/Tables";
 import Cards from "./views/Cards";
 import ProgressBars from "./views/ProgressBars";
 import Modals from "./views/Modals";
-import Grids from "./views/Grids";
+
 import Typography from "./views/Typography";
 import AddSong from "./views/AddSong";
 import AdvancedForm from "./views/AdvancedForm";
@@ -14,6 +14,9 @@ import Register from "./views/Register";
 import Page404 from "./views/Error404";
 import Page500 from "./views/Error500";
 import AllSongs from "./views/AllSongs";
+import AddAlbum from "./views/AddAlbum";
+import AllAlbums from "./views/AllAlbums";
+import AlbumInfo from "./views/AlbumInfo";
 
 const routes = [
   {
@@ -25,10 +28,7 @@ const routes = [
     component: Dashboard,
   },
 
-  {
-    path: "/components/badges",
-    component: Badges,
-  },
+
 
   {
     path: "/components/cards",
@@ -43,10 +43,7 @@ const routes = [
     path: "/components/modals",
     component: Modals,
   },
-  {
-    path: "/components/grids",
-    component: Grids,
-  },
+
   {
     path: "/components/typography",
     component: Typography,
@@ -58,6 +55,18 @@ const routes = [
   {
     path: "/forms/basic-form",
     component: AddSong,
+  },
+  {
+    path: "/forms/add-album",
+    component: AddAlbum,
+  },
+  {
+    path: "/forms/all-album",
+    component: AllAlbums,
+  },
+  {
+    path: "/forms/album/:albumId",
+    component: AlbumInfo
   },
   {
     path: "/forms/advanced-form",
