@@ -18,6 +18,42 @@ const AlbumInfo = () => {
   });
   const [songLoading, setSongLoading] = useState(false); // State for song uploading
 
+
+  const handleAddSong = async () => {
+    const formData = new FormData();
+    formData.append("title", newSongData.title);
+    formData.append("album", album._id);
+    formData.append("artist", album.artistDetails._id);
+    formData.append("genre", album.genreDetails._id);
+    formData.append("coverImage", newSongData.coverImage);
+    formData.append("low", newSongData.lowAudio);
+    formData.append("high", newSongData.highAudio);
+
+    setSongLoading(true);
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/v1/song", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const newSong = res.data.song
+      // console.log(newSong);
+      // console.log(album)
+      setAlbum({
+        ...album,
+        songs: [...album.songs, newSong],
+      });
+      setSongLoading(false);
+      setShowAddSongModal(false);
+      alert("Song added successfully");
+      // Optionally, you can reload album info to see the updated songs
+    } catch (error) {
+      setSongLoading(false);
+      alert("Error adding song");
+      console.error("Error adding song:", error);
+    }
+  };
   useEffect(() => {
     const fetchAlbumInfo = async () => {
       try {
@@ -42,34 +78,7 @@ const AlbumInfo = () => {
     });
   };
 
-  const handleAddSong = async () => {
-    const formData = new FormData();
-    formData.append("title", newSongData.title);
-    formData.append("album", album._id);
-    formData.append("artist", album.artistDetails._id);
-    formData.append("genre", album.genreDetails._id);
-    formData.append("coverImage", newSongData.coverImage);
-    formData.append("low", newSongData.lowAudio);
-    formData.append("high", newSongData.highAudio);
 
-    setSongLoading(true);
-
-    try {
-      await axios.post("http://localhost:5000/api/v1/song", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      setSongLoading(false);
-      setShowAddSongModal(false);
-      alert("Song added successfully");
-      // Optionally, you can reload album info to see the updated songs
-    } catch (error) {
-      setSongLoading(false);
-      alert("Error adding song");
-      console.error("Error adding song:", error);
-    }
-  };
 
   if (loading) {
     return (
@@ -148,7 +157,7 @@ const AlbumInfo = () => {
       </div>
       
      
-      {album?.songs && album.songs.length > 0 && <SongList songs={album.songs} />}
+      {album?.songs && album.songs.length > 0 && <SongList album={album.title} artist={album?.artistDetails?.fullName} albumSongs={album.songs} />}
    
 
       {/* Add Song Modal */}

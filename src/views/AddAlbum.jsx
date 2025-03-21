@@ -166,7 +166,7 @@ const AddAlbum = () => {
                           className="form-control-label mb-1"
                           htmlFor="coverImage"
                         >
-                          Album Title <span className="text-danger">*</span>
+                          Cover Image <span className="text-danger">*</span>
                         </label>
                       </Col>
                       <Col md={9}>

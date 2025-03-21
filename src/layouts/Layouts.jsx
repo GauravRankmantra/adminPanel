@@ -73,10 +73,7 @@ const Layouts = () => {
                                 <i className="fa fa-pencil-square" />
                                 <span>Add Song</span>
                             </MenuItem>
-                            <MenuItem routeLink="/forms/advanced-form">
-                                <i className="fa fa-pencil-square" />
-                                <span>Update Song</span>
-                            </MenuItem>
+
                             <MenuItem routeLink="/forms/all-songs">
                                 <i className="fa fa-pencil-square" />
                                 <span>All Songs</span>
@@ -94,10 +91,6 @@ const Layouts = () => {
                             <MenuItem routeLink="/forms/add-album">
                                 <i className="fa fa-pencil-square" />
                                 <span>Add Album</span>
-                            </MenuItem>
-                            <MenuItem routeLink="/forms/all-songs">
-                                <i className="fa fa-pencil-square" />
-                                <span>Update Album</span>
                             </MenuItem>
                         </SubMenu>
                         
