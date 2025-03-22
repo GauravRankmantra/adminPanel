@@ -19,7 +19,7 @@ const Download = () => {
                     },
                 },
             },
-            labels: ["Cricket", "ract"],
+            labels: ["Download %", "ract"],
         },
     });
     return (

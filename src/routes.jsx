@@ -17,6 +17,7 @@ import AllSongs from "./views/AllSongs";
 import AddAlbum from "./views/AddAlbum";
 import AllAlbums from "./views/AllAlbums";
 import AlbumInfo from "./views/AlbumInfo";
+import Profile from "./views/Profile";
 
 const routes = [
   {
@@ -80,6 +81,10 @@ const routes = [
   {
     path: "/maps/leaflet-maps",
     component: LeafletMaps,
+  },
+  {
+    path:"/Profile",
+    component:Profile,
   },
   {
     route: "/login",

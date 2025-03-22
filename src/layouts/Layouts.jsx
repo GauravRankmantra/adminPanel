@@ -67,7 +67,7 @@ const Layouts = () => {
                         </MenuItem>
                         <SubMenu
                             label="Songs"
-                            icon={<i className="fa fa-pencil-square" />}
+                            icon={<i className="fa fa-headphones" />}
                         >
                             <MenuItem routeLink="/forms/basic-form">
                                 <i className="fa fa-pencil-square" />
@@ -81,7 +81,7 @@ const Layouts = () => {
                         </SubMenu>
                         <SubMenu
                             label="Albums"
-                            icon={<i className="fa fa-pencil-square" />}
+                            icon={<i className="fa fa-folder-open" />}
                         >
                             <MenuItem routeLink="/forms/all-album">
                                 <i className="fa fa-pencil-square" />

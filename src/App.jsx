@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import routes from "@/routes.jsx";
 import Layouts from "@/layouts/Layouts.jsx";
 import { DashboardDataProvider } from "@/context/dashboardDataContext.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Import ProtectedRoute
 
 function App() {
   return (
@@ -16,7 +17,14 @@ function App() {
               <Fragment key={index}>
                 {(item?.path && (
                   <Route path="/" element={<Layouts />}>
-                    <Route path={item?.path} element={<item.component />} />
+                    <Route
+                      path={item?.path}
+                      element={
+                        <ProtectedRoute>
+                          <item.component />
+                        </ProtectedRoute>
+                      }
+                    />
                   </Route>
                 )) ||
                   (item?.route && (

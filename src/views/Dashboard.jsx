@@ -2,6 +2,7 @@ import { Alert, Badge, Col, Container, Row } from "react-bootstrap";
 import { Bar, BarChart, Line, LineChart } from "recharts";
 import StatsCard from "@/components/StatsCard/StatsCard";
 import Traffic from "@/components/Traffic/Traffic";
+import axios from "axios";
 
 import Download from "@/components/Download/Download";
 import Revenue from "@/components/Revenue/Revenue";
@@ -9,6 +10,8 @@ import Revenue from "@/components/Revenue/Revenue";
 import SocialCounter from "@/components/SocialCounter/SocialCounter";
 
 import RealTime from "@/components/RealTime/RealTime";
+import { useEffect, useState } from "react";
+import SongsUploadedChart from "../components/SongsUploadedChart";
 
 const Dashboard = () => {
   const data1 = [
@@ -89,6 +92,55 @@ const Dashboard = () => {
     },
   ];
 
+  const [users, setUsers] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalNewUser, setTotalNewUser] = useState(0); // Initialize as 0
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/v1/admin/users"
+        );
+
+        setTotalUsers(response.data.totalUsers);
+     
+      } catch (error) {
+        console.error("Error fetching users", error); // Handle error
+      }
+    };
+    fetchAllUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/v1/user/new-users"
+        );
+
+        // Set users from API response
+        setUsers(response.data.data);
+      } catch (error) {
+        console.error("Error fetching users", error); // Handle error
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    // Calculate total new users only when 'users' state is updated
+    const calculateTotalNewUsers = () => {
+      const total = users.reduce((acc, user) => acc + user.newUsers, 0);
+      setTotalNewUser(total);
+    };
+
+    if (users.length > 0) {
+      calculateTotalNewUsers();
+    }
+  }, [users]);
+
   return (
     <Container fluid className="p-0">
       <Alert variant="success" dismissible>
@@ -127,7 +179,7 @@ const Dashboard = () => {
           <StatsCard
             type="revenue-counter"
             bgColor="#ffa726"
-            counter={659}
+            counter={totalUsers}
             isCounter={true}
             title="Total Users"
             icon="fa-solid fa-user-group"
@@ -137,7 +189,7 @@ const Dashboard = () => {
           <StatsCard
             type="revenue-counter"
             bgColor="#42a5f5"
-            counter={14}
+            counter={totalNewUser}
             isCounter={true}
             title="New Users"
             icon={
@@ -162,7 +214,12 @@ const Dashboard = () => {
           <Traffic />
         </Col>
       </Row>
+      <Row className="gy-4 gx-4 mb-4">
+        <Col >
+          <SongsUploadedChart />
+        </Col>
 
+      </Row>
       <Row className="justify-content-center gy-4 gx-4 mb-4">
         <Col md={12} lg={6} xl={6}>
           <Row className="justify-content-center gy-4 gx-4">

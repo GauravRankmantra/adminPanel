@@ -28,6 +28,8 @@ const Navbar = () => {
             }
         });
     }, []);
+    const user = JSON.parse(localStorage.getItem('user'));
+
 
     return (
         <NavBarBgWrapper>
@@ -143,7 +145,7 @@ const Navbar = () => {
                                 }}
                                 className={styles.user_dropdown}
                             >
-                                <img src={profile} alt="uesr" />
+                                <img src={user?.coverImage} alt="uesr" />
                             </a>
                         </div>
                         {!openUser ? (
