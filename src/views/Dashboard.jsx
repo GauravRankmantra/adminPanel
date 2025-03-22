@@ -100,11 +100,10 @@ const Dashboard = () => {
     const fetchAllUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/admin/users"
+          "https://backend-music-xg6e.onrender.com/api/v1/admin/users"
         );
 
         setTotalUsers(response.data.totalUsers);
-     
       } catch (error) {
         console.error("Error fetching users", error); // Handle error
       }
@@ -116,7 +115,7 @@ const Dashboard = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/user/new-users"
+          "https://backend-music-xg6e.onrender.com/api/v1/user/new-users"
         );
 
         // Set users from API response
@@ -215,10 +214,9 @@ const Dashboard = () => {
         </Col>
       </Row>
       <Row className="gy-4 gx-4 mb-4">
-        <Col >
+        <Col>
           <SongsUploadedChart />
         </Col>
-
       </Row>
       <Row className="justify-content-center gy-4 gx-4 mb-4">
         <Col md={12} lg={6} xl={6}>

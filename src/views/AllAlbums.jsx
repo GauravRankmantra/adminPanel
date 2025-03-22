@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button, Row, Col, Container } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import defaultAlbum from "../assets/image/album_cover.png"
+import defaultAlbum from "../assets/image/album_cover.png";
 import axios from "axios";
-
 
 const AllAlbums = () => {
   const [albums, setAlbums] = useState([]);
@@ -17,7 +16,7 @@ const AllAlbums = () => {
     const fetchAlbums = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/albums"
+          "https://backend-music-xg6e.onrender.com/api/v1/albums"
         );
         setAlbums(response.data.allAlbums);
         setLoading(false);
@@ -40,7 +39,7 @@ const AllAlbums = () => {
 
   // Redirect to album info page with album ID
   const handleAlbumClick = (albumId) => {
-    navigate(`/forms/album/${albumId}`); 
+    navigate(`/forms/album/${albumId}`);
   };
 
   return (

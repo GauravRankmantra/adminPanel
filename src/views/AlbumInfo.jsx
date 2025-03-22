@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
-import SongList from "./SongList"
+import SongList from "./SongList";
 
 const AlbumInfo = () => {
   const { albumId } = useParams();
@@ -18,7 +18,6 @@ const AlbumInfo = () => {
   });
   const [songLoading, setSongLoading] = useState(false); // State for song uploading
 
-
   const handleAddSong = async () => {
     const formData = new FormData();
     formData.append("title", newSongData.title);
@@ -32,12 +31,16 @@ const AlbumInfo = () => {
     setSongLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/song", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const newSong = res.data.song
+      const res = await axios.post(
+        "https://backend-music-xg6e.onrender.com/api/v1/song",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const newSong = res.data.song;
       // console.log(newSong);
       // console.log(album)
       setAlbum({
@@ -77,8 +80,6 @@ const AlbumInfo = () => {
       [e.target.name]: e.target.files ? e.target.files[0] : e.target.value,
     });
   };
-
-
 
   if (loading) {
     return (
@@ -137,7 +138,9 @@ const AlbumInfo = () => {
           style={{ width: "40%", height: "auto", display: "block" }}
         />
         <div style={{ padding: "30px", width: "60%" }}>
-          <h2 style={{ marginBottom: "15px", color: "#444", fontSize: "1.6rem" }}>
+          <h2
+            style={{ marginBottom: "15px", color: "#444", fontSize: "1.6rem" }}
+          >
             Artist: {album?.artistDetails?.fullName}
           </h2>
           <p style={{ marginBottom: "10px", color: "#666", fontSize: "1rem" }}>
@@ -148,24 +151,28 @@ const AlbumInfo = () => {
           </p>
         </div>
       </div>
-      
+
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h2>Songs</h2>
         <Button variant="primary" onClick={() => setShowAddSongModal(true)}>
           Add Song
         </Button>
       </div>
-      
-     
-      {album?.songs && album.songs.length > 0 && <SongList album={album.title} artist={album?.artistDetails?.fullName} albumSongs={album.songs} />}
-   
+
+      {album?.songs && album.songs.length > 0 && (
+        <SongList
+          album={album.title}
+          artist={album?.artistDetails?.fullName}
+          albumSongs={album.songs}
+        />
+      )}
 
       {/* Add Song Modal */}
       <Modal show={showAddSongModal} onHide={() => setShowAddSongModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add New Song</Modal.Title>
         </Modal.Header>
-        <Modal.Body >
+        <Modal.Body>
           <Form>
             <Form.Group className="mb-2">
               <Form.Label>Song Title</Form.Label>
@@ -207,10 +214,17 @@ const AlbumInfo = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddSongModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowAddSongModal(false)}
+          >
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleAddSong} disabled={songLoading}>
+          <Button
+            variant="primary"
+            onClick={handleAddSong}
+            disabled={songLoading}
+          >
             {songLoading ? "Adding Song..." : "Add Song"}
           </Button>
         </Modal.Footer>

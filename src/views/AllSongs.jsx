@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { CardBody, Col, Row, Modal, Button, Form, Spinner } from "react-bootstrap";
+import {
+  CardBody,
+  Col,
+  Row,
+  Modal,
+  Button,
+  Form,
+  Spinner,
+} from "react-bootstrap";
 import Card from "../components/Card/Card";
 import styles from "../assets/scss/Tables.module.scss";
 import axios from "axios";
@@ -7,7 +15,9 @@ import { toast } from "react-toastify";
 import editIcon from "../assets/image/edit.png";
 import deleteIcon from "../assets/image/trash.png";
 
-const API_BASE_URL = import.meta.env.VITE_API_LOCAL_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL =
+  import.meta.env.VITE_API_LOCAL_URL ||
+  "https://backend-music-xg6e.onrender.com/api/v1";
 
 const AllSongs = () => {
   const [state, setState] = useState({
@@ -32,7 +42,7 @@ const AllSongs = () => {
 
   const fetchSongs = useCallback(async (query = "", page = 1) => {
     try {
-      setState(prev => ({ ...prev, loading: true }));
+      setState((prev) => ({ ...prev, loading: true }));
       const response = await axios.get(`${API_BASE_URL}/song`, {
         params: {
           search: query,
@@ -42,7 +52,7 @@ const AllSongs = () => {
       });
 
       const { data, total, pages } = response.data;
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         songs: data,
         totalPages: pages,
@@ -52,7 +62,7 @@ const AllSongs = () => {
     } catch (error) {
       console.error("Error fetching songs:", error);
       toast.error("Failed to load songs. Please try again later.");
-      setState(prev => ({ ...prev, loading: false }));
+      setState((prev) => ({ ...prev, loading: false }));
     }
   }, []);
 
@@ -62,23 +72,27 @@ const AllSongs = () => {
   }, [state.searchQuery, state.currentPage, fetchSongs]);
 
   const handleSearch = (e) => {
-    setState(prev => ({ ...prev, searchQuery: e.target.value, currentPage: 1 }));
+    setState((prev) => ({
+      ...prev,
+      searchQuery: e.target.value,
+      currentPage: 1,
+    }));
   };
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= state.totalPages) {
-      setState(prev => ({ ...prev, currentPage: newPage }));
+      setState((prev) => ({ ...prev, currentPage: newPage }));
     }
   };
 
   const handleDeleteConfirm = async () => {
     try {
-      setState(prev => ({ ...prev, isProcessing: true }));
+      setState((prev) => ({ ...prev, isProcessing: true }));
       await axios.delete(`${API_BASE_URL}/song/${state.selectedSong._id}`);
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
-        songs: prev.songs.filter(song => song._id !== state.selectedSong._id),
+        songs: prev.songs.filter((song) => song._id !== state.selectedSong._id),
         showDeleteModal: false,
         isProcessing: false,
       }));
@@ -86,7 +100,7 @@ const AllSongs = () => {
     } catch (error) {
       console.error("Error deleting song:", error);
       toast.error("Failed to delete song. Please try again.");
-      setState(prev => ({ ...prev, isProcessing: false }));
+      setState((prev) => ({ ...prev, isProcessing: false }));
     }
   };
 
@@ -94,9 +108,9 @@ const AllSongs = () => {
     if (!state.selectedSong) return;
 
     try {
-      setState(prev => ({ ...prev, isProcessing: true }));
+      setState((prev) => ({ ...prev, isProcessing: true }));
       const { title, artist, album, duration } = state.selectedSong;
-      
+
       await axios.put(`${API_BASE_URL}/song/${state.selectedSong._id}`, {
         title,
         artist: artist.fullName,
@@ -104,9 +118,9 @@ const AllSongs = () => {
         duration: Number(duration),
       });
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        songs: prev.songs.map(song => 
+        songs: prev.songs.map((song) =>
           song._id === state.selectedSong._id ? state.selectedSong : song
         ),
         showEditModal: false,
@@ -116,14 +130,14 @@ const AllSongs = () => {
     } catch (error) {
       console.error("Error updating song:", error);
       toast.error("Failed to update song. Please try again.");
-      setState(prev => ({ ...prev, isProcessing: false }));
+      setState((prev) => ({ ...prev, isProcessing: false }));
     }
   };
 
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')} min`;
+    return `${mins}:${secs.toString().padStart(2, "0")} min`;
   };
 
   const {
@@ -158,7 +172,7 @@ const AllSongs = () => {
             className="mb-3"
             aria-label="Search songs"
           />
-          
+
           <Card title="Song Management">
             <CardBody>
               <div className={`table-responsive ${styles.table_wrapper}`}>
@@ -183,37 +197,41 @@ const AllSongs = () => {
                               src={song.coverImage}
                               alt="Cover"
                               className="img-thumbnail"
-                              style={{ 
-                                width: "50px", 
-                                height: "50px", 
-                                objectFit: "cover" 
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                objectFit: "cover",
                               }}
                             />
                           </td>
                           <td>{song.title}</td>
-                          <td>{song.artist?.fullName || 'Unknown Artist'}</td>
-                          <td>{song.album?.title || 'No Album'}</td>
+                          <td>{song.artist?.fullName || "Unknown Artist"}</td>
+                          <td>{song.album?.title || "No Album"}</td>
                           <td>{formatDuration(song.duration)}</td>
                           <td>
                             <div className="d-flex gap-2">
                               <Button
                                 variant="link"
-                                onClick={() => setState(prev => ({
-                                  ...prev,
-                                  selectedSong: song,
-                                  showEditModal: true
-                                }))}
+                                onClick={() =>
+                                  setState((prev) => ({
+                                    ...prev,
+                                    selectedSong: song,
+                                    showEditModal: true,
+                                  }))
+                                }
                                 aria-label="Edit song"
                               >
                                 <img src={editIcon} alt="Edit" width="20" />
                               </Button>
                               <Button
                                 variant="link"
-                                onClick={() => setState(prev => ({
-                                  ...prev,
-                                  selectedSong: song,
-                                  showDeleteModal: true
-                                }))}
+                                onClick={() =>
+                                  setState((prev) => ({
+                                    ...prev,
+                                    selectedSong: song,
+                                    showDeleteModal: true,
+                                  }))
+                                }
                                 aria-label="Delete song"
                               >
                                 <img src={deleteIcon} alt="Delete" width="20" />
@@ -243,7 +261,7 @@ const AllSongs = () => {
                   >
                     Previous
                   </Button>
-                  
+
                   <span className="mx-3">
                     Page {currentPage} of {totalPages}
                   </span>
@@ -266,7 +284,7 @@ const AllSongs = () => {
       {/* Edit Modal */}
       <Modal
         show={showEditModal}
-        onHide={() => setState(prev => ({ ...prev, showEditModal: false }))}
+        onHide={() => setState((prev) => ({ ...prev, showEditModal: false }))}
         aria-labelledby="edit-song-modal"
       >
         <Modal.Header closeButton>
@@ -280,13 +298,15 @@ const AllSongs = () => {
                 <Form.Control
                   type="text"
                   value={selectedSong.title}
-                  onChange={(e) => setState(prev => ({
-                    ...prev,
-                    selectedSong: {
-                      ...prev.selectedSong,
-                      title: e.target.value
-                    }
-                  }))}
+                  onChange={(e) =>
+                    setState((prev) => ({
+                      ...prev,
+                      selectedSong: {
+                        ...prev.selectedSong,
+                        title: e.target.value,
+                      },
+                    }))
+                  }
                 />
               </Form.Group>
 
@@ -294,17 +314,19 @@ const AllSongs = () => {
                 <Form.Label>Artist</Form.Label>
                 <Form.Control
                   type="text"
-                  value={selectedSong.artist?.fullName || ''}
-                  onChange={(e) => setState(prev => ({
-                    ...prev,
-                    selectedSong: {
-                      ...prev.selectedSong,
-                      artist: {
-                        ...prev.selectedSong.artist,
-                        fullName: e.target.value
-                      }
-                    }
-                  }))}
+                  value={selectedSong.artist?.fullName || ""}
+                  onChange={(e) =>
+                    setState((prev) => ({
+                      ...prev,
+                      selectedSong: {
+                        ...prev.selectedSong,
+                        artist: {
+                          ...prev.selectedSong.artist,
+                          fullName: e.target.value,
+                        },
+                      },
+                    }))
+                  }
                 />
               </Form.Group>
 
@@ -312,17 +334,19 @@ const AllSongs = () => {
                 <Form.Label>Album</Form.Label>
                 <Form.Control
                   type="text"
-                  value={selectedSong.album?.title || ''}
-                  onChange={(e) => setState(prev => ({
-                    ...prev,
-                    selectedSong: {
-                      ...prev.selectedSong,
-                      album: {
-                        ...prev.selectedSong.album,
-                        title: e.target.value
-                      }
-                    }
-                  }))}
+                  value={selectedSong.album?.title || ""}
+                  onChange={(e) =>
+                    setState((prev) => ({
+                      ...prev,
+                      selectedSong: {
+                        ...prev.selectedSong,
+                        album: {
+                          ...prev.selectedSong.album,
+                          title: e.target.value,
+                        },
+                      },
+                    }))
+                  }
                 />
               </Form.Group>
 
@@ -332,13 +356,15 @@ const AllSongs = () => {
                   type="number"
                   min="0"
                   value={selectedSong.duration}
-                  onChange={(e) => setState(prev => ({
-                    ...prev,
-                    selectedSong: {
-                      ...prev.selectedSong,
-                      duration: e.target.value
-                    }
-                  }))}
+                  onChange={(e) =>
+                    setState((prev) => ({
+                      ...prev,
+                      selectedSong: {
+                        ...prev.selectedSong,
+                        duration: e.target.value,
+                      },
+                    }))
+                  }
                 />
               </Form.Group>
             </Form>
@@ -347,7 +373,9 @@ const AllSongs = () => {
         <Modal.Footer>
           <Button
             variant="secondary"
-            onClick={() => setState(prev => ({ ...prev, showEditModal: false }))}
+            onClick={() =>
+              setState((prev) => ({ ...prev, showEditModal: false }))
+            }
           >
             Cancel
           </Button>
@@ -356,7 +384,7 @@ const AllSongs = () => {
             onClick={handleEditSave}
             disabled={isProcessing}
           >
-            {isProcessing ? 'Saving...' : 'Save Changes'}
+            {isProcessing ? "Saving..." : "Save Changes"}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -364,19 +392,22 @@ const AllSongs = () => {
       {/* Delete Confirmation Modal */}
       <Modal
         show={showDeleteModal}
-        onHide={() => setState(prev => ({ ...prev, showDeleteModal: false }))}
+        onHide={() => setState((prev) => ({ ...prev, showDeleteModal: false }))}
         aria-labelledby="delete-song-modal"
       >
         <Modal.Header closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete "{selectedSong?.title}"? This action cannot be undone.
+          Are you sure you want to delete "{selectedSong?.title}"? This action
+          cannot be undone.
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant="secondary"
-            onClick={() => setState(prev => ({ ...prev, showDeleteModal: false }))}
+            onClick={() =>
+              setState((prev) => ({ ...prev, showDeleteModal: false }))
+            }
           >
             Cancel
           </Button>
@@ -385,7 +416,7 @@ const AllSongs = () => {
             onClick={handleDeleteConfirm}
             disabled={isProcessing}
           >
-            {isProcessing ? 'Deleting...' : 'Confirm Delete'}
+            {isProcessing ? "Deleting..." : "Confirm Delete"}
           </Button>
         </Modal.Footer>
       </Modal>
