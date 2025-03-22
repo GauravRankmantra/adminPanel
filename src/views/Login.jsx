@@ -95,7 +95,7 @@ const Login = () => {
         <div className={styles.oblique}></div>
         <div className={styles.logo}>
           <Link to="/">
-            <img src={logo} alt="logo" />
+           <h1>Welcom To Admin Panel</h1>
           </Link>
         </div>
       </div>
