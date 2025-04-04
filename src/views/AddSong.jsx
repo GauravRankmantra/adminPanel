@@ -17,7 +17,9 @@ const AddSong = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
   const [success, setSuccess] = useState(false); // Success state
- 
+  const lowAudioRef = useRef(null);
+  const highAudioRef = useRef(null);
+  const coverImageRef = useRef(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -178,7 +180,7 @@ const AddSong = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/song",
+        "https://backend-music-xg6e.onrender.com/api/v1/song",
         data,
         {
           headers: {

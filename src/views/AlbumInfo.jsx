@@ -177,7 +177,7 @@ const AlbumInfo = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/song",
+        "https://backend-music-xg6e.onrender.com/api/v1/song",
         data,
         {
           headers: {
@@ -200,12 +200,12 @@ const AlbumInfo = () => {
       });
 
       const newSong = response?.data?.song;
-      console.log("newSong",newSong)
+      console.log("newSong", newSong);
       setAlbum({
         ...album,
         songs: [...album.songs, newSong],
       });
-      console.log("albums",album)
+      console.log("albums", album);
       setSongLoading(false);
       setShowAddSongModal(false);
       setArtistSuggestions([]);
@@ -270,7 +270,7 @@ const AlbumInfo = () => {
     const fetchAlbumInfo = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/v1/albums/${albumId}`
+          `https://backend-music-xg6e.onrender.com/api/v1/albums/${albumId}`
         );
         setAlbum(response.data.data);
         setLoading(false);
@@ -362,10 +362,7 @@ const AlbumInfo = () => {
       </div>
 
       {album?.songs && album.songs.length > 0 && (
-        <SongList
-          album={album.title}
-          albumSongs={album.songs}
-        />
+        <SongList album={album.title} albumSongs={album.songs} />
       )}
 
       {/* Add Song Modal */}
