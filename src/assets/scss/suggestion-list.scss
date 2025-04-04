@@ -1,13 +1,14 @@
 /* Style the suggestion list and items */
 .suggestion-list {
     position: absolute;
-    z-index: 10;
+    z-index: 20;
     width: max-content;
     max-height: 200px;
     overflow-y: auto; /* Add scroll if the list is too long */
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 4px;
+    cursor: pointer;
   
     .suggestion-item {
       cursor: pointer;

@@ -7,7 +7,6 @@ import Error from "./Error";
 import Success from "./Success";
 import "../assets/scss/suggestion-list.scss";
 
-
 const AddSong = () => {
   const [genres, setGenres] = useState([]);
   const [artistSuggestions, setArtistSuggestions] = useState([]);
@@ -28,6 +27,8 @@ const AddSong = () => {
     lowAudio: null,
     highAudio: null,
     coverImage: null,
+    price: 0,
+    freeDownload: false,
   });
 
   const [artistSearch, setArtistSearch] = useState("");
@@ -90,6 +91,30 @@ const AddSong = () => {
       [e.target.name]: e.target.value,
     });
   };
+  const handlePriceChange = (e) => {
+    const priceValue = parseFloat(e.target.value);
+    setFormData({
+      ...formData,
+      price: priceValue,
+      freeDownload: priceValue > 0 ? false : formData.freeDownload, // Disable freeDownload if price > 0
+    });
+  };
+
+  const handleFreeDownloadChange = (e) => {
+    setFormData({
+      ...formData,
+      freeDownload: e.target.value === "true",
+    });
+    console.log("handleFreeDownloadChange - e.target.value:", e.target.value);
+    console.log(
+      "handleFreeDownloadChange - formData.freeDownload:",
+      e.target.value === "true"
+    );
+  };
+
+  useEffect(() => {
+    console.log("useEffect - formData:", formData);
+  }, [formData]);
 
   const handleFileChange = (e) => {
     setFormData({
@@ -105,7 +130,8 @@ const AddSong = () => {
       !formData.genre ||
       !formData.lowAudio ||
       !formData.highAudio ||
-      !formData.coverImage
+      !formData.coverImage ||
+      !formData.price
     ) {
       setError("All fields are required except album.");
       return false;
@@ -129,10 +155,12 @@ const AddSong = () => {
     data.append("low", formData.lowAudio);
     data.append("high", formData.highAudio);
     data.append("coverImage", formData.coverImage);
+    data.append("price", formData.price);
+    data.append("freeDownload", formData.freeDownload);
 
     try {
       const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/song",
+        "http://localhost:5000/api/v1/song",
         data,
         {
           headers: {
@@ -150,6 +178,8 @@ const AddSong = () => {
         lowAudio: null,
         highAudio: null,
         coverImage: null,
+        price: 0,
+        freeDownload: false,
       });
       setArtistSuggestions([]);
       setAlbumSuggestions([]);
@@ -347,7 +377,79 @@ const AddSong = () => {
                       </Col>
                     </Row>
                   </div>
+                  <div className="form-group mt-3">
+                    <Row>
+                      <Col md={3}>
+                        <label
+                          htmlFor="price"
+                          className="form-control-label mb-1"
+                        >
+                          Price ($) <span className="text-danger">*</span>
+                        </label>
+                      </Col>
+                      <Col md={9}>
+                        <input
+                          id="price"
+                          name="price"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          className="form-control"
+                          placeholder="Enter the price"
+                          value={formData.price}
+                          onChange={handlePriceChange}
+                          required
+                        />
+                      </Col>
+                    </Row>
+                  </div>
 
+                  <div className="form-group mt-3">
+                    <Row>
+                      <Col md={3}>
+                        <label className="form-control-label mb-1">
+                          Free Download
+                        </label>
+                      </Col>
+                      <Col md={9}>
+                        <div className="">
+                          <input
+                            className=""
+                            type="radio"
+                            name="freeDownload"
+                            value="true"
+                            id="freeDownloadTrue"
+                            disabled={formData.price > 0}
+                            checked={formData.freeDownload === true} // Now comparing boolean with boolean
+                            onChange={handleFreeDownloadChange}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="freeDownloadTrue"
+                          >
+                            Yes
+                          </label>
+                        </div>
+                        <div className="">
+                          <input
+                            className=""
+                            type="radio"
+                            name="freeDownload"
+                            value="false"
+                            id="freeDownloadFalse"
+                            checked={formData.freeDownload === false} // Now comparing boolean with boolean
+                            onChange={handleFreeDownloadChange}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="freeDownloadFalse"
+                          >
+                            No
+                          </label>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
                   <div className="form-group mt-3">
                     <Row>
                       <Col md={3}>
