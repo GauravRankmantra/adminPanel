@@ -2,6 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import { useDashboardDataContext } from "@/context/dashboardDataContext";
 import styles from "@/assets/scss/Layouts.module.scss";
 import Navbar from "../components/Navbars/Navbar";
+import { ToastContainer } from "react-toastify";
 import {
     Logo,
     Menu,
@@ -27,6 +28,7 @@ const Layouts = () => {
 
     return (
         <div className={styles.layout}>
+                <ToastContainer />
             <Sidebar>
                 <SidebarBg bgImg={sidebarBgImg} bgColor={sidebarBgColor}>
                     <Logo>

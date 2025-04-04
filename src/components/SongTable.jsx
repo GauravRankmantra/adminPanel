@@ -3,7 +3,7 @@ import styles from "@/assets/scss/Tables.module.scss";
 import editIcon from "../assets/image/edit.png";
 import deleteIcon from "../assets/image/trash.png";
 
-const SongTable = ({ songs, artist, handleEditClick, handleDeleteClick }) => {
+const SongTable = ({ songs, handleEditClick, handleDeleteClick }) => {
   return (
     <div className={`table-responsive ${styles.table_wrapper}`}>
       <table className={`table ${styles.table}`}>
@@ -27,7 +27,17 @@ const SongTable = ({ songs, artist, handleEditClick, handleDeleteClick }) => {
                 />
               </td>
               <td>{song?.title}</td>
-              <td>{artist}</td>
+              <td>
+                {console.log("artist in song list",song.artist)}
+                {Array.isArray(song?.artist)
+                  ? song.artist.map((a, index) => (
+                      <span key={index}>
+                        {a}
+                        {index !== song.artist.length - 1 && ", "}
+                      </span>
+                    ))
+                  : song.artist || "Unknown Artist"}
+              </td>
               <td>
                 {Math.floor(song?.duration)}:
                 {String(Math.floor(song?.duration % 60)).padStart(2, "0")}{" "}

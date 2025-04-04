@@ -67,7 +67,7 @@ const AllSongs = () => {
   }, []);
 
   useEffect(() => {
-    const debouncedFetch = debounce(fetchSongs, 500);
+    const debouncedFetch = debounce(fetchSongs, 1000);
     debouncedFetch(state.searchQuery, state.currentPage);
   }, [state.searchQuery, state.currentPage, fetchSongs]);
 
@@ -205,7 +205,18 @@ const AllSongs = () => {
                             />
                           </td>
                           <td>{song.title}</td>
-                          <td>{song.artist?.fullName || "Unknown Artist"}</td>
+                          <td>
+                            {Array.isArray(song?.artist)
+                              ? song?.artist.map((a, i) => (
+                                  <span key={a._id || i}>
+                                    {a.fullName}
+                                    {i < song?.artist.length - 1 && ", "}
+                                  </span>
+                                ))
+                              : song?.artist?.fullName ||
+                                song?.artist ||
+                                "Unknown Artist"}
+                          </td>
                           <td>{song.album?.title || "No Album"}</td>
                           <td>{formatDuration(song.duration)}</td>
                           <td>

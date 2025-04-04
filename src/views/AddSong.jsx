@@ -6,6 +6,8 @@ import Loading from "./Loading";
 import Error from "./Error";
 import Success from "./Success";
 import "../assets/scss/suggestion-list.scss";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddSong = () => {
   const [genres, setGenres] = useState([]);
@@ -15,13 +17,11 @@ const AddSong = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
   const [success, setSuccess] = useState(false); // Success state
-  const lowAudioRef = useRef(null);
-  const highAudioRef = useRef(null);
-  const coverImageRef = useRef(null);
+ 
 
   const [formData, setFormData] = useState({
     title: "",
-    artist: "",
+    artists: [],
     genre: "",
     album: "",
     lowAudio: null,
@@ -48,6 +48,7 @@ const AddSong = () => {
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching genres:", error);
+        toast.error("Failed to fetch genres. Please try again.");
       }
     };
     fetchGenres();
@@ -63,6 +64,7 @@ const AddSong = () => {
           setArtistSuggestions(response.data);
         } catch (error) {
           console.error("Error fetching artist suggestions:", error);
+          toast.error("Failed to fetch artist suggestions.");
         }
       };
       fetchArtists();
@@ -79,11 +81,30 @@ const AddSong = () => {
           setAlbumSuggestions(response.data);
         } catch (error) {
           console.error("Error fetching album suggestions:", error);
+          toast.error("Failed to fetch album suggestions.");
         }
       };
       fetchAlbum();
     }
   }, [albumSearch]);
+
+  const handleArtistSelect = (artist) => {
+    if (!formData.artists.some((a) => a._id === artist._id)) {
+      setFormData((prev) => ({
+        ...prev,
+        artists: [...prev.artists, artist],
+      }));
+    }
+    setArtistSearch("");
+    setArtistSuggestions([]);
+  };
+
+  const removeArtist = (artistId) => {
+    setFormData((prev) => ({
+      ...prev,
+      artists: prev.artists.filter((artist) => artist._id !== artistId),
+    }));
+  };
 
   const handleInputChange = (e) => {
     setFormData({
@@ -101,15 +122,10 @@ const AddSong = () => {
   };
 
   const handleFreeDownloadChange = (e) => {
-    setFormData({
-      ...formData,
-      freeDownload: e.target.value === "true",
-    });
-    console.log("handleFreeDownloadChange - e.target.value:", e.target.value);
-    console.log(
-      "handleFreeDownloadChange - formData.freeDownload:",
-      e.target.value === "true"
-    );
+    setFormData((prev) => ({
+      ...prev,
+      freeDownload: e.target.value === "true" ? true : false,
+    }));
   };
 
   useEffect(() => {
@@ -126,20 +142,22 @@ const AddSong = () => {
   const validateForm = () => {
     if (
       !formData.title ||
-      !formData.artist ||
+      formData.artists.length === 0 ||
       !formData.genre ||
       !formData.lowAudio ||
       !formData.highAudio ||
       !formData.coverImage ||
-      !formData.price
+      formData.price === null
     ) {
       setError("All fields are required except album.");
+      toast.error("All fields are required except album.");
       return false;
     }
     return true;
   };
 
   const handleSubmit = async (e) => {
+    console.log("clicked");
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -149,7 +167,7 @@ const AddSong = () => {
 
     const data = new FormData();
     data.append("title", formData.title);
-    data.append("artist", formData.artist);
+    data.append("artists", JSON.stringify(formData.artists.map((a) => a._id)));
     data.append("album", formData.album);
     data.append("genre", formData.genre);
     data.append("low", formData.lowAudio);
@@ -172,7 +190,7 @@ const AddSong = () => {
       handleSuccess();
       setFormData({
         title: "",
-        artist: "",
+        artists: [],
         genre: "",
         album: "",
         lowAudio: null,
@@ -192,6 +210,10 @@ const AddSong = () => {
     } catch (error) {
       setLoading(false);
       setError("Error submitting the form");
+      toast.error(
+        error.response?.data?.message ||
+          "Error submitting the form. Please try again."
+      );
       console.error("Error submitting the form:", error);
     }
   };
@@ -259,7 +281,7 @@ const AddSong = () => {
                     </Row>
                   </div>
 
-                  <div className="form-group mt-3">
+                  {/* <div className="form-group mt-3">
                     <Row>
                       <Col md={3}>
                         <label
@@ -302,6 +324,47 @@ const AddSong = () => {
                         )}
                       </Col>
                     </Row>
+                  </div> */}
+
+                  <div className="form-group  mt-3">
+                    <label>
+                      Artists <span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search artist..."
+                      value={artistSearch}
+                      onChange={(e) => setArtistSearch(e.target.value)}
+                    />
+                    {artistSuggestions?.data?.length > 0 && (
+                      <ul className="list-group suggestion-list">
+                        {artistSuggestions?.data?.map((artist) => (
+                          <li
+                            key={artist._id}
+                            className="list-group-item"
+                            onClick={() => handleArtistSelect(artist)}
+                          >
+                            {artist.fullName}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div className="mt-2">
+                      {formData.artists.map((artist) => (
+                        <span
+                          key={artist._id}
+                          className="badge bg-primary me-2"
+                        >
+                          {artist.fullName}{" "}
+                          <button
+                            type="button"
+                            className="btn-close"
+                            onClick={() => removeArtist(artist._id)}
+                          ></button>
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="form-group mt-3">

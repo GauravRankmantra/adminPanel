@@ -5,7 +5,7 @@ import SongTable from "../components/SongTable";
 import EditSongModal from "../components/EditSongModal";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
-const SongList = ({ album, artist, albumSongs }) => {
+const SongList = ({ album, albumSongs }) => {
   const [songs, setSongs] = useState(albumSongs);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSong, setSelectedSong] = useState(null);
@@ -76,12 +76,13 @@ const SongList = ({ album, artist, albumSongs }) => {
 
   return (
     <div>
+    
       <Row className="gy-4 gx-4 mt-4">
         <Col sm={12}>
           <CardBody>
             <SongTable
               songs={songs}
-              artist={artist}
+            
               handleEditClick={handleEditClick}
               handleDeleteClick={handleDeleteClick}
             />
