@@ -15,9 +15,7 @@ import { toast } from "react-toastify";
 import editIcon from "../assets/image/edit.png";
 import deleteIcon from "../assets/image/trash.png";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_LOCAL_URL ||
-  "https://backend-music-xg6e.onrender.com/api/v1";
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
 const AllSongs = () => {
   const [state, setState] = useState({

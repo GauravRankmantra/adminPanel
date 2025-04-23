@@ -52,9 +52,7 @@ const AlbumInfo = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/genre"
-        );
+        const response = await axios.get("http://localhost:5000/api/v1/genre");
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching genres:", error);
@@ -69,7 +67,7 @@ const AlbumInfo = () => {
       const fetchArtists = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${artistSearch}`
+            `http://localhost:5000/api/v1/user/artist/search?search=${artistSearch}`
           );
           setArtistSuggestions(response.data);
         } catch (error) {
@@ -86,7 +84,7 @@ const AlbumInfo = () => {
       const fetchAlbum = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/albums/album/search?search=${albumSearch}`
+            `http://localhost:5000/api/v1/albums/album/search?search=${albumSearch}`
           );
           setAlbumSuggestions(response.data);
         } catch (error) {
@@ -177,7 +175,7 @@ const AlbumInfo = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/song",
+        "http://localhost:5000/api/v1/song",
         data,
         {
           headers: {
@@ -241,7 +239,7 @@ const AlbumInfo = () => {
 
     try {
       const res = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/song",
+        "http://localhost:5000/api/v1/song",
         formData,
         {
           headers: {
@@ -270,7 +268,7 @@ const AlbumInfo = () => {
     const fetchAlbumInfo = async () => {
       try {
         const response = await axios.get(
-          `https://backend-music-xg6e.onrender.com/api/v1/albums/${albumId}`
+          `http://localhost:5000/api/v1/albums/${albumId}`
         );
         setAlbum(response.data.data);
         setLoading(false);

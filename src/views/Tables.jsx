@@ -3,8 +3,9 @@ import { CardBody, Col, Row, Modal, Button, Form } from "react-bootstrap";
 import Card from "@/components/Card/Card";
 import styles from "@/assets/scss/Tables.module.scss";
 import axios from "axios";
+import defaultUser from "../assets/image/default.jpg";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; 
+import "react-toastify/dist/ReactToastify.css";
 import editIcon from "../assets/image/edit.png";
 import deleteIcon from "../assets/image/trash.png";
 import AddUserModal from "./AddUserModal"; // Import AddUserModal
@@ -28,44 +29,19 @@ const Tables = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://backend-music-xg6e.onrender.com/api/v1/admin/users?page=${page}&limit=${limit}`
+          `http://localhost:5000/api/v1/admin/users?page=${page}&limit=${limit}`
         );
-  
-        if (response?.data?.users && Array.isArray(response.data.users)) {
-          setUserData(response.data.users); // ✅ Update user data
-          setTotalPages(response.data.totalPages || 1); // ✅ Ensure pages exist
-          toast.success("Users fetched successfully! 🎉");
-        } else {
-          throw new Error("Invalid response structure from server.");
-        }
+        setUserData(response.data.users); // Update user data
+        setTotalPages(response.data.totalPages); // Set total pages
+        setLoading(false);
       } catch (error) {
-        // Check for different error types and show relevant messages
-        if (error.response) {
-          const status = error.response.status;
-          const errorMessage =
-            error.response.data?.message || "Something went wrong.";
-  
-          if (status === 401) {
-            toast.error("Unauthorized! Please log in again. 🚫");
-          } else if (status === 404) {
-            toast.error("No users found! 📭");
-          } else if (status === 500) {
-            toast.error("Server error! Please try again later. 🚨");
-          } else {
-            toast.error(`Error: ${errorMessage}`);
-          }
-        } else if (error.request) {
-          toast.error("No response from server. Check your internet connection. 📶");
-        } else {
-          toast.error(`Request failed: ${error.message}`);
-        }
-      } finally {
+        console.error("Error fetching data:", error);
         setLoading(false);
       }
     };
-  
-    fetchData(1); // Load initial data when component mounts
-  }, []);
+
+    fetchData(currentPage); // Fetch data for current page
+  }, [currentPage]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -86,7 +62,7 @@ const Tables = () => {
   const handleDeleteConfirm = async () => {
     try {
       await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${userToDelete._id}`
+        `http://localhost:5000/api/v1/admin/user/${userToDelete._id}`
       );
       setShowDeleteModal(false);
       setUserData(userData.filter((user) => user._id !== userToDelete._id)); // Remove user from list
@@ -115,56 +91,22 @@ const Tables = () => {
   };
 
   const handleSave = async () => {
-    if (!selectedUser?._id) {
-      toast.error("Invalid user selection. Please try again.");
-      return;
-    }
-  
     try {
-      const response = await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${selectedUser._id}`,
+      await axios.put(
+        `http://localhost:5000/api/v1/admin/user/${selectedUser._id}`,
         { role }
       );
-  
-      // ✅ Check if update was successful (assuming success status = 200)
-      if (response.status === 200) {
-        toast.success("User role updated successfully! 🎉");
-  
-        // ✅ Update user data in state
-        const updatedUsers = userData.map((user) =>
-          user._id === selectedUser._id ? { ...user, role } : user
-        );
-        setUserData(updatedUsers);
-  
-        // ✅ Close modal only on success
-        setShowModal(false);
-      } else {
-        throw new Error("Unexpected response from the server.");
-      }
+      setShowModal(false);
+
+      const updatedUsers = userData.map((user) =>
+        user._id === selectedUser._id ? { ...user, role } : user
+      );
+      setUserData(updatedUsers);
     } catch (error) {
       console.error("Error updating user role:", error);
-  
-      if (error.response) {
-        const status = error.response.status;
-        const errorMessage =
-          error.response.data?.message || "Something went wrong.";
-  
-        if (status === 401) {
-          toast.error("Unauthorized! Please log in again. 🚫");
-        } else if (status === 404) {
-          toast.error("User not found! 📭");
-        } else if (status === 500) {
-          toast.error("Server error! Please try again later. 🚨");
-        } else {
-          toast.error(`Error: ${errorMessage}`);
-        }
-      } else if (error.request) {
-        toast.error("No response from server. Check your internet connection. 📶");
-      } else {
-        toast.error(`Request failed: ${error.message}`);
-      }
     }
   };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -226,7 +168,10 @@ const Tables = () => {
                     {userData.map((item, index) => (
                       <tr key={index}>
                         <td>
-                          <img src={item.coverImage} alt="Cover" />
+                          <img
+                            src={item.coverImage || defaultUser}
+                            alt="Cover"
+                          />
                         </td>
                         <td>{item.fullName}</td>
                         <td>{item.email}</td>

@@ -9,12 +9,9 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/auth",
-          {
-            withCredentials: true, // Include cookies in the request
-          }
-        );
+        const res = await axios.get("http://localhost:5000/api/v1/auth", {
+          withCredentials: true, // Include cookies in the request
+        });
         console.log("token check response ", res);
         setIsAuthenticated(true);
       } catch {
@@ -24,10 +21,7 @@ const ProtectedRoute = ({ children }) => {
     checkAuth();
   }, []);
 
-  if (isAuthenticated === null)
-    return (
-<Loading/>
-    );
+  if (isAuthenticated === null) return <Loading />;
 
   return isAuthenticated ? children : <Navigate to="/login" />;
 };

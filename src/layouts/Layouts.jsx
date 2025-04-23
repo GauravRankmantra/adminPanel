@@ -94,13 +94,33 @@ const Layouts = () => {
                                 <i className="fa fa-pencil-square" />
                                 <span>Add Album</span>
                             </MenuItem>
+                           
+                        </SubMenu>
+                        <SubMenu
+                            label="Add on"
+                            icon={<i className="fa fa-folder-open" />}
+                        >
+                            <MenuItem routeLink="/contactInfo">
+                                <i className="fa fa-pencil-square" />
+                                <span>Contact Info</span>
+                            </MenuItem>
+                            <MenuItem routeLink="/privacyPolicy">
+                                <i className="fa fa-pencil-square" />
+                                <span>Privacy Policy</span>
+                            </MenuItem>
+                            
+                            <MenuItem routeLink="/terms">
+                                <i className="fa fa-pencil-square" />
+                                <span>Terms And Conditions</span>
+                            </MenuItem>
+                           
                         </SubMenu>
                         
                         
-                        <NavTitle>
+                        {/* <NavTitle>
                             <span>Extras</span>
-                        </NavTitle>
-                        <SubMenu
+                        </NavTitle> */}
+                        {/* <SubMenu
                             label="Pages"
                             icon={<i className="fa fa-paperclip" />}
                         >
@@ -120,7 +140,7 @@ const Layouts = () => {
                                 <i className="fa fa-paper-plane" />
                                 <span>Page 500</span>
                             </MenuItem>
-                        </SubMenu>
+                        </SubMenu> */}
                     </Menu>
                 </SidebarBg>
             </Sidebar>

@@ -15,7 +15,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/auth/login",
+        "http://localhost:5000/api/v1/auth/adminlogin",
         { email, password },
         { withCredentials: true }
       );
@@ -95,7 +95,7 @@ const Login = () => {
         <div className={styles.oblique}></div>
         <div className={styles.logo}>
           <Link to="/">
-           <h1>Welcom To Admin Panel</h1>
+            <h1 className={styles.h1}>Welcom To Admin Panel</h1>
           </Link>
         </div>
       </div>

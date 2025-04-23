@@ -12,7 +12,7 @@ const SongList = ({ album, albumSongs }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loading, setLoading] = useState(false);
-    const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleEditClick = (song) => {
     setSelectedSong(song);
@@ -38,7 +38,7 @@ const SongList = ({ album, albumSongs }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`
+        `http://localhost:5000/api/v1/song/${selectedSong._id}`
       );
       setSongs(songs.filter((song) => song._id !== selectedSong._id));
       setShowDeleteModal(false);
@@ -59,7 +59,7 @@ const SongList = ({ album, albumSongs }) => {
       }
 
       await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
+        `http://localhost:5000/api/v1/song/${selectedSong._id}`,
         formData
       );
       const updatedSongs = songs.map((song) =>
@@ -76,93 +76,90 @@ const SongList = ({ album, albumSongs }) => {
 
   return (
     <div>
-    
       <Row className="gy-4 gx-4 mt-4">
         <Col sm={12}>
           <CardBody>
             <SongTable
               songs={songs}
-            
               handleEditClick={handleEditClick}
               handleDeleteClick={handleDeleteClick}
             />
             {/* Pagination */}
             <div>
-                <div
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "20px 0",
+                }}
+              >
+                <button
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "20px 0",
+                    padding: "8px 16px",
+                    margin: "0 5px",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    backgroundColor: "#f0f0f0",
+                    cursor: "pointer",
+                    transition: "background-color 0.3s ease",
+                  }}
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  onMouseOver={(e) => {
+                    if (!e.target.disabled) {
+                      e.target.style.backgroundColor = "#e0e0e0";
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (!e.target.disabled) {
+                      e.target.style.backgroundColor = "#f0f0f0";
+                    }
                   }}
                 >
-                  <button
-                    style={{
-                      padding: "8px 16px",
-                      margin: "0 5px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      backgroundColor: "#f0f0f0",
-                      cursor: "pointer",
-                      transition: "background-color 0.3s ease",
-                    }}
-                    onClick={handlePreviousPage}
-                    disabled={currentPage === 1}
-                    onMouseOver={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#e0e0e0";
-                      }
-                    }}
-                    onMouseOut={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#f0f0f0";
-                      }
-                    }}
-                  >
-                    Previous
-                  </button>
+                  Previous
+                </button>
 
-                  <span
-                    style={{
-                      margin: "0 10px",
-                      fontSize: "14px",
-                      color: "#555",
-                    }}
-                  >
-                    Page {currentPage} of {totalPages}
-                  </span>
+                <span
+                  style={{
+                    margin: "0 10px",
+                    fontSize: "14px",
+                    color: "#555",
+                  }}
+                >
+                  Page {currentPage} of {totalPages}
+                </span>
 
-                  <button
-                    style={{
-                      padding: "8px 16px",
-                      margin: "0 5px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      backgroundColor: "#f0f0f0",
-                      cursor: "pointer",
-                      transition: "background-color 0.3s ease",
-                    }}
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    onMouseOver={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#e0e0e0";
-                      }
-                    }}
-                    onMouseOut={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#f0f0f0";
-                      }
-                    }}
-                  >
-                    Next
-                  </button>
-                </div>
+                <button
+                  style={{
+                    padding: "8px 16px",
+                    margin: "0 5px",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    backgroundColor: "#f0f0f0",
+                    cursor: "pointer",
+                    transition: "background-color 0.3s ease",
+                  }}
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  onMouseOver={(e) => {
+                    if (!e.target.disabled) {
+                      e.target.style.backgroundColor = "#e0e0e0";
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (!e.target.disabled) {
+                      e.target.style.backgroundColor = "#f0f0f0";
+                    }
+                  }}
+                >
+                  Next
+                </button>
               </div>
+            </div>
           </CardBody>
         </Col>
       </Row>
-
 
       {selectedSong && (
         <EditSongModal

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; 
+import "react-toastify/dist/ReactToastify.css";
 
 const AddUserModal = ({ showModalAdd, handleClose }) => {
   const [name, setName] = useState(""); // State for name
@@ -26,10 +26,10 @@ const AddUserModal = ({ showModalAdd, handleClose }) => {
       toast.error("All fields are required! 🛑");
       return;
     }
-  
+
     setLoading(true);
     setError("");
-  
+
     const formData = new FormData();
     formData.append("fullName", name);
     formData.append("email", email);
@@ -38,26 +38,26 @@ const AddUserModal = ({ showModalAdd, handleClose }) => {
     if (coverImage) {
       formData.append("coverImage", coverImage);
     }
-  
+
     try {
       const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/user",
+        "http://localhost:5000/api/v1/user",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-  
+
       // ✅ Check if the user was successfully created
       if (response.status === 201) {
         toast.success("User added successfully! 🎉");
-  
+
         // ✅ Reset form fields only on success
         setEmail("");
         setPassword("");
         setCoverImage("");
         setName("");
-  
+
         setSuccess(true);
         handleClose();
       } else {
@@ -66,12 +66,12 @@ const AddUserModal = ({ showModalAdd, handleClose }) => {
     } catch (error) {
       console.error("Error adding user:", error);
       setLoading(false);
-  
+
       if (error.response) {
         const status = error.response.status;
         const errorMessage =
           error.response.data?.message || "Something went wrong.";
-          toast.error(errorMessage,status);
+        toast.error(errorMessage, status);
       } else if (error.request) {
         toast.error("No response from server. Check your internet. 📶");
       } else {

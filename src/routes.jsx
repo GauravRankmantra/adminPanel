@@ -18,6 +18,9 @@ import AddAlbum from "./views/AddAlbum";
 import AllAlbums from "./views/AllAlbums";
 import AlbumInfo from "./views/AlbumInfo";
 import Profile from "./views/Profile";
+import ContactInfo from "./views/ContactInfo";
+import PrivacyPolicy from "./views/PrivacyPolicy";
+import Terms from "./views/Terms";
 
 const routes = [
   {
@@ -64,6 +67,18 @@ const routes = [
   {
     path: "/forms/all-album",
     component: AllAlbums,
+  },
+  {
+    path: "/contactInfo",
+    component: ContactInfo,
+  },
+  {
+    path: "/privacyPolicy",
+    component: PrivacyPolicy,
+  },
+  {
+    path: "/terms",
+    component: Terms,
   },
   {
     path: "/forms/album/:albumId",

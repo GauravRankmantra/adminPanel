@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect,useRef } from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import { CardBody, Col, Row, Button } from "react-bootstrap";
 import Card from "../components/Card/Card";
@@ -13,7 +13,7 @@ const AddAlbum = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-    const coverImageRef = useRef(null);
+  const coverImageRef = useRef(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -35,9 +35,7 @@ const AddAlbum = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/genre"
-        );
+        const response = await axios.get("http://localhost:5000/api/v1/genre");
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching genres:", error);
@@ -51,7 +49,7 @@ const AddAlbum = () => {
       const fetchArtists = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${artistSearch}`
+            `http://localhost:5000/api/v1/user/artist/search?search=${artistSearch}`
           );
           setArtistSuggestions(response.data);
         } catch (error) {
@@ -99,7 +97,7 @@ const AddAlbum = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/albums",
+        "http://localhost:5000/api/v1/albums",
         data
       );
       setLoading(false);
@@ -113,7 +111,7 @@ const AddAlbum = () => {
       if (coverImageRef.current) coverImageRef.current.value = "";
       setArtistSuggestions([]);
       setArtistSearch("");
-      navigate(`/forms/album/${response.data._id}`); 
+      navigate(`/forms/album/${response.data._id}`);
     } catch (error) {
       setLoading(false);
       setError("Error submitting the form");

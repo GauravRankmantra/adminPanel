@@ -38,7 +38,10 @@ const SongUpload = () => {
 
   // Add a new song upload form
   const handleAddSong = () => {
-    setSongs([...songs, { artist: "", coverImage: null, lowAudio: null, highAudio: null }]);
+    setSongs([
+      ...songs,
+      { artist: "", coverImage: null, lowAudio: null, highAudio: null },
+    ]);
   };
 
   // Remove song upload form
@@ -50,7 +53,12 @@ const SongUpload = () => {
 
   const validateForm = () => {
     for (const song of songs) {
-      if (!song.artist || !song.coverImage || !song.lowAudio || !song.highAudio) {
+      if (
+        !song.artist ||
+        !song.coverImage ||
+        !song.lowAudio ||
+        !song.highAudio
+      ) {
         setError("All fields are required for each song.");
         return false;
       }
@@ -76,7 +84,7 @@ const SongUpload = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/songs/upload",
+        "http://localhost:5000/api/v1/songs/upload",
         formData,
         {
           headers: {
@@ -86,7 +94,9 @@ const SongUpload = () => {
       );
       setLoading(false);
       handleSuccess();
-      setSongs([{ artist: "", coverImage: null, lowAudio: null, highAudio: null }]);
+      setSongs([
+        { artist: "", coverImage: null, lowAudio: null, highAudio: null },
+      ]);
     } catch (error) {
       setLoading(false);
       setError("Error submitting the form");
@@ -113,7 +123,10 @@ const SongUpload = () => {
                       <div className="form-group mt-3">
                         <Row>
                           <Col md={3}>
-                            <label className="form-control-label mb-1" htmlFor={`artist-${index}`}>
+                            <label
+                              className="form-control-label mb-1"
+                              htmlFor={`artist-${index}`}
+                            >
                               Artist Name <span className="text-danger">*</span>
                             </label>
                           </Col>
@@ -136,7 +149,10 @@ const SongUpload = () => {
                       <div className="form-group mt-3">
                         <Row>
                           <Col md={3}>
-                            <label className="form-control-label mb-1" htmlFor={`coverImage-${index}`}>
+                            <label
+                              className="form-control-label mb-1"
+                              htmlFor={`coverImage-${index}`}
+                            >
                               Cover Image <span className="text-danger">*</span>
                             </label>
                           </Col>
@@ -157,8 +173,12 @@ const SongUpload = () => {
                       <div className="form-group mt-3">
                         <Row>
                           <Col md={3}>
-                            <label className="form-control-label mb-1" htmlFor={`lowAudio-${index}`}>
-                              Low Quality Audio <span className="text-danger">*</span>
+                            <label
+                              className="form-control-label mb-1"
+                              htmlFor={`lowAudio-${index}`}
+                            >
+                              Low Quality Audio{" "}
+                              <span className="text-danger">*</span>
                             </label>
                           </Col>
                           <Col md={9}>
@@ -178,8 +198,12 @@ const SongUpload = () => {
                       <div className="form-group mt-3">
                         <Row>
                           <Col md={3}>
-                            <label className="form-control-label mb-1" htmlFor={`highAudio-${index}`}>
-                              High Quality Audio <span className="text-danger">*</span>
+                            <label
+                              className="form-control-label mb-1"
+                              htmlFor={`highAudio-${index}`}
+                            >
+                              High Quality Audio{" "}
+                              <span className="text-danger">*</span>
                             </label>
                           </Col>
                           <Col md={9}>
@@ -195,14 +219,22 @@ const SongUpload = () => {
                         </Row>
                       </div>
 
-                      <Button variant="danger" className="mt-3" onClick={() => handleRemoveSong(index)}>
+                      <Button
+                        variant="danger"
+                        className="mt-3"
+                        onClick={() => handleRemoveSong(index)}
+                      >
                         Remove Song
                       </Button>
                       <hr />
                     </div>
                   ))}
 
-                  <Button variant="primary" className="mt-3" onClick={handleAddSong}>
+                  <Button
+                    variant="primary"
+                    className="mt-3"
+                    onClick={handleAddSong}
+                  >
                     Add Another Song
                   </Button>
 
