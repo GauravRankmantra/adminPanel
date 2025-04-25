@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { CardBody } from "react-bootstrap";
+import { CardBody, Button, ButtonGroup } from "react-bootstrap";
 import {
   LineChart,
   Line,
@@ -14,72 +14,83 @@ import axios from "axios";
 import styles from "@/assets/scss/Traffic.module.scss";
 
 const Traffic = () => {
-  const [close, setClose] = useState(false);
+  const [range, setRange] = useState("week");
   const [trafficData, setTrafficData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchTrafficData = async (selectedRange) => {
+    try {
+      const res = await axios.get(
+        `https://backend-music-xg6e.onrender.com/api/v1/traffic?range=${selectedRange}`
+      );
+      const data = res.data.data.sort(
+        (a, b) => new Date(a.dayDate) - new Date(b.dayDate)
+      );
+      setTrafficData(data);
+    } catch (error) {
+      console.error("Error fetching traffic data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchTrafficData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/v1/traffic"
-        );
-
-        const data = response.data.data;
-
-        // Sort by dayDate (converted to Date)
-        const sortedData = data.sort((a, b) => {
-          return new Date(a.dayDate) - new Date(b.dayDate);
-        });
-        console.log(sortedData)
-
-        setTrafficData(sortedData);
-      } catch (error) {
-        console.error("Error fetching traffic data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTrafficData();
-  }, []);
+    fetchTrafficData(range);
+  }, [range]);
 
   return (
     <Fragment>
-      {!close && (
-        <Card
-          title="Website Traffic"
-          dismissible={true}
-          onClose={() => setClose(true)}
-        >
-          <CardBody className="p-3">
-            {loading ? (
-              <div>Loading traffic data...</div>
-            ) : (
-              <ResponsiveContainer width="100%" height={345}>
-                <LineChart
-                  data={trafficData}
-                  fontSize="11px"
-                  color="#999999"
-                  margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="day" /> {/* Display string like '23 Apr' */}
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="totalVisits"
-                    stroke="#5C6BC0"
-                    strokeWidth={2}
-                    fill="#5C6BC0"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-          </CardBody>
-        </Card>
-      )}
+      <Card
+        title="Website Traffic"
+        dismissible={true}
+        onClose={() => setTrafficData([])}
+      >
+        <CardBody className="p-3">
+          <div className="mb-3">
+            <ButtonGroup aria-label="Traffic Filter">
+              <Button
+                variant={range === "week" ? "primary" : "outline-primary"}
+                onClick={() => setRange("week")}
+              >
+                This Week
+              </Button>
+              <Button
+                variant={range === "month" ? "primary" : "outline-primary"}
+                onClick={() => setRange("month")}
+              >
+                This Month
+              </Button>
+              <Button
+                variant={range === "all" ? "primary" : "outline-primary"}
+                onClick={() => setRange("all")}
+              >
+                All Time
+              </Button>
+            </ButtonGroup>
+          </div>
+          {loading ? (
+            <div>Loading traffic data...</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={345}>
+              <LineChart
+                data={trafficData}
+                margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="totalVisits"
+                  stroke="#5C6BC0"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </CardBody>
+      </Card>
     </Fragment>
   );
 };

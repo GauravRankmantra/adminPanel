@@ -16,10 +16,12 @@ const Terms = () => {
   const [toast, setToast] = useState({ show: false, message: "" });
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/v1/terms").then((res) => {
-      setContent(res.data?.content || "");
-      setInitialContent(res.data?.content || "");
-    });
+    axios
+      .get("https://backend-music-xg6e.onrender.com/api/v1/terms")
+      .then((res) => {
+        setContent(res.data?.content || "");
+        setInitialContent(res.data?.content || "");
+      });
   }, []);
 
   const handleSubmit = async (e) => {
@@ -40,7 +42,7 @@ const Terms = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/v1/terms", {
+      await axios.post("https://backend-music-xg6e.onrender.com/api/v1/terms", {
         content,
       });
       setInitialContent(content);

@@ -41,7 +41,7 @@ const AddUserModal = ({ showModalAdd, handleClose }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user",
+        "https://backend-music-xg6e.onrender.com/api/v1/user",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

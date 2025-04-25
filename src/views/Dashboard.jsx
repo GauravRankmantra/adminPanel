@@ -100,7 +100,7 @@ const Dashboard = () => {
     const fetchAllUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/admin/users"
+          "https://backend-music-xg6e.onrender.com/api/v1/admin/users"
         );
 
         setTotalUsers(response.data.totalUsers);
@@ -115,7 +115,7 @@ const Dashboard = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/user/new-users"
+          "https://backend-music-xg6e.onrender.com/api/v1/user/new-users"
         );
 
         // Set users from API response

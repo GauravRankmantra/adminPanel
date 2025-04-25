@@ -24,7 +24,9 @@ const ContactInfo = () => {
 
   const fetchMessages = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/v1/contact");
+      const response = await axios.get(
+        "https://backend-music-xg6e.onrender.com/api/v1/contact"
+      );
       setMessages(response.data.data);
     } catch (error) {
       console.error("Error fetching contact messages:", error);
@@ -57,7 +59,9 @@ const ContactInfo = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/v1/contact/contact-info")
+      .get(
+        "https://backend-music-xg6e.onrender.com/api/v1/contact/contact-info"
+      )
       .then((res) => {
         const data = res.data;
         setFormData(data);
@@ -80,7 +84,9 @@ const ContactInfo = () => {
 
   const handleDeleteMessage = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/contact/${id}`);
+      await axios.delete(
+        `https://backend-music-xg6e.onrender.com/api/v1/contact/${id}`
+      );
       setMessages((prevMessages) =>
         prevMessages.filter((msg) => msg._id !== id)
       );
@@ -102,7 +108,7 @@ const ContactInfo = () => {
     }
 
     await axios.put(
-      `http://localhost:5000/api/v1/contact/contact-info/${contactId}`,
+      `https://backend-music-xg6e.onrender.com/api/v1/contact/contact-info/${contactId}`,
       formData
     );
     setToastMessage("Contact info updated!");

@@ -38,7 +38,7 @@ const SongList = ({ album, albumSongs }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `http://localhost:5000/api/v1/song/${selectedSong._id}`
+        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`
       );
       setSongs(songs.filter((song) => song._id !== selectedSong._id));
       setShowDeleteModal(false);
@@ -59,7 +59,7 @@ const SongList = ({ album, albumSongs }) => {
       }
 
       await axios.put(
-        `http://localhost:5000/api/v1/song/${selectedSong._id}`,
+        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
         formData
       );
       const updatedSongs = songs.map((song) =>

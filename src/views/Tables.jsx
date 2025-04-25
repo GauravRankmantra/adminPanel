@@ -29,7 +29,7 @@ const Tables = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/v1/admin/users?page=${page}&limit=${limit}`
+          `https://backend-music-xg6e.onrender.com/api/v1/admin/users?page=${page}&limit=${limit}`
         );
         setUserData(response.data.users); // Update user data
         setTotalPages(response.data.totalPages); // Set total pages
@@ -62,7 +62,7 @@ const Tables = () => {
   const handleDeleteConfirm = async () => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/v1/admin/user/${userToDelete._id}`
+        `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${userToDelete._id}`
       );
       setShowDeleteModal(false);
       setUserData(userData.filter((user) => user._id !== userToDelete._id)); // Remove user from list
@@ -93,7 +93,7 @@ const Tables = () => {
   const handleSave = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/v1/admin/user/${selectedUser._id}`,
+        `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${selectedUser._id}`,
         { role }
       );
       setShowModal(false);

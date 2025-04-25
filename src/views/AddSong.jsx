@@ -6,7 +6,7 @@ import Loading from "./Loading";
 import Error from "./Error";
 import Success from "./Success";
 import "../assets/scss/suggestion-list.scss";
-import { toast } from "react-toastify";
+import { toast, Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddSong = () => {
@@ -20,6 +20,9 @@ const AddSong = () => {
   const lowAudioRef = useRef(null);
   const highAudioRef = useRef(null);
   const coverImageRef = useRef(null);
+  const [artistError, setArtistError] = useState("");
+const [albumError, setAlbumError] = useState("");
+
 
   const [formData, setFormData] = useState({
     title: "",
@@ -44,7 +47,9 @@ const AddSong = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/genre");
+        const response = await axios.get(
+          "https://backend-music-xg6e.onrender.com/api/v1/genre"
+        );
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching genres:", error);
@@ -59,34 +64,54 @@ const AddSong = () => {
       const fetchArtists = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/v1/user/artist/search?search=${artistSearch}`
+            `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${artistSearch}`
           );
           setArtistSuggestions(response.data);
+          if (response.data?.data?.length === 0) {
+            setArtistError("No artist found");
+          } else {
+            setArtistError("");
+          }
         } catch (error) {
           console.error("Error fetching artist suggestions:", error);
-          toast.error("Failed to fetch artist suggestions.");
+          // toast.error("Failed to fetch artist suggestions.");
+          setArtistError("No artist Found");
         }
       };
       fetchArtists();
+    } else {
+      setArtistSuggestions([]);
+      setArtistError("");
     }
   }, [artistSearch]);
+  
 
   useEffect(() => {
     if (albumSearch.length > 1) {
       const fetchAlbum = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/v1/albums/album/search?search=${albumSearch}`
+            `https://backend-music-xg6e.onrender.com/api/v1/albums/album/search?search=${albumSearch}`
           );
           setAlbumSuggestions(response.data);
+          if (response.data?.data?.length === 0) {
+            setAlbumError("No album found");
+          } else {
+            setAlbumError("");
+          }
         } catch (error) {
           console.error("Error fetching album suggestions:", error);
-          toast.error("Failed to fetch album suggestions.");
+          // toast.error("Failed to fetch album suggestions.");
+          setAlbumError("No album found");
         }
       };
       fetchAlbum();
+    } else {
+      setAlbumSuggestions([]);
+      setAlbumError("");
     }
   }, [albumSearch]);
+  
 
   const handleArtistSelect = (artist) => {
     if (!formData.artists.some((a) => a._id === artist._id)) {
@@ -178,7 +203,7 @@ const AddSong = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/song",
+        "https://backend-music-xg6e.onrender.com/api/v1/song",
         data,
         {
           headers: {
@@ -337,6 +362,8 @@ const AddSong = () => {
                       value={artistSearch}
                       onChange={(e) => setArtistSearch(e.target.value)}
                     />
+                    {artistError && <div className="text-danger mt-1">{artistError}</div>}
+
                     {artistSuggestions?.data?.length > 0 && (
                       <ul className="list-group suggestion-list">
                         {artistSuggestions?.data?.map((artist) => (
@@ -387,6 +414,8 @@ const AddSong = () => {
                           value={albumSearch}
                           onChange={(e) => setAlbumSearch(e.target.value)}
                         />
+                        {albumError && <div className="text-danger mt-1">{albumError}</div>}
+
                         {albumSuggestions?.data?.length > 0 && (
                           <ul className="list-group suggestion-list">
                             {albumSuggestions?.data?.map((album) => (

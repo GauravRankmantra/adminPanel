@@ -16,10 +16,12 @@ const PrivacyPolicy = () => {
   const [toast, setToast] = useState({ show: false, message: "" });
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/v1/privacy").then((res) => {
-      setContent(res.data?.content || "");
-      setInitialContent(res.data?.content || "");
-    });
+    axios
+      .get("https://backend-music-xg6e.onrender.com/api/v1/privacy")
+      .then((res) => {
+        setContent(res.data?.content || "");
+        setInitialContent(res.data?.content || "");
+      });
   }, []);
 
   const handleSubmit = async (e) => {
@@ -40,9 +42,12 @@ const PrivacyPolicy = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/v1/privacy", {
-        content,
-      });
+      await axios.post(
+        "https://backend-music-xg6e.onrender.com/api/v1/privacy",
+        {
+          content,
+        }
+      );
       setInitialContent(content);
       setToast({ show: true, message: "Privacy policy saved successfully." });
     } catch {

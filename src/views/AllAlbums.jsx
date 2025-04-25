@@ -15,7 +15,9 @@ const AllAlbums = () => {
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/albums");
+        const response = await axios.get(
+          "https://backend-music-xg6e.onrender.com/api/v1/albums"
+        );
         setAlbums(response.data.allAlbums);
         setLoading(false);
       } catch (error) {

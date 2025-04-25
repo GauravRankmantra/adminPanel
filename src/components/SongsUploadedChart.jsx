@@ -63,7 +63,7 @@ const SongsUploadedChart = () => {
     const fetchSongsData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/song/songs-uploaded-this-week"
+          "https://backend-music-xg6e.onrender.com/api/v1/song/songs-uploaded-this-week"
         );
         const data = response.data.data;
 
