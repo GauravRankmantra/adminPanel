@@ -193,7 +193,10 @@ const AddAlbum = () => {
                           htmlFor="artist"
                         >
                           Artist <span className="text-danger">*</span>
+
                         </label>
+                        
+                        
                       </Col>
                       <Col md={9}>
                         <input
@@ -227,6 +230,8 @@ const AddAlbum = () => {
                           </ul>
                         )}
                       </Col>
+                      <h1 className="h6 text-danger"
+                      >Please select an artist from the list of pre-registered artists.</h1>
                     </Row>
                   </div>
 

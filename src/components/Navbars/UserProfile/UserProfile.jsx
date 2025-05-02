@@ -1,12 +1,15 @@
-import { Nav } from "react-bootstrap";
+import { Nav, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "@/assets/scss/UesrProfile.module.scss";
+import { useState } from "react";
 
 const UserProfile = () => {
   const navigate = useNavigate();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
+    setLoggingOut(true);
     try {
       // Make the logout API call
       await axios.post(
@@ -17,10 +20,11 @@ const UserProfile = () => {
         }
       );
       localStorage.removeItem("user");
-
       navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
+      // Optionally, set loggingOut back to false to allow retry
+      setLoggingOut(false);
     }
   };
 
@@ -32,9 +36,30 @@ const UserProfile = () => {
           <span>My Profile</span>
         </Nav.Link>
 
-        <Nav.Link href="#" className={styles.menu} onClick={handleLogout}>
-          <i className="fa-solid fa-right-from-bracket"></i>
-          <span>Logout</span>
+        <Nav.Link
+          href="#"
+          className={styles.menu}
+          onClick={handleLogout}
+          disabled={loggingOut}
+        >
+          {loggingOut ? (
+            <>
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                className="mr-2"
+              />
+              <span>Logging Out...</span>
+            </>
+          ) : (
+            <>
+              <i className="fa-solid fa-right-from-bracket"></i>
+              <span>Logout</span>
+            </>
+          )}
         </Nav.Link>
       </Nav>
     </div>

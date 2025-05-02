@@ -49,7 +49,7 @@ const ContactInfo = () => {
     mapEmbedLink: "",
     facebook: "",
     instagram: "",
-    twitter: "",
+    Twitter: "",
   });
 
   const [initialData, setInitialData] = useState(null);
@@ -190,7 +190,7 @@ const ContactInfo = () => {
                 <Form.Control
                   type="text"
                   name="twitter"
-                  value={formData.twitter}
+                  value={formData.Twitter}
                   onChange={handleChange}
                   placeholder="Enter Twitter/X link"
                 />

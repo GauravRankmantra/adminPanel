@@ -21,8 +21,7 @@ const AddSong = () => {
   const highAudioRef = useRef(null);
   const coverImageRef = useRef(null);
   const [artistError, setArtistError] = useState("");
-const [albumError, setAlbumError] = useState("");
-
+  const [albumError, setAlbumError] = useState("");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -84,7 +83,6 @@ const [albumError, setAlbumError] = useState("");
       setArtistError("");
     }
   }, [artistSearch]);
-  
 
   useEffect(() => {
     if (albumSearch.length > 1) {
@@ -111,7 +109,6 @@ const [albumError, setAlbumError] = useState("");
       setAlbumError("");
     }
   }, [albumSearch]);
-  
 
   const handleArtistSelect = (artist) => {
     if (!formData.artists.some((a) => a._id === artist._id)) {
@@ -362,7 +359,9 @@ const [albumError, setAlbumError] = useState("");
                       value={artistSearch}
                       onChange={(e) => setArtistSearch(e.target.value)}
                     />
-                    {artistError && <div className="text-danger mt-1">{artistError}</div>}
+                    {artistError && (
+                      <div className="text-danger mt-1">{artistError}</div>
+                    )}
 
                     {artistSuggestions?.data?.length > 0 && (
                       <ul className="list-group suggestion-list">
@@ -414,7 +413,9 @@ const [albumError, setAlbumError] = useState("");
                           value={albumSearch}
                           onChange={(e) => setAlbumSearch(e.target.value)}
                         />
-                        {albumError && <div className="text-danger mt-1">{albumError}</div>}
+                        {albumError && (
+                          <div className="text-danger mt-1">{albumError}</div>
+                        )}
 
                         {albumSuggestions?.data?.length > 0 && (
                           <ul className="list-group suggestion-list">

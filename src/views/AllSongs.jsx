@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import debounce from "lodash";
+
 import {
   CardBody,
   Col,
@@ -20,6 +22,7 @@ const API_BASE_URL = "https://backend-music-xg6e.onrender.com/api/v1";
 const AllSongs = () => {
   const [state, setState] = useState({
     songs: [],
+    originalSongs: [],
     loading: true,
     showEditModal: false,
     showDeleteModal: false,
@@ -28,6 +31,7 @@ const AllSongs = () => {
     searchQuery: "",
     selectedSong: null,
     isProcessing: false,
+    noSearchResult: false,
   });
 
   const debounce = (func, delay) => {
@@ -38,43 +42,75 @@ const AllSongs = () => {
     };
   };
 
-  const fetchSongs = useCallback(async (query = "", page = 1) => {
-    try {
-      setState((prev) => ({ ...prev, loading: true }));
-      const response = await axios.get(`${API_BASE_URL}/song`, {
-        params: {
-          search: query,
-          page,
-          limit: 10,
-        },
-      });
+  const fetchSongs = useCallback(
+    async (query = "", page = 1, isSearch = false) => {
+      // Show loading only if it's NOT a search
+      if (!isSearch) {
+        setState((prev) => ({ ...prev, loading: true }));
+      }
 
-      const { data, total, pages } = response.data;
-      setState((prev) => ({
-        ...prev,
-        songs: data,
-        totalPages: pages,
-        currentPage: page,
-        loading: false,
-      }));
-    } catch (error) {
-      console.error("Error fetching songs:", error);
-      toast.error("Failed to load songs. Please try again later.");
-      setState((prev) => ({ ...prev, loading: false }));
-    }
-  }, []);
+      try {
+        const response = await axios.get(`${API_BASE_URL}/song`, {
+          params: {
+            search: query,
+            page,
+            limit: 10,
+          },
+        });
+
+        const { data, total, pages } = response.data;
+
+        if (isSearch && data.length === 0) {
+          setState((prev) => ({
+            ...prev,
+            noSearchResult: true,
+            loading: false, // make sure to stop loading
+          }));
+          return;
+        }
+
+        setState((prev) => ({
+          ...prev,
+          songs: data,
+          originalSongs: isSearch ? prev.originalSongs : data,
+          totalPages: pages,
+          currentPage: page,
+          loading: false,
+          noSearchResult: false,
+        }));
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+        toast.error("Failed to load songs. Please try again later.");
+        setState((prev) => ({ ...prev, loading: false }));
+      }
+    },
+    []
+  );
 
   useEffect(() => {
-    const debouncedFetch = debounce(fetchSongs, 1000);
+    const debouncedFetch = debounce(fetchSongs, 500);
     debouncedFetch(state.searchQuery, state.currentPage);
   }, [state.searchQuery, state.currentPage, fetchSongs]);
 
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      if (query.length >= 3) {
+        fetchSongs(query, 1, true);
+      } else if (query.length === 0) {
+        fetchSongs("", 1);
+      }
+    }, 600),
+    [fetchSongs]
+  );
+
   const handleSearch = (e) => {
+    const value = e.target.value;
     setState((prev) => ({
       ...prev,
-      searchQuery: e.target.value,
+      searchQuery: value,
       currentPage: 1,
     }));
+    debouncedSearch(value);
   };
 
   const handlePageChange = (newPage) => {
@@ -150,13 +186,13 @@ const AllSongs = () => {
     isProcessing,
   } = state;
 
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center mt-5">
-        <Spinner animation="border" variant="primary" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="d-flex justify-content-center mt-5">
+  //       <Spinner animation="border" variant="primary" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
@@ -174,90 +210,105 @@ const AllSongs = () => {
           <Card title="Song Management">
             <CardBody>
               <div className={`table-responsive ${styles.table_wrapper}`}>
-                <table className={`table ${styles.table}`}>
-                  <thead className={`text-primary thead ${styles.thead}`}>
-                    <tr>
-                      <th scope="col">Cover</th>
-                      <th scope="col">Title</th>
-                      <th scope="col">Artist</th>
-                      <th scope="col">Album</th>
-                      <th scope="col">Duration</th>
-                      <th scope="col">Actions</th>
-                    </tr>
-                  </thead>
+                {state.noSearchResult && (
+                  <div className="text-danger text-center mb-3 fw-semibold">
+                    No song found
+                  </div>
+                )}
+                {loading ? (
+                  <div className="d-flex justify-content-center mt-5">
+                    <Spinner animation="border" variant="primary" />
+                  </div>
+                ) : (
+                  <table className={`table ${styles.table}`}>
+                    <thead className={`text-primary thead ${styles.thead}`}>
+                      <tr>
+                        <th scope="col">Cover</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Artist</th>
+                        <th scope="col">Album</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
 
-                  <tbody className={`tbody ${styles.tbody}`}>
-                    {songs.length > 0 ? (
-                      songs.map((song) => (
-                        <tr key={song._id}>
-                          <td>
-                            <img
-                              src={song.coverImage}
-                              alt="Cover"
-                              className="img-thumbnail"
-                              style={{
-                                width: "50px",
-                                height: "50px",
-                                objectFit: "cover",
-                              }}
-                            />
-                          </td>
-                          <td>{song.title}</td>
-                          <td>
-                            {Array.isArray(song?.artist)
-                              ? song?.artist.map((a, i) => (
-                                  <span key={a._id || i}>
-                                    {a.fullName}
-                                    {i < song?.artist.length - 1 && ", "}
-                                  </span>
-                                ))
-                              : song?.artist?.fullName ||
-                                song?.artist ||
-                                "Unknown Artist"}
-                          </td>
-                          <td>{song.album?.title || "No Album"}</td>
-                          <td>{formatDuration(song.duration)}</td>
-                          <td>
-                            <div className="d-flex gap-2">
-                              <Button
-                                variant="link"
-                                onClick={() =>
-                                  setState((prev) => ({
-                                    ...prev,
-                                    selectedSong: song,
-                                    showEditModal: true,
-                                  }))
-                                }
-                                aria-label="Edit song"
-                              >
-                                <img src={editIcon} alt="Edit" width="20" />
-                              </Button>
-                              <Button
-                                variant="link"
-                                onClick={() =>
-                                  setState((prev) => ({
-                                    ...prev,
-                                    selectedSong: song,
-                                    showDeleteModal: true,
-                                  }))
-                                }
-                                aria-label="Delete song"
-                              >
-                                <img src={deleteIcon} alt="Delete" width="20" />
-                              </Button>
-                            </div>
+                    <tbody className={`tbody ${styles.tbody}`}>
+                      {songs.length > 0 ? (
+                        songs.map((song) => (
+                          <tr key={song._id}>
+                            <td>
+                              <img
+                                src={song.coverImage}
+                                alt="Cover"
+                                className="img-thumbnail"
+                                style={{
+                                  width: "50px",
+                                  height: "50px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </td>
+                            <td>{song.title}</td>
+                            <td>
+                              {Array.isArray(song?.artist)
+                                ? song?.artist.map((a, i) => (
+                                    <span key={a._id || i}>
+                                      {a.fullName}
+                                      {i < song?.artist.length - 1 && ", "}
+                                    </span>
+                                  ))
+                                : song?.artist?.fullName ||
+                                  song?.artist ||
+                                  "Unknown Artist"}
+                            </td>
+                            <td>{song.album?.title || "No Album"}</td>
+                            <td>{formatDuration(song.duration)}</td>
+                            <td>
+                              <div className="d-flex gap-2">
+                                <Button
+                                  variant="link"
+                                  onClick={() =>
+                                    setState((prev) => ({
+                                      ...prev,
+                                      selectedSong: song,
+                                      showEditModal: true,
+                                    }))
+                                  }
+                                  aria-label="Edit song"
+                                >
+                                  <img src={editIcon} alt="Edit" width="20" />
+                                </Button>
+                                <Button
+                                  variant="link"
+                                  onClick={() =>
+                                    setState((prev) => ({
+                                      ...prev,
+                                      selectedSong: song,
+                                      showDeleteModal: true,
+                                    }))
+                                  }
+                                  aria-label="Delete song"
+                                >
+                                  <img
+                                    src={deleteIcon}
+                                    alt="Delete"
+                                    width="20"
+                                  />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="6" className="text-center py-4">
+                            No songs found
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="text-center py-4">
-                          No songs found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                      )}
+                    </tbody>
+                  </table>
+                )}
               </div>
 
               {totalPages > 1 && (

@@ -165,7 +165,7 @@ const SongList = ({ album, albumSongs }) => {
         <EditSongModal
           show={showEditModal}
           song={selectedSong}
-          artist={artist}
+          artist={selectedSong.artist[0]}
           album={album}
           onHide={() => setShowEditModal(false)}
           onSave={handleEditSave}

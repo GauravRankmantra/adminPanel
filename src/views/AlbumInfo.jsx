@@ -159,11 +159,11 @@ const AlbumInfo = () => {
     console.log("clicked");
     e.preventDefault();
     if (!validateForm()) return;
-  
+
     setSongLoading(true);
     setError("");
     setSuccess(false);
-  
+
     const data = new FormData();
     data.append("title", formData.title);
     data.append("artists", JSON.stringify(formData.artists.map((a) => a._id)));
@@ -174,7 +174,7 @@ const AlbumInfo = () => {
     data.append("coverImage", formData.coverImage);
     data.append("price", formData.price);
     data.append("freeDownload", formData.freeDownload);
-  
+
     try {
       const response = await axios.post(
         "https://backend-music-xg6e.onrender.com/api/v1/song",
@@ -185,19 +185,19 @@ const AlbumInfo = () => {
           },
         }
       );
-  
+
       setSongLoading(false);
       handleSuccess();
-  
+
       const newSong = response?.data?.song;
       console.log("newSong", newSong);
-  
+
       // ✅ Add the new song to album.songs
       setAlbum((prev) => ({
         ...prev,
         songs: [...prev.songs, newSong],
       }));
-  
+
       setFormData({
         title: "",
         artists: [],
@@ -209,17 +209,17 @@ const AlbumInfo = () => {
         price: 0,
         freeDownload: false,
       });
-  
+
       setShowAddSongModal(false);
       setArtistSuggestions([]);
       setAlbumSuggestions([]);
       setAlbumSearch("");
       setArtistSearch("");
-  
+
       if (lowAudioRef.current) lowAudioRef.current.value = "";
       if (highAudioRef.current) highAudioRef.current.value = "";
       if (coverImageRef.current) coverImageRef.current.value = "";
-  
+
       console.log("Song added successfully:", response.data);
     } catch (error) {
       setSongLoading(false); // not `setLoading`
@@ -231,7 +231,6 @@ const AlbumInfo = () => {
       console.error("Error submitting the form:", error);
     }
   };
-  
 
   const handleAddSong = async () => {
     const formData = new FormData();

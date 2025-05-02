@@ -1,346 +1,407 @@
+// ✅ Improved User Table with UX Enhancements
 import { Fragment, useEffect, useState } from "react";
-import { CardBody, Col, Row, Modal, Button, Form } from "react-bootstrap";
-import Card from "@/components/Card/Card";
-import styles from "@/assets/scss/Tables.module.scss";
+import {
+  CardBody,
+  Col,
+  Row,
+  Modal,
+  Button,
+  Form,
+  Spinner,
+  InputGroup,
+  FormControl,
+} from "react-bootstrap";
 import axios from "axios";
+import { debounce } from "lodash";
+import { toast } from "react-hot-toast";
 import defaultUser from "../assets/image/default.jpg";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import editIcon from "../assets/image/edit.png";
 import deleteIcon from "../assets/image/trash.png";
-import AddUserModal from "./AddUserModal"; // Import AddUserModal
+import AddUserModal from "./AddUserModal";
+import Card from "@/components/Card/Card";
+import styles from "@/assets/scss/Tables.module.scss";
 
 const Tables = () => {
   const [userData, setUserData] = useState([]);
+  const [originalUsers, setOriginalUsers] = useState([]);
+  const [searchUsers, SetSearchUsers] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showModalAdd, setShowModalAdd] = useState(false); // State to show AddUserModal
-  const [selectedUser, setSelectedUser] = useState(null); // Selected user info for editing
-  const [role, setRole] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showModalAdd, setShowModalAdd] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [role, setRole] = useState("user");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [coverImage, setCoverImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const limit = 10;
 
   useEffect(() => {
-    const fetchData = async (page) => {
-      setLoading(true);
+    fetchUsers();
+  }, [currentPage, activeFilter]);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const query = searchTerm ? `&search=${searchTerm}` : "";
+      const filter = activeFilter !== "all" ? `&role=${activeFilter}` : "";
+      const res = await axios.get(
+        `https://backend-music-xg6e.onrender.com/api/v1/admin/users?page=${currentPage}&limit=${limit}${query}${filter}`
+      );
+      setUserData(res.data.users);
+      setOriginalUsers(res.data.users);
+      setTotalPages(res.data.totalPages);
+    } catch (err) {
+      toast.error("Failed to fetch users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = debounce(async (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+
+    if (value.trim().length > 2) {
       try {
-        const response = await axios.get(
-          `https://backend-music-xg6e.onrender.com/api/v1/admin/users?page=${page}&limit=${limit}`
+        const res = await axios.get(
+          `https://backend-music-xg6e.onrender.com/api/v1/admin/searchUser?query=${value}`
         );
-        setUserData(response.data.users); // Update user data
-        setTotalPages(response.data.totalPages); // Set total pages
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
+        setUserData(res.data.users || []);
+      } catch (err) {
+        console.error("Search failed:", err);
+        setUserData(originalUsers);
       }
-    };
-
-    fetchData(currentPage); // Fetch data for current page
-  }, [currentPage]);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+    } else if (value.trim() === "") {
+      // Restore original list if search is cleared
+      setUserData(originalUsers);
     }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const handleDeleteClick = (user) => {
-    setUserToDelete(user);
-    setShowDeleteModal(true);
-  };
+  }, 400);
 
   const handleDeleteConfirm = async () => {
+    if (!userToDelete) return;
+    setDeleting(true);
     try {
       await axios.delete(
         `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${userToDelete._id}`
       );
+      toast.success("User deleted successfully");
+      fetchUsers();
       setShowDeleteModal(false);
-      setUserData(userData.filter((user) => user._id !== userToDelete._id)); // Remove user from list
     } catch (error) {
-      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user");
+    } finally {
+      setDeleting(false);
     }
-  };
-  const handleEditClick = (user) => {
-    setSelectedUser(user);
-    setRole(user.role); // Set the current role in the form
-    setShowModal(true);
-  };
-
-  const handleAddUserClick = () => {
-    setShowModalAdd(true);
-  };
-
-  // Close modal
-  const handleClose = () => {
-    setShowModal(false);
-    setSelectedUser(null);
-  };
-
-  const handleCloseAddUserModal = () => {
-    setShowModalAdd(false);
   };
 
   const handleSave = async () => {
+    if (!fullName || !email || !role) {
+      toast.error("Name, email, and role are required.");
+      return;
+    }
+
+    setSaving(true);
+    const formData = new FormData();
+    formData.append("fullName", fullName);
+    formData.append("email", email);
+    formData.append("role", role);
+    if (coverImage) formData.append("coverImage", coverImage);
+
     try {
       await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${selectedUser._id}`,
-        { role }
+        `https://backend-music-xg6e.onrender.com/api/v1/user/update/${selectedUser._id}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
+      toast.success("User updated successfully ✅");
       setShowModal(false);
-
-      const updatedUsers = userData.map((user) =>
-        user._id === selectedUser._id ? { ...user, role } : user
-      );
-      setUserData(updatedUsers);
-    } catch (error) {
-      console.error("Error updating user role:", error);
+      fetchUsers();
+    } catch {
+      toast.error("Update failed");
+    } finally {
+      setSaving(false);
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setCoverImage(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviewImage(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const openEditModal = (user) => {
+    setSelectedUser(user);
+    setFullName(user.fullName);
+    setEmail(user.email);
+    setRole(user.role);
+    setPreviewImage(user.coverImage || defaultUser);
+    setCoverImage(null);
+    setShowModal(true);
+  };
+
+  const openDeleteModal = (user) => {
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+  };
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleAddUserClick = () => setShowModalAdd(true);
+  const handleCloseAddUserModal = () => {
+    setShowModalAdd(false);
+    fetchUsers(); // Refresh list after add
+  };
+
+  const handleCloseEditModal = () => setShowModal(false);
 
   return (
     <Fragment>
-      {/* Add New User Button */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "20px", // Add some top margin
-        }}
-      >
-        <button
-          style={{
-            padding: "12px 24px",
-            margin: "10px",
-            backgroundColor: "#4CAF50", // Green background
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "16px",
-            fontWeight: "600",
-            cursor: "pointer",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-            transition: "background-color 0.3s ease, transform 0.2s ease",
-          }}
-          onMouseOver={(e) => {
-            e.target.style.backgroundColor = "#45a049"; // Darker green on hover
-            e.target.style.transform = "scale(1.05)"; // Slightly scale up
-          }}
-          onMouseOut={(e) => {
-            e.target.style.backgroundColor = "#4CAF50";
-            e.target.style.transform = "scale(1)";
-          }}
-          onClick={handleAddUserClick} // Add user button clicked
-        >
-          Add new User
-        </button>
+      {/* Add User Button */}
+      <div className="text-center my-3">
+        <Button variant="success" onClick={handleAddUserClick}>
+          Add New User
+        </Button>
       </div>
 
-      <Row className="gy-4 gx-4">
+      {/* Search Input */}
+      <div className="mx-auto mb-3" style={{ maxWidth: 600 }}>
+        <InputGroup>
+          <FormControl
+            placeholder="Search by name or email..."
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </InputGroup>
+      </div>
+      {userData.length == 0 && (
+        <h1 className="text-danger h6">No user found</h1>
+      )}
+
+      {/* Filter Buttons */}
+      <div className="text-center mb-3">
+        {["all", "user", "admin"].map((filter) => (
+          <Button
+            key={filter}
+            variant={activeFilter === filter ? "primary" : "outline-primary"}
+            className="mx-2"
+            onClick={() => setActiveFilter(filter)}
+          >
+            {filter.charAt(0).toUpperCase() + filter.slice(1)}
+          </Button>
+        ))}
+      </div>
+
+      {/* Table */}
+      <Row>
         <Col sm={12}>
-          <Card title="User Information">
-            <CardBody>
-              <div className={`table-responsive ${styles.table_wrapper}`}>
-                <table className={`table ${styles.table}`}>
-                  <thead className={`text-primary thead ${styles.thead}`}>
-                    <tr>
-                      <td>Cover image</td>
-                      <td>Name</td>
-                      <td>Email</td>
-                      <td>Role</td>
-                      <td>Update</td>
-                    </tr>
-                  </thead>
-                  <tbody className={`tbody ${styles.tbody}`}>
-                    {userData.map((item, index) => (
-                      <tr key={index}>
-                        <td>
-                          <img
-                            src={item.coverImage || defaultUser}
-                            alt="Cover"
-                          />
-                        </td>
-                        <td>{item.fullName}</td>
-                        <td>{item.email}</td>
-                        <td>{item.role}</td>
-                        <button onClick={() => handleEditClick(item)}>
-                          <img src={editIcon} alt="Edit" />
-                        </button>
-                        <button onClick={() => handleDeleteClick(item)}>
-                          <img src={deleteIcon} alt="Delete" />
-                        </button>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          <Card title="User Table">
+            {loading ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  height: "100vh",
+                }}
+              >
+                <Spinner />
               </div>
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "20px 0",
-                  }}
-                >
-                  <button
-                    style={{
-                      padding: "8px 16px",
-                      margin: "0 5px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      backgroundColor: "#f0f0f0",
-                      cursor: "pointer",
-                      transition: "background-color 0.3s ease",
-                    }}
-                    onClick={handlePreviousPage}
+            ) : (
+              <CardBody>
+                <div className={`table-responsive ${styles.table_wrapper}`}>
+                  <table className={`table ${styles.table}`}>
+                    <thead className={`text-primary thead ${styles.thead}`}>
+                      <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className={styles.tbody}>
+                      {userData.map((user, index) => (
+                        <tr key={index}>
+                          <td>
+                            <img
+                              src={user.coverImage || defaultUser}
+                              alt="User"
+                              width={40}
+                            />
+                          </td>
+                          <td>{user.fullName}</td>
+                          <td>{user.email}</td>
+                          <td>{user.role}</td>
+
+                          <button
+                            className="me-2"
+                            onClick={() => openEditModal(user)}
+                          >
+                            <img src={editIcon} alt="Edit" />
+                          </button>
+                          <button
+                            size="sm"
+                            onClick={() => openDeleteModal(user)}
+                          >
+                            <img src={deleteIcon} alt="Delete" />
+                            {/* {deleting && userToDelete?._id === user._id ? (
+                              <Spinner animation="border" size="sm" />
+                            ) : (
+                              "Delete"
+                            )} */}
+                          </button>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Pagination */}
+                <div className="text-center mt-3">
+                  <Button
+                    variant="outline-secondary"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    onMouseOver={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#e0e0e0";
-                      }
-                    }}
-                    onMouseOut={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#f0f0f0";
-                      }
-                    }}
                   >
                     Previous
-                  </button>
-
-                  <span
-                    style={{
-                      margin: "0 10px",
-                      fontSize: "14px",
-                      color: "#555",
-                    }}
-                  >
+                  </Button>
+                  <span className="mx-3">
                     Page {currentPage} of {totalPages}
                   </span>
-
-                  <button
-                    style={{
-                      padding: "8px 16px",
-                      margin: "0 5px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      backgroundColor: "#f0f0f0",
-                      cursor: "pointer",
-                      transition: "background-color 0.3s ease",
-                    }}
-                    onClick={handleNextPage}
+                  <Button
+                    variant="outline-secondary"
+                    onClick={() => setCurrentPage((p) => p + 1)}
                     disabled={currentPage === totalPages}
-                    onMouseOver={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#e0e0e0";
-                      }
-                    }}
-                    onMouseOut={(e) => {
-                      if (!e.target.disabled) {
-                        e.target.style.backgroundColor = "#f0f0f0";
-                      }
-                    }}
                   >
                     Next
-                  </button>
+                  </Button>
                 </div>
-              </div>
-            </CardBody>
+              </CardBody>
+            )}
           </Card>
         </Col>
       </Row>
 
-      {/* AddUserModal */}
       <AddUserModal
         showModalAdd={showModalAdd}
+        type="user"
         handleClose={handleCloseAddUserModal}
       />
 
-      {/* Modal to edit user role */}
-      <Modal show={showModal} onHide={handleClose}>
+      <Modal show={showModal} onHide={handleCloseEditModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit User Role</Modal.Title>
+          <Modal.Title>Edit User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedUser && (
-            <Form>
-              <Form.Group controlId="formFullName">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={selectedUser.fullName}
-                  readOnly
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  value={selectedUser.email}
-                  readOnly
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formRole">
-                <Form.Label>Role</Form.Label>
-                <Form.Control
-                  as="select"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                  <option value="artist">Artist</option>
-                </Form.Control>
-              </Form.Group>
-
-              <Form.Group controlId="formCoverImage">
-                <Form.Label>Cover Image</Form.Label>
+          <Form>
+            <Form.Group controlId="formFullName" className="mb-3">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formEmail" className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formRole" className="mb-3">
+              <Form.Label>Role</Form.Label>
+              <Form.Control
+                as="select"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <option value="artist">Artist</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formCoverImage" className="mb-3">
+              <Form.Label>Cover Image</Form.Label>
+              <div style={{ position: "relative" }}>
                 <img
-                  src={selectedUser.coverImage || "default-image.jpg"} // Optional cover image
+                  src={previewImage || defaultUser}
                   alt="Cover"
-                  style={{ width: "100%", height: "auto" }}
+                  style={{ width: "100%", maxHeight: 200, objectFit: "cover" }}
                 />
-              </Form.Group>
-            </Form>
-          )}
+                <label
+                  htmlFor="uploadImage"
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    backgroundColor: "#fff",
+                    borderRadius: "50%",
+                    padding: 5,
+                    cursor: "pointer",
+                    boxShadow: "0 0 4px rgba(0,0,0,0.2)",
+                  }}
+                >
+                  <img src={editIcon} alt="edit" width={20} />
+                </label>
+                <input
+                  type="file"
+                  id="uploadImage"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+              </div>
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleCloseEditModal}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSave}>
+          <Button variant="primary" onClick={handleSave} disabled={saving}>
+            {saving && (
+              <Spinner size="sm" animation="border" className="me-2" />
+            )}
             Save
           </Button>
         </Modal.Footer>
       </Modal>
+
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Delete User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete the user "{userToDelete?.fullName}"?
+          Are you sure you want to delete "{userToDelete?.fullName}"?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDeleteConfirm}>
+          <Button
+            variant="danger"
+            onClick={handleDeleteConfirm}
+            disabled={deleting}
+          >
+            {deleting && (
+              <Spinner size="sm" animation="border" className="me-2" />
+            )}
             Confirm
           </Button>
         </Modal.Footer>

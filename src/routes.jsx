@@ -20,7 +20,10 @@ import AlbumInfo from "./views/AlbumInfo";
 import Profile from "./views/Profile";
 import ContactInfo from "./views/ContactInfo";
 import PrivacyPolicy from "./views/PrivacyPolicy";
+import Genres from "./views/Genres"
 import Terms from "./views/Terms";
+import Home from "./views/Home";
+import AllArtist from "./views/AllArtist"
 
 const routes = [
   {
@@ -91,6 +94,18 @@ const routes = [
   {
     path: "/forms/all-songs",
     component: AllSongs,
+  },
+  {
+    path: "/forms/all-artist",
+    component: AllArtist,
+  },
+  {
+    path: "/forms/genre",
+    component: Genres,
+  },
+  {
+    path: "/forms/homepage",
+    component: Home,
   },
 
   {

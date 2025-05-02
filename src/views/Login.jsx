@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import styles from "@/assets/scss/Authentication.module.scss";
 import logo from "@/assets/image/logo.png";
@@ -9,9 +10,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [logging, setLogging] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLogging(true);
 
     try {
       const response = await axios.post(
@@ -22,10 +25,12 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
       if (response.data.success) {
+        setLogging(false);
         // Redirect to dashboard on successful login
         navigate("/dashboard");
       }
     } catch (err) {
+      setLogging(false);
       setError(
         err.response?.data?.message || "Login failed. Please try again."
       );
@@ -40,7 +45,7 @@ const Login = () => {
         <div className="col-md-10 col-lg-8 col-xl-5">
           <div className={`${styles.card} card rounded-0`}>
             <div className={`${styles.card_header} card-header`}>
-              <strong> Welcome !</strong>
+              <strong> Welcome Admin !</strong>
             </div>
             <div className={`${styles.card_body} card-body`}>
               {error && <div className="alert alert-danger">{error}</div>}
@@ -76,9 +81,24 @@ const Login = () => {
                   />
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <button type="submit" className="btn btn-primary">
-                    Log In
-                  </button>
+                  <Button type="submit" variant="primary">
+                    {logging ? (
+                      <>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                          className="mr-2"
+                        />
+                        Logging In...
+                      </>
+                    ) : (
+                      "Login"
+                    )}
+                  </Button>
+
                   <Link
                     to="/register"
                     className="text-white text-decoration-none"

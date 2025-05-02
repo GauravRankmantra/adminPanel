@@ -39,6 +39,11 @@ export const navItems = [
         path: "/components/all-songs",
         icon: "fa fa-pencil-square",
       },
+      {
+        name: "Genre",
+        path: "/components/all-songs",
+        icon: "fa fa-pencil-square",
+      },
     ],
   },
 

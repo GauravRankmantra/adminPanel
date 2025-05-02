@@ -76,18 +76,30 @@ const Layouts = () => {
             </MenuItem>
 
             <MenuItem routeLink="/tables">
-              <i className="fa fa-table" />
+              <i className="fa fa-user" />
               <span>Users</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/all-artist">
+              <i className="fa fa-microphone" />
+              <span>Artist</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/homepage">
+              <i className="fa fa-home" />
+              <span>Home section</span>
             </MenuItem>
             <SubMenu label="Songs" icon={<i className="fa fa-headphones" />}>
               <MenuItem routeLink="/forms/basic-form">
-                <i className="fa fa-pencil-square" />
+                <i className="fa fa-plus" />
                 <span>Add Song</span>
               </MenuItem>
 
               <MenuItem routeLink="/forms/all-songs">
                 <i className="fa fa-pencil-square" />
                 <span>All Songs</span>
+              </MenuItem>
+              <MenuItem routeLink="/forms/genre">
+                <i className="fa fa-pencil-square" />
+                <span>Genre</span>
               </MenuItem>
             </SubMenu>
             <SubMenu label="Albums" icon={<i className="fa fa-folder-open" />}>
@@ -97,11 +109,12 @@ const Layouts = () => {
               </MenuItem>
 
               <MenuItem routeLink="/forms/add-album">
-                <i className="fa fa-pencil-square" />
+                <i className="fa fa-plus" />
                 <span>Add Album</span>
               </MenuItem>
             </SubMenu>
-            <SubMenu label="Add on" icon={<i className="fa fa-folder-open" />}>
+
+            <SubMenu label="Add on" icon={<i className="fa fa-plus" />}>
               <MenuItem routeLink="/contactInfo">
                 <i className="fa fa-pencil-square" />
                 <span>Contact Info</span>
