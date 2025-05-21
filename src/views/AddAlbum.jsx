@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import { CardBody, Col, Row, Button } from "react-bootstrap";
+import { CardBody, Col, Row, Button, Form } from "react-bootstrap";
 import Card from "../components/Card/Card";
 import axios from "axios";
 import Loading from "../views/Loading";
@@ -20,6 +20,8 @@ const AddAlbum = () => {
     artist: "",
     genre: "",
     company: "",
+    isFeatured: false,
+    isTranding: false,
     coverImage: null,
   });
 
@@ -63,11 +65,22 @@ const AddAlbum = () => {
   }, [artistSearch]);
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, type, checked } = e.target;
+
+    // Correct handling for radio button values
+    let processedValue = value;
+    if (type === "radio") {
+      if (value === "true") processedValue = true;
+      else if (value === "false") processedValue = false;
+    }
+    console.log("pro", processedValue);
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : processedValue,
+    }));
   };
+
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
@@ -76,7 +89,12 @@ const AddAlbum = () => {
   };
 
   const validateForm = () => {
-    if (!formData.title || !formData.artist || !formData.genre) {
+    if (
+      !formData.title ||
+      !formData.artist ||
+      !formData.genre ||
+      !formData.coverImage
+    ) {
       setError("All fields are required.");
       return false;
     }
@@ -96,6 +114,8 @@ const AddAlbum = () => {
     data.append("genre", formData.genre);
     data.append("coverImage", formData.coverImage);
     data.append("company", formData.company);
+    data.append("isFeatured", formData.isFeatured === true);
+    data.append("isTranding", formData.isTranding === true);
 
     try {
       const response = await axios.post(
@@ -109,11 +129,13 @@ const AddAlbum = () => {
         artist: "",
         genre: "",
         company: "",
+        isFeatured: false,
+        isTranding: false,
       });
       if (coverImageRef.current) coverImageRef.current.value = "";
       setArtistSuggestions([]);
       setArtistSearch("");
-      navigate(`/forms/album/${response.data._id}`);
+      navigate(`/forms/album/${response.data.album._id}`);
     } catch (error) {
       setLoading(false);
       setError("Error submitting the form");
@@ -132,171 +154,191 @@ const AddAlbum = () => {
                 {error && <Error message={error} />}
                 {success && <Success message={"Album Added Successfully"} />}
 
-                <form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                   {/* Album Title */}
-                  <div className="form-group mt-3">
-                    <Row>
-                      <Col md={3}>
-                        <label
-                          className="form-control-label mb-1"
-                          htmlFor="title"
-                        >
-                          Album Title <span className="text-danger">*</span>
-                        </label>
-                      </Col>
-                      <Col md={9}>
-                        <input
-                          id="title"
-                          name="title"
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter the album title.."
-                          value={formData.title}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </Col>
-                    </Row>
-                  </div>
+                  <Form.Group className="mt-3">
+                    <Form.Label>
+                      Album Title <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="title"
+                      placeholder="Enter the album title.."
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </Form.Group>
 
-                  <div className="form-group mt-3">
-                    <Row>
-                      <Col md={3}>
-                        <label
-                          className="form-control-label mb-1"
-                          htmlFor="coverImage"
-                        >
-                          Cover Image <span className="text-danger">*</span>
-                        </label>
-                      </Col>
-                      <Col md={9}>
-                        <input
-                          id="coverImage"
-                          name="coverImage"
-                          type="file"
-                          className="form-control"
-                          placeholder="choose coverImage."
-                          ref={coverImageRef}
-                          onChange={handleFileChange}
-                          required
-                        />
-                      </Col>
-                    </Row>
-                  </div>
+                  {/* Cover Image */}
+                  <Form.Group className="mt-3">
+                    <Form.Label>
+                      Cover Image <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="file"
+                      name="coverImage"
+                      placeholder="choose coverImage."
+                      ref={coverImageRef}
+                      onChange={handleFileChange}
+                      required
+                    />
+                  </Form.Group>
 
                   {/* Artist Search */}
-                  <div className="form-group mt-3">
-                    <Row>
-                      <Col md={3}>
-                        <label
-                          className="form-control-label mb-1"
-                          htmlFor="artist"
-                        >
-                          Artist <span className="text-danger">*</span>
-
-                        </label>
-                        
-                        
-                      </Col>
-                      <Col md={9}>
-                        <input
-                          id="artist"
-                          name="artistSearch"
-                          type="text"
-                          className="form-control"
-                          placeholder="Search artist..."
-                          value={artistSearch}
-                          onChange={(e) => setArtistSearch(e.target.value)}
-                          required
-                        />
-                        {artistSuggestions?.data?.length > 0 && (
-                          <ul className="list-group suggestion-list">
-                            {artistSuggestions?.data?.map((artist) => (
-                              <li
-                                key={artist._id}
-                                className="list-group-item"
-                                onClick={() => {
-                                  setFormData({
-                                    ...formData,
-                                    artist: artist._id,
-                                  });
-                                  setArtistSuggestions([]);
-                                  setArtistSearch(artist.fullName);
-                                }}
-                              >
-                                {artist?.fullName}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </Col>
-                      <h1 className="h6 text-danger"
-                      >Please select an artist from the list of pre-registered artists.</h1>
-                    </Row>
-                  </div>
+                  <Form.Group className="mt-3">
+                    <Form.Label>
+                      Artist <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="artistSearch"
+                      placeholder="Search artist..."
+                      value={artistSearch}
+                      onChange={(e) => setArtistSearch(e.target.value)}
+                      required
+                      autoComplete="off"
+                    />
+                    {artistSuggestions?.data?.length > 0 && (
+                      <ul className="list-group suggestion-list">
+                        {artistSuggestions?.data?.map((artist) => (
+                          <li
+                            key={artist._id}
+                            className="list-group-item"
+                            onClick={() => {
+                              setFormData({
+                                ...formData,
+                                artist: artist._id,
+                              });
+                              setArtistSuggestions([]);
+                              setArtistSearch(artist.fullName);
+                            }}
+                          >
+                            {artist?.fullName}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <Form.Text className="text-danger">
+                      Please select an artist from the list of pre-registered
+                      artists.
+                    </Form.Text>
+                  </Form.Group>
 
                   {/* Genre */}
-                  <div className="form-group mt-3">
-                    <Row>
-                      <Col md={3}>
-                        <label
-                          className="form-control-label mb-1"
-                          htmlFor="genre"
-                        >
-                          Genre <span className="text-danger">*</span>
-                        </label>
-                      </Col>
-                      <Col md={9}>
-                        <select
-                          id="genre"
-                          name="genre"
-                          className="form-control"
-                          value={formData.genre}
-                          onChange={handleInputChange}
-                          required
-                        >
-                          <option value="">Select Genre</option>
-                          {genres.map((genre) => (
-                            <option key={genre._id} value={genre._id}>
-                              {genre.name}
-                            </option>
-                          ))}
-                        </select>
-                      </Col>
-                    </Row>
-                  </div>
+                  <Form.Group className="mt-3">
+                    <Form.Label>
+                      Genre <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="genre"
+                      value={formData.genre}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Genre</option>
+                      {genres.map((genre) => (
+                        <option key={genre._id} value={genre._id}>
+                          {genre.name}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </Form.Group>
 
                   {/* Company */}
-                  <div className="form-group mt-3">
-                    <Row>
-                      <Col md={3}>
-                        <label
-                          className="form-control-label mb-1"
-                          htmlFor="company"
-                        >
-                          Company
-                        </label>
-                      </Col>
-                      <Col md={9}>
-                        <input
-                          id="company"
-                          name="company"
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter the company name.."
-                          value={formData.company}
-                          onChange={handleInputChange}
-                        />
-                      </Col>
-                    </Row>
-                  </div>
+                  <Form.Group className="mt-3">
+                    <Form.Label>Company</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="company"
+                      placeholder="Enter the company name.."
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      autoComplete="off"
+                    />
+                  </Form.Group>
+
+                  {/* isTranding Radio Buttons */}
+                  {/* isTranding Radio Buttons */}
+                  <Form.Group className="mt-3">
+                    <Form.Label>Is Trending</Form.Label>
+                    <div className="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="isTranding"
+                        id="isTrandingYes"
+                        value="true"
+                        checked={formData.isTranding === true}
+                        onChange={handleInputChange}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="isTrandingYes"
+                      >
+                        Yes
+                      </label>
+                    </div>
+                    <div className="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="isTranding"
+                        id="isTrandingNo"
+                        value="false"
+                        checked={formData.isTranding === false}
+                        onChange={handleInputChange}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="isTrandingNo"
+                      >
+                        No
+                      </label>
+                    </div>
+                  </Form.Group>
+
+                  <Form.Group className="mt-3">
+                    <Form.Label>Is Featured</Form.Label>
+                    <div className="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="isFeatured"
+                        id="isFeaturedYes"
+                        value="true"
+                        checked={formData.isFeatured === true}
+                        onChange={handleInputChange}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="isFeaturedYes"
+                      >
+                        Yes
+                      </label>
+                    </div>
+                    <div className="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="isFeatured"
+                        id="isFeaturedNo"
+                        value="false"
+                        checked={formData.isFeatured === false}
+                        onChange={handleInputChange}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="isFeaturedNo"
+                      >
+                        No
+                      </label>
+                    </div>
+                  </Form.Group>
 
                   <div className="form-group mt-4 text-center w-100">
                     <Button type="submit" className="w-100">
                       Submit
                     </Button>
                   </div>
-                </form>
+                </Form>
               </div>
             </CardBody>
           </Card>

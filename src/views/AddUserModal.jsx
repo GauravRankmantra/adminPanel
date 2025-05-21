@@ -8,12 +8,17 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const [admin, setAdmin] = useState(false);
   const [coverImage, setCoverImage] = useState(null);
+  const [isTrending, setIsTrending] = useState(false); // State for isTrending
+  const [isFeatured, setIsFeatured] = useState(false); // State for isFeatured
   const [loading, setLoading] = useState(false);
+  const formData = new FormData();
 
   useEffect(() => {
     if (type === "artist") {
       setRole("artist");
+      setAdmin(true);
     } else {
       setRole("user");
     }
@@ -23,19 +28,43 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
     setCoverImage(e.target.files[0]);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "fullName") {
+      setName(value);
+    } else if (name === "email") {
+      setEmail(value);
+    } else if (name === "password") {
+      setPassword(value);
+    } else if (name === "role") {
+      setRole(value);
+    }
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    if (name === "isTrending") {
+      setIsTrending(checked);
+    } else if (name === "isFeatured") {
+      setIsFeatured(checked);
+    }
+  };
+
   const handleAddUser = async () => {
     if (!name || !email || !password || !role) {
-      toast.error("All fields are required");
+      toast.error("All basic fields are required");
       return;
     }
 
     setLoading(true);
 
-    const formData = new FormData();
     formData.append("fullName", name);
     formData.append("email", email);
     formData.append("password", password);
     formData.append("role", role);
+    formData.append("admin", admin);
+    formData.append("isTrending", isTrending); // Append isTrending
+    formData.append("isFeatured", isFeatured); // Append isFeatured
     if (coverImage) {
       formData.append("coverImage", coverImage);
     }
@@ -61,6 +90,8 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
         setEmail("");
         setPassword("");
         setCoverImage(null);
+        setIsTrending(false);
+        setIsFeatured(false);
         handleClose();
       } else {
         throw new Error("Unexpected server response.");
@@ -89,7 +120,8 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
             <Form.Control
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleInputChange}
+              name="fullName"
               placeholder="Enter name"
             />
           </Form.Group>
@@ -99,7 +131,8 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
             <Form.Control
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInputChange}
+              name="email"
               placeholder="Enter email"
             />
           </Form.Group>
@@ -109,10 +142,51 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
             <Form.Control
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleInputChange}
+              name="password"
               placeholder="Enter password"
             />
           </Form.Group>
+
+          {type === "artist" ? (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>Is Trending</Form.Label>
+                <div>
+                  <input
+                    type="checkbox"
+                    id="isTrending"
+                    name="isTrending"
+                    checked={isTrending}
+                    onChange={handleCheckboxChange}
+                    // Apply Bootstrap class for styling
+                  />
+                  <label className="form-check-label ms-2" htmlFor="isTrending">
+                    Yes
+                  </label>
+                </div>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Is Featured</Form.Label>
+                <div>
+                  <input
+                    type="checkbox"
+                    id="isFeatured"
+                    name="isFeatured"
+                    checked={isFeatured}
+                    onChange={handleCheckboxChange}
+                    // Apply Bootstrap class for styling
+                  />
+                  <label className="form-check-label ms-2" htmlFor="isFeatured">
+                    Yes
+                  </label>
+                </div>
+              </Form.Group>
+            </div>
+          ) : (
+            <div></div>
+          )}
 
           <Form.Group controlId="formRole" className="mb-3">
             <Form.Label>Role</Form.Label>
@@ -120,7 +194,8 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
               <Form.Control
                 as="select"
                 value={role}
-                onChange={(e) => setRole(e.target.value)}
+                onChange={handleInputChange}
+                name="role"
               >
                 <option value="user">User</option>
                 <option value="admin">Admin</option>

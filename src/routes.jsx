@@ -20,10 +20,15 @@ import AlbumInfo from "./views/AlbumInfo";
 import Profile from "./views/Profile";
 import ContactInfo from "./views/ContactInfo";
 import PrivacyPolicy from "./views/PrivacyPolicy";
-import Genres from "./views/Genres"
+import Genres from "./views/Genres";
 import Terms from "./views/Terms";
 import Home from "./views/Home";
-import AllArtist from "./views/AllArtist"
+import AllArtist from "./views/AllArtist";
+import WebUpdate from "./views/WebUpdate";
+import Ticket from "./views/Ticket";
+import { components } from "react-select";
+import SalesFilterPanel from "./views/SalesFilterPanel";
+import FeaturedVideoAdmin from "./views/FeaturedVideoAdmin";
 
 const routes = [
   {
@@ -34,8 +39,6 @@ const routes = [
     path: "/dashboard",
     component: Dashboard,
   },
-
-
 
   {
     path: "/components/cards",
@@ -85,7 +88,7 @@ const routes = [
   },
   {
     path: "/forms/album/:albumId",
-    component: AlbumInfo
+    component: AlbumInfo,
   },
   {
     path: "/forms/advanced-form",
@@ -109,12 +112,29 @@ const routes = [
   },
 
   {
+    path: "/forms/webUpdate",
+    component: WebUpdate,
+  },
+  {
+    path: "/forms/sales",
+    component: SalesFilterPanel,
+  },
+  {
+    path: "/forms/video",
+    component: FeaturedVideoAdmin,
+  },
+
+  {
+    path: "/forms/tickets",
+    component: Ticket,
+  },
+  {
     path: "/maps/leaflet-maps",
     component: LeafletMaps,
   },
   {
-    path:"/Profile",
-    component:Profile,
+    path: "/Profile",
+    component: Profile,
   },
   {
     route: "/login",

@@ -10,6 +10,7 @@ import {
   Spinner,
   InputGroup,
   FormControl,
+  Alert,
 } from "react-bootstrap";
 import axios from "axios";
 import { debounce } from "lodash";
@@ -389,6 +390,15 @@ const Tables = () => {
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete "{userToDelete?.fullName}"?
+          <Alert variant="danger" className="mt-3">
+            <Alert.Heading className="mb-2 text-sm">
+              Careful with Artist Deletion
+            </Alert.Heading>
+            <p className="mb-0">
+              Deleting an artist might lead to errors or the removal of their
+              associated songs. Please proceed with caution.
+            </p>
+          </Alert>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>

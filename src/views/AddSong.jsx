@@ -357,6 +357,7 @@ const AddSong = () => {
                       className="form-control"
                       placeholder="Search artist..."
                       value={artistSearch}
+                      autoComplete="off"
                       onChange={(e) => setArtistSearch(e.target.value)}
                     />
                     {artistError && (
@@ -411,6 +412,7 @@ const AddSong = () => {
                           className="form-control"
                           placeholder="Enter the Album name.."
                           value={albumSearch}
+                          autoComplete="off"
                           onChange={(e) => setAlbumSearch(e.target.value)}
                         />
                         {albumError && (

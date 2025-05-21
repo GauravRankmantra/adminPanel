@@ -87,6 +87,22 @@ const Layouts = () => {
               <i className="fa fa-home" />
               <span>Home section</span>
             </MenuItem>
+            <MenuItem routeLink="/forms/webUpdate">
+              <i className="fa fa-globe" />
+              <span>Website Updates</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/tickets">
+              <i className="fa-solid fa-ticket"></i>
+              <span> Tickets</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/video">
+              <i class="fa-solid fa-video"></i>
+              <span> Video</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/sales">
+              <i class="fa-solid fa-circle-dollar-to-slot"></i>
+              <span> Sales</span>
+            </MenuItem>
             <SubMenu label="Songs" icon={<i className="fa fa-headphones" />}>
               <MenuItem routeLink="/forms/basic-form">
                 <i className="fa fa-plus" />

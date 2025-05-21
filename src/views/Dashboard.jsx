@@ -12,8 +12,10 @@ import SocialCounter from "@/components/SocialCounter/SocialCounter";
 import RealTime from "@/components/RealTime/RealTime";
 import { useEffect, useState } from "react";
 import SongsUploadedChart from "../components/SongsUploadedChart";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   const data1 = [
     {
       name: "Page A",
@@ -94,7 +96,9 @@ const Dashboard = () => {
 
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
-  const [totalNewUser, setTotalNewUser] = useState(0); // Initialize as 0
+  const [totalNewUser, setTotalNewUser] = useState(0);
+  const [totalSongs, setTotalSongs] = useState(0);
+  const [totalAlbum, setTotalAlbum] = useState(0);
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -129,6 +133,40 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    const fetchTotalSongs = async () => {
+      try {
+        const response = await axios.get(
+          "https://backend-music-xg6e.onrender.com/api/v1/song/totalSongs"
+        );
+
+        // Set users from API response
+
+        setTotalSongs(response.data.total);
+      } catch (error) {
+        console.error("Error fetching total songs", error);
+      }
+    };
+
+    fetchTotalSongs();
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalSongs = async () => {
+      try {
+        const response = await axios.get(
+          "https://backend-music-xg6e.onrender.com/api/v1/albums/getTotalAlbum"
+        );
+
+        setTotalAlbum(response.data.total);
+      } catch (error) {
+        console.error("Error fetching total songs", error);
+      }
+    };
+
+    fetchTotalSongs();
+  }, []);
+
+  useEffect(() => {
     // Calculate total new users only when 'users' state is updated
     const calculateTotalNewUsers = () => {
       const total = users.reduce((acc, user) => acc + user.newUsers, 0);
@@ -147,24 +185,24 @@ const Dashboard = () => {
       </Alert>
 
       <Row className="gy-4 gx-4 mb-4">
-        <Col sm={12} md={6} lg={3} xl={3}>
+        <Col onClick={()=>navigate('/forms/sales')} sm={12} md={6} lg={3} xl={3}>
           <StatsCard
             type="revenue-counter"
             bgColor="#5c6bc0"
             symbol="$"
-            counter={2356}
+            counter={0}
             isCounter={true}
             title="Revenue"
             icon="fa-solid fa-dollar-sign"
           />
         </Col>
-        <Col sm={12} md={6} lg={3} xl={3}>
+        <Col onClick={()=>navigate('/forms/sales')} sm={12} md={6} lg={3} xl={3}>
           <StatsCard
             type="revenue-counter"
             bgColor="#66bb6a"
             symbolPosition="right"
             symbol="%"
-            counter={23}
+            counter={0}
             isCounter={true}
             title="Revenue"
             icon={
@@ -174,7 +212,7 @@ const Dashboard = () => {
             }
           />
         </Col>
-        <Col sm={12} md={6} lg={3} xl={3}>
+        <Col onClick={()=>navigate('/tables')} sm={12} md={6} lg={3} xl={3}>
           <StatsCard
             type="revenue-counter"
             bgColor="#ffa726"
@@ -184,7 +222,7 @@ const Dashboard = () => {
             icon="fa-solid fa-user-group"
           />
         </Col>
-        <Col sm={12} md={6} lg={3} xl={3}>
+        <Col onClick={()=>navigate('/tables')}  sm={12} md={6} lg={3} xl={3}>
           <StatsCard
             type="revenue-counter"
             bgColor="#42a5f5"
@@ -201,6 +239,26 @@ const Dashboard = () => {
                 />
               </LineChart>
             }
+          />
+        </Col>
+        <Col onClick={()=>navigate('/forms/all-songs')} sm={12} md={6} lg={3} xl={3}>
+          <StatsCard
+            type="revenue-counter"
+            bgColor="#ffa726"
+            counter={totalSongs}
+            isCounter={true}
+            title="Total Songs"
+            icon="fa-solid fa-music"
+          />
+        </Col>
+        <Col  onClick={()=>navigate('/forms/all-album')} sm={12} md={6} lg={3} xl={3}>
+          <StatsCard
+            type="revenue-counter"
+            bgColor="#a83239"
+            counter={totalAlbum}
+            isCounter={true}
+            title="Total Albums"
+            icon="fa-solid fa-compact-disc"
           />
         </Col>
       </Row>
@@ -265,36 +323,7 @@ const Dashboard = () => {
             </Col>
           </Row>
         </Col>
-        {/* <Col md={12} lg={4} xl={4}>
-        <Timeline />
-      </Col> */}
       </Row>
-
-      {/* <Row className="gy-4 gx-4">
-                <Col className="" md={12} lg={6}>
-                    <AnalyticsStats />
-                </Col>
-                <Col md={12} lg={6}>
-                    <Row className="gy-4 gx-4">
-                        <Col md={6}>
-                            <WeatherStats />
-                        </Col>
-                        <Col md={6}>
-                            <SocialStats />
-                        </Col>
-                    </Row>
-                    <Col className="mt-4">
-                        <Row className="gy-4 gx-4">
-                            <Col md={6}>
-                                <MonthlyStats />
-                            </Col>
-                            <Col md={6}>
-                                <DeviceVisitorStats />
-                            </Col>
-                        </Row>
-                    </Col>
-                </Col>
-            </Row> */}
     </Container>
   );
 };

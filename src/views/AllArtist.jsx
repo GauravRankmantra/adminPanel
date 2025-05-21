@@ -9,6 +9,7 @@ import {
   Form,
   Container,
   Spinner,
+  Alert,
 } from "react-bootstrap";
 import { FormControl, InputGroup } from "react-bootstrap";
 import { debounce } from "lodash";
@@ -36,12 +37,14 @@ const ArtistsPage = () => {
   const [artistToDelete, setArtistToDelete] = useState(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [isTrending, setIsTrending] = useState(false); // State for isTrending
+  const [isFeatured, setIsFeatured] = useState(false); // State for isFeatured
 
   const [coverImage, setCoverImage] = useState(null);
   const [previewImage, setPreviewImage] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const limit = 20;
+  const limit = 10;
 
   useEffect(() => {
     if (selectedArtist) {
@@ -50,8 +53,19 @@ const ArtistsPage = () => {
       setRole(selectedArtist.role);
       setPreviewImage(selectedArtist.coverImage || "default-image.jpg");
       setCoverImage(null);
+      setIsTrending(selectedArtist.isTrending);
+      setIsFeatured(selectedArtist.isFeatured);
     }
   }, [selectedArtist]);
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    if (name === "isTrending") {
+      setIsTrending(checked);
+    } else if (name === "isFeatured") {
+      setIsFeatured(checked);
+    }
+  };
 
   const handleClose = () => {
     setShowModal(false);
@@ -82,10 +96,10 @@ const ArtistsPage = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/users?page=${page}&limit=${limit}`
+        `https://backend-music-xg6e.onrender.com/api/v1/admin/artist?page=${page}&limit=${limit}`
       );
-      const artistUsers = res.data.users.filter((u) => u.role === "artist");
-      setArtists(artistUsers);
+
+      setArtists(res.data.data);
       setTotalPages(res.data.totalPages);
     } catch (err) {
       toast.error("Failed to fetch artists");
@@ -140,6 +154,8 @@ const ArtistsPage = () => {
     formData.append("fullName", fullName);
     formData.append("email", email);
     formData.append("role", role);
+    formData.append("isFeatured", isFeatured);
+    formData.append("isTrending", isTrending);
     if (coverImage) formData.append("coverImage", coverImage);
 
     try {
@@ -318,6 +334,40 @@ const ArtistsPage = () => {
               </Form.Control>
             </Form.Group>
 
+            <Form.Group className="mb-3">
+              <Form.Label>Is Trending</Form.Label>
+              <div>
+                <input
+                  type="checkbox"
+                  id="isTrending"
+                  name="isTrending"
+                  checked={isTrending}
+                  onChange={handleCheckboxChange}
+                  // Apply Bootstrap class for styling
+                />
+                <label className="form-check-label ms-2" htmlFor="isTrending">
+                  Yes
+                </label>
+              </div>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Is Featured</Form.Label>
+              <div>
+                <input
+                  type="checkbox"
+                  id="isFeatured"
+                  name="isFeatured"
+                  checked={isFeatured}
+                  onChange={handleCheckboxChange}
+                  // Apply Bootstrap class for styling
+                />
+                <label className="form-check-label ms-2" htmlFor="isFeatured">
+                  Yes
+                </label>
+              </div>
+            </Form.Group>
+
             <Form.Group controlId="formCoverImage" className="mb-3">
               <Form.Label>Cover Image</Form.Label>
               <div style={{ position: "relative", display: "inline-block" }}>
@@ -339,7 +389,7 @@ const ArtistsPage = () => {
                     boxShadow: "0 0 4px rgba(0,0,0,0.2)",
                   }}
                 >
-                  <img src={editIcon} alt="edit" width={20}/>
+                  <img src={editIcon} alt="edit" width={20} />
                 </label>
                 <input
                   type="file"
@@ -370,6 +420,15 @@ const ArtistsPage = () => {
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete "{artistToDelete?.fullName}"?
+          <Alert variant="danger" className="mt-3">
+            <Alert.Heading className="mb-2 text-sm">
+              Careful with Artist Deletion
+            </Alert.Heading>
+            <p className="mb-0">
+              Deleting an artist might lead to errors or the removal of their
+              associated songs. Please proceed with caution.
+            </p>
+          </Alert>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
