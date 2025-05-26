@@ -488,12 +488,10 @@ const AddSong = () => {
                           name="price"
                           type="number"
                           min="0"
-                          step="0.01"
                           className="form-control"
                           placeholder="Enter the price"
                           value={formData.price}
                           onChange={handlePriceChange}
-                          required
                         />
                       </Col>
                     </Row>

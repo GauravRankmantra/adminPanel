@@ -39,8 +39,7 @@ const SongTable = ({ songs, handleEditClick, handleDeleteClick }) => {
                   : song.artist || "Unknown Artist"}
               </td>
               <td>
-                {Math.floor(song?.duration)}:
-                {String(Math.floor(song?.duration % 60)).padStart(2, "0")}{" "}
+               {song?.duration}
                 <span style={{ fontSize: "0.8em", opacity: 0.6 }}>min</span>
               </td>
               <td>

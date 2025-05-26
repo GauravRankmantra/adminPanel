@@ -262,7 +262,7 @@ const AllSongs = () => {
                                   "Unknown Artist"}
                             </td>
                             <td>{song.album?.title || "No Album"}</td>
-                            <td>{formatDuration(song.duration)}</td>
+                            <td>{song.duration}</td>
                             <td>
                               <div className="d-flex gap-2">
                                 <Button

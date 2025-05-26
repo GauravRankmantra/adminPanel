@@ -7,14 +7,22 @@ import {
   Container,
   Row,
   Col,
-  Card, // Added Card for a nicer spinner container
+  Card,
+  Badge, // Added Card for a nicer spinner container
 } from "react-bootstrap";
 import axios from "axios";
 import { MdEdit } from "react-icons/md"; // Kept for consistency, though not used in current UI
-import { FaFilter, FaMoneyBillWave, FaShoppingCart, FaDollarSign, FaInfoCircle } from "react-icons/fa"; // Added more icons
+import {
+  FaFilter,
+  FaMoneyBillWave,
+  FaShoppingCart,
+  FaDollarSign,
+  FaInfoCircle,
+} from "react-icons/fa"; // Added more icons
 import AdminRevenueCharts from "../components/AdminRevenueCharts";
 
 const apiUrl = "https://backend-music-xg6e.onrender.com/";
+// const apiUrl = "http://localhost:5000/";
 
 const statusEnum = ["pending", "paid", "rejected"]; // Left as is, per instructions
 
@@ -81,7 +89,8 @@ const SalesFilterPanel = () => {
         <Row className="mb-4 align-items-center">
           <Col>
             <h3 className="mb-0 text-primary d-flex align-items-center">
-              <FaShoppingCart className="me-3 fs-3 text-info" /> {/* Shopping cart icon */}
+              <FaShoppingCart className="me-3 fs-3 text-info" />{" "}
+              {/* Shopping cart icon */}
               Sales Transactions
             </h3>
           </Col>
@@ -110,30 +119,103 @@ const SalesFilterPanel = () => {
             <Card.Body>
               <Spinner animation="border" variant="primary" className="mb-3" />
               <p className="lead text-muted">Loading sales transactions...</p>
-              <p className="text-muted small">Please wait while we fetch the latest data.</p>
+              <p className="text-muted small">
+                Please wait while we fetch the latest data.
+              </p>
             </Card.Body>
           </Card>
         ) : (
           /* Sales Table */
-          <Table striped bordered hover responsive className="bg-light rounded shadow-sm">
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            className="bg-light rounded shadow-sm"
+          >
             <thead className="table-dark">
               <tr>
-                <th>Song <FaInfoCircle className="ms-1 text-muted small" title="Song Title" /></th>
-                <th>Buyer <FaInfoCircle className="ms-1 text-muted small" title="Purchasing User" /></th>
-                <th>Seller <FaInfoCircle className="ms-1 text-muted small" title="Selling Artist" /></th>
-                <th>Amount <FaDollarSign className="ms-1 text-success small" title="Total Amount Paid by Buyer" /></th>
-                <th>Received <FaDollarSign className="ms-1 text-info small" title="Actual Amount Received After Payment Gateway Fees" /></th>
-                <th>Seller Earning <FaDollarSign className="ms-1 text-warning small" title="70% of Received Amount for Seller" /></th>
-                <th>Platform Fee <FaDollarSign className="ms-1 text-danger small" title="Stripe's Processing Fee" /></th>
-                <th>Admin Earning <FaDollarSign className="ms-1 text-primary small" title="30% of Received Amount Minus Stripe Fee" /></th>
+                <th>
+                  Song{" "}
+                  <FaInfoCircle
+                    className="ms-1 text-muted small"
+                    title="Song Title"
+                  />
+                </th>
+                <th>
+                  Buyer{" "}
+                  <FaInfoCircle
+                    className="ms-1 text-muted small"
+                    title="Purchasing User"
+                  />
+                </th>
+                <th>
+                  Seller{" "}
+                  <FaInfoCircle
+                    className="ms-1 text-muted small"
+                    title="Selling Artist"
+                  />
+                </th>
+                <th>
+                  Amount{" "}
+                  <FaDollarSign
+                    className="ms-1 text-success small"
+                    title="Total Amount Paid by Buyer"
+                  />
+                </th>
+                <th>
+                  Received{" "}
+                  <FaDollarSign
+                    className="ms-1 text-info small"
+                    title="Actual Amount Received After Payment Gateway Fees"
+                  />
+                </th>
+                <th>
+                  Seller Earning{" "}
+                  <FaDollarSign
+                    className="ms-1 text-warning small"
+                    title="70% of Received Amount for Seller"
+                  />
+                </th>
+                <th>
+                  Platform Fee{" "}
+                  <FaDollarSign
+                    className="ms-1 text-danger small"
+                    title="Stripe's Processing Fee"
+                  />
+                </th>
+                <th>
+                  Admin Earning{" "}
+                  <FaDollarSign
+                    className="ms-1 text-primary small"
+                    title="30% of Received Amount Minus Stripe Fee"
+                  />
+                </th>
               </tr>
             </thead>
             <tbody>
               {sales.map((sale) => (
                 <tr key={sale._id}>
-                  <td>{sale.songId?.title || <span className="text-muted fst-italic">N/A</span>}</td>
-                  <td>{sale.buyerId?.fullName || <span className="text-muted fst-italic">N/A</span>}</td>
-                  <td>{sale.sellerId?.fullName || <span className="text-muted fst-italic">N/A</span>}</td>
+                  <td>
+                    {sale.songId?.title || (
+                      <span className="text-muted fst-italic">N/A</span>
+                    )}
+                  </td>
+                  <td>
+                    {sale.buyerId?.fullName || (
+                      <span className="text-muted fst-italic">N/A</span>
+                    )}
+                  </td>
+                  <td>
+                    {sale.sellerId?.fullName || (
+                      <span className="text-muted fst-italic">N/A</span>
+                    )}
+                    {sale.sellerId?.admin && (
+                      <Badge bg="info" size="sm" className="ms-2">
+                        AD
+                      </Badge> // Bootstrap primary badge for "AD"
+                    )}
+                  </td>
                   <td>${sale.amountPaid?.toFixed(2) || "0.00"}</td>
                   <td>${sale.amountReceved?.toFixed(2) || "0.00"}</td>
                   <td>${sale.sellerEarning?.toFixed(2) || "0.00"}</td>
@@ -143,8 +225,12 @@ const SalesFilterPanel = () => {
               ))}
               {sales.length === 0 && (
                 <tr>
-                  <td colSpan="8" className="text-center py-4 text-muted fst-italic">
-                    <FaInfoCircle className="me-2" /> No sales transactions found.
+                  <td
+                    colSpan="8"
+                    className="text-center py-4 text-muted fst-italic"
+                  >
+                    <FaInfoCircle className="me-2" /> No sales transactions
+                    found.
                   </td>
                 </tr>
               )}

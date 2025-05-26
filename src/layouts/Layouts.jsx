@@ -79,6 +79,10 @@ const Layouts = () => {
               <i className="fa fa-user" />
               <span>Users</span>
             </MenuItem>
+            <MenuItem routeLink="/manageSeller">
+              <i class="fa-solid fa-people-roof"></i>
+              <span>Manage Seller</span>
+            </MenuItem>
             <MenuItem routeLink="/forms/all-artist">
               <i className="fa fa-microphone" />
               <span>Artist</span>
@@ -92,12 +96,16 @@ const Layouts = () => {
               <span>Website Updates</span>
             </MenuItem>
             <MenuItem routeLink="/forms/tickets">
-              <i className="fa-solid fa-ticket"></i>
-              <span> Tickets</span>
+              <i className="fa-solid fa-message"></i>
+              <span> Messages</span>
             </MenuItem>
             <MenuItem routeLink="/forms/video">
               <i class="fa-solid fa-video"></i>
               <span> Video</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/footer">
+              <i class="fa-solid fa-list"></i>
+              <span> Footer Managment</span>
             </MenuItem>
             <MenuItem routeLink="/forms/sales">
               <i class="fa-solid fa-circle-dollar-to-slot"></i>

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Spinner } from "react-bootstrap";
 import axios from "axios";
-import styles from "@/assets/scss/Authentication.module.scss";
-import logo from "@/assets/image/main_bg.jpg";
+import styles from "@/assets/scss/Authentication.module.scss"; // Assuming this path is correct
+import logo from "@/assets/image/main_bg.jpg"; // Assuming this path is correct
 import {
   Container,
   Row,
@@ -13,22 +13,39 @@ import {
   Alert,
   InputGroup,
 } from "react-bootstrap";
-import { FaUser, FaLock, FaSignInAlt } from "react-icons/fa";
+import { FaUser, FaLock, FaSignInAlt, FaEye, FaEyeSlash } from "react-icons/fa"; // Import FaEyeSlash for the "hide" icon
 import { IoLogIn } from "react-icons/io5";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const [isLoading, setIsLoading] = useState(false);
+  const [logging, setLogging] = useState(false); // Renamed from isLoading for clarity with your code
   const [validated, setValidated] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
+
   const navigate = useNavigate();
-  const [logging, setLogging] = useState(false);
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+    }
+    setValidated(true); // Set validated to true to show validation feedback
+
+    if (form.checkValidity() === false) {
+      return; // Stop if form is invalid
+    }
+
     setLogging(true);
+    setError(""); // Clear previous errors
 
     try {
       const response = await axios.post(
@@ -36,33 +53,32 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      localStorage.setItem("user", JSON.stringify(response.data.user));
 
       if (response.data.success) {
-        setLogging(false);
-        // Redirect to dashboard on successful login
+        localStorage.setItem("user", JSON.stringify(response.data.user));
         navigate("/dashboard");
+      } else {
+        // This block might be redundant if the server always sends error status on failure
+        // but it's good for explicit handling if success: false is sent with 200 OK
+        setError(response.data.message || "Login failed. Please try again.");
       }
     } catch (err) {
-      setLogging(false);
+      console.error("Login error:", err); // Log the full error for debugging
       setError(
-        err.response?.data?.message || "Login failed. Please try again."
+        err.response?.data?.message ||
+          "Login failed. Please check your credentials and try again."
       );
+    } finally {
+      setLogging(false); // Ensure logging state is reset in finally block
     }
   };
 
   const backgroundStyle = {
     minHeight: "100vh",
-    // === BACKGROUND IMAGE SECTION ===
-    // Replace '/assets/images/login-background.jpg' with the path to YOUR image
-    // Ensure this image is in your `public` folder or import it if it's in `src`
-
     backgroundImage: `url(${logo})`,
-    backgroundSize: "cover", // Cover the entire area
-    backgroundPosition: "center", // Center the image
-    backgroundRepeat: "no-repeat", // Do not repeat the image
-    // backgroundAttachment: 'fixed', // Optional: Creates a parallax effect
-    // === END BACKGROUND IMAGE SECTION ===
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -72,18 +88,17 @@ const Login = () => {
   const enhancedBackgroundStyle = {
     ...backgroundStyle,
     background: `linear-gradient(rgba(20, 20, 50, 0.65), rgba(40, 20, 70, 0.75)), ${backgroundStyle.backgroundImage}`,
-    // Ensure other background properties are reapplied if `background` shorthand overwrites them
     backgroundSize: backgroundStyle.backgroundSize,
     backgroundPosition: backgroundStyle.backgroundPosition,
     backgroundRepeat: backgroundStyle.backgroundRepeat,
-    // backgroundAttachment: backgroundStyle.backgroundAttachment, // if you used it
   };
+
   const cardStyle = {
     maxWidth: "450px",
     width: "100%",
     borderRadius: "15px",
     boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
-    border: "none", // Remove default card border
+    border: "none",
   };
 
   return (
@@ -131,13 +146,21 @@ const Login = () => {
                         <FaLock />
                       </InputGroup.Text>
                       <Form.Control
-                        type="password"
+                        type={showPassword ? "text" : "password"} // Dynamic type based on state
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        minLength={6} // Example validation
+                        minLength={6}
                       />
+                      <InputGroup.Text
+                        role="button" // Indicate it's clickable
+                        onClick={togglePasswordVisibility} // Attach click handler
+                        style={{ cursor: "pointer" }} // Add cursor style
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}{" "}
+                        {/* Change icon based on state */}
+                      </InputGroup.Text>
                       <Form.Control.Feedback type="invalid">
                         Password must be at least 6 characters.
                       </Form.Control.Feedback>
@@ -145,22 +168,30 @@ const Login = () => {
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Remember me" />
+                    <input
+                      type="checkbox"
+                      name="remember"
+                      placeholder="Remember me"
+                    />
+                    <label htmlFor="remember"> Remember me</label>
                   </Form.Group>
 
                   <Button
                     variant="primary"
                     type="submit"
                     className="w-100 py-2 fw-semibold"
-                    disabled={isLoading}
+                    disabled={logging} // Use 'logging' state for disabled
                   >
-                    {isLoading ? (
+                    {logging ? (
                       <>
-                        <span
-                          className="spinner-border spinner-border-sm me-2"
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
                           role="status"
                           aria-hidden="true"
-                        ></span>
+                          className="me-2"
+                        />
                         Logging in...
                       </>
                     ) : (
@@ -181,6 +212,7 @@ const Login = () => {
                     <a
                       href="https://odgmusic.com/register"
                       target="_blank"
+                      rel="noopener noreferrer" // Good practice for target="_blank"
                       className="text-decoration-none fw-semibold"
                     >
                       Sign up

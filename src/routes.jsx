@@ -29,6 +29,8 @@ import Ticket from "./views/Ticket";
 import { components } from "react-select";
 import SalesFilterPanel from "./views/SalesFilterPanel";
 import FeaturedVideoAdmin from "./views/FeaturedVideoAdmin";
+import ManageSeller from "./views/ManageSeller";
+import FooterManagement from "./components/FooterManagement";
 
 const routes = [
   {
@@ -118,6 +120,15 @@ const routes = [
   {
     path: "/forms/sales",
     component: SalesFilterPanel,
+  },
+  {
+    path: "/manageSeller",
+    component: ManageSeller,
+  },
+
+  {
+    path: "/forms/footer",
+    component: FooterManagement,
   },
   {
     path: "/forms/video",
