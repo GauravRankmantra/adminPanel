@@ -21,6 +21,7 @@ import deleteIcon from "../assets/image/trash.png";
 import AddUserModal from "./AddUserModal";
 import Card from "@/components/Card/Card";
 import styles from "@/assets/scss/Tables.module.scss";
+import UserDetailsModal from "./UserDetailsModal";
 
 const ArtistsPage = () => {
   const [artists, setArtists] = useState([]);
@@ -39,11 +40,13 @@ const ArtistsPage = () => {
   const [email, setEmail] = useState("");
   const [isTrending, setIsTrending] = useState(false); // State for isTrending
   const [isFeatured, setIsFeatured] = useState(false); // State for isFeatured
-
+  const [showModalAdd, setShowModalAdd] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
   const [previewImage, setPreviewImage] = useState("");
   const [saving, setSaving] = useState(false);
 
+  
   const limit = 10;
 
   useEffect(() => {
@@ -143,6 +146,15 @@ const ArtistsPage = () => {
     }
   };
 
+  const handleShowModal = (user) => {
+    setSelectedUser(user);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedUser(null);
+  };
   const handleSave = async () => {
     if (!fullName || !email || !role) {
       toast.error("Name, email, and role are required.");
@@ -233,7 +245,7 @@ const ArtistsPage = () => {
                   <tbody className={styles.tbody}>
                     {(searchResults.length > 0 ? searchResults : artists).map(
                       (artist, index) => (
-                        <tr key={index}>
+                        <tr key={index} onClick={() => handleShowModal(artist)}>
                           <td>
                             <img
                               src={artist.coverImage || defaultUser}
@@ -439,6 +451,12 @@ const ArtistsPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <UserDetailsModal
+        show={showModal}
+        handleClose={handleCloseModal}
+        user={selectedUser}
+      />
     </Fragment>
   );
 };

@@ -54,3 +54,211 @@ body {
         border-radius: 20px;
     }
 }
+
+
+/* UserDetailsModal.css or your global stylesheet */
+
+.user-details-modal .modal-content {
+  border-radius: 15px;
+  overflow: hidden; /* Ensures rounded corners apply to content */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background-color: #f0f2f5; /* A softer background */
+}
+
+.modal-header-modern {
+  background: linear-gradient(45deg, #6f42c1, #8e2de2); /* Gradient header */
+  color: #fff !important;
+  border-bottom: none;
+  padding: 20px 30px;
+  position: relative;
+}
+
+.modal-header-modern .btn-close {
+  filter: invert(1); /* Makes the close button white */
+  font-size: 1.2rem;
+  margin-left: auto;
+}
+
+.modal-title-modern {
+  font-weight: 700;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.modal-body-modern {
+  padding: 40px;
+  background-color: #f8f9fa; /* Light background for the body */
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 4px solid #8e2de2; /* Primary color border */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.user-full-name {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #343a40;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.verified-badge, .featured-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.contact-item {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.user-bio {
+  font-size: 1.1rem;
+  color: #6c757d;
+  line-height: 1.6;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e9ecef;
+  border-left: 5px solid #8e2de2;
+  border-radius: 8px;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(142, 45, 226, 0.5), rgba(0, 0, 0, 0));
+  margin: 30px 0;
+}
+
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.stat-card {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #8e2de2; /* Primary color */
+  line-height: 1;
+}
+
+.date-list-group .list-group-item {
+  background-color: transparent !important;
+  border: none;
+  padding: 10px 0;
+  font-size: 1.05rem;
+  color: #495057;
+}
+
+.social-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-right: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.facebook-btn {
+  background-color: #3b5998;
+  color: #fff;
+}
+.facebook-btn:hover {
+  background-color: #2d4373;
+  color: #fff;
+}
+
+.instagram-btn {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: #fff;
+}
+.instagram-btn:hover {
+  opacity: 0.9;
+  color: #fff;
+}
+
+.twitter-btn {
+  background-color: #1da1f2;
+  color: #fff;
+}
+.twitter-btn:hover {
+  background-color: #0c85d0;
+  color: #fff;
+}
+
+.roles-list-group .list-group-item {
+  background-color: transparent !important;
+  border: none;
+  padding: 10px 0;
+  font-size: 1.05rem;
+  color: #495057;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roles-list-group .badge {
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-weight: 500;
+}
+
+.modal-footer-modern {
+  background-color: #f0f2f5;
+  border-top: none;
+  padding: 20px 30px;
+}
+
+.close-button {
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #e9ecef;
+  color: #343a40;
+}

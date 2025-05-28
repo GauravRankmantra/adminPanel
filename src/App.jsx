@@ -1,12 +1,24 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { EntypoSprite } from "@entypo-icons/react";
 import { Routes, Route } from "react-router-dom";
 import routes from "@/routes.jsx";
 import Layouts from "@/layouts/Layouts.jsx";
 import { DashboardDataProvider } from "@/context/dashboardDataContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx"; // Import ProtectedRoute
+import axios from "axios";
 
 function App() {
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const res = await axios.get(
+  //       "http://localhost:5000/api/v1/auth/checkAdminToken",
+  //       { withCredentials: true }
+  //     );
+  //     if (!res) localStorage.removeItem("user");
+  //   };
+  //   checkAuth();
+  // }, []);
+
   return (
     <div className="admin-container position-relative overflow-hidden">
       <DashboardDataProvider>

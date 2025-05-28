@@ -8,7 +8,6 @@ import {
   Logo,
   Menu,
   MenuItem,
-  NavTitle,
   Sidebar,
   SidebarBg,
   SidebarToggle,
@@ -16,6 +15,27 @@ import {
 } from "../components/Sidebar/Sidebar";
 
 import { Fragment } from "react";
+// Import React Icons
+import {
+  FaTachometerAlt,
+  FaUser,
+  FaUsers,
+  FaMicrophoneAlt,
+  FaHome,
+  FaGlobe,
+  FaEnvelope,
+  FaVideo,
+  FaList,
+  FaDollarSign,
+  FaHeadphones,
+  FaPlus,
+  FaPencilAlt,
+  FaFolderOpen,
+  FaInfoCircle,
+  FaShieldAlt,
+  FaScroll,
+  FaBars,
+} from "react-icons/fa";
 
 const Layouts = () => {
   const {
@@ -26,6 +46,12 @@ const Layouts = () => {
     sidebarBgImg,
     sidebarBgColor,
   } = useDashboardDataContext();
+
+  // Define a style object for consistent icon styling
+  const iconStyle = {
+    marginRight: sidebarMini ? "0px" : "10px", // Adjust margin based on sidebar state
+    fontSize: sidebarMini ? "1.4rem" : "1.2rem", // Adjust size based on sidebar state
+  };
 
   return (
     <div className={styles.layout}>
@@ -47,7 +73,6 @@ const Layouts = () => {
           <Logo>
             <Link to="/">
               <Fragment>
-                {/* Replacing the logo images with the text "Admin" */}
                 <span
                   data-logo="mini-logo"
                   style={{
@@ -65,119 +90,124 @@ const Layouts = () => {
                 type="button"
                 onClick={() => setSidebarMini(!sidebarMini)}
               >
-                <i className="fa-solid fa-bars-progress" />
+                <FaBars />
               </button>
             </SidebarToggle>
           </Logo>
           <Menu>
             <MenuItem routeLink="/dashboard">
-              <i className="fa fa-dashboard" />
+              <FaTachometerAlt style={{ ...iconStyle, color: "#FFD700" }} />{" "}
+              {/* Gold */}
               <span>Dashboard</span>
             </MenuItem>
 
             <MenuItem routeLink="/tables">
-              <i className="fa fa-user" />
+              <FaUser style={{ ...iconStyle, color: "#4CAF50" }} />{" "}
+              {/* Green */}
               <span>Users</span>
             </MenuItem>
             <MenuItem routeLink="/manageSeller">
-              <i class="fa-solid fa-people-roof"></i>
+              <FaUsers style={{ ...iconStyle, color: "#2196F3" }} />{" "}
+              {/* Blue */}
               <span>Manage Seller</span>
             </MenuItem>
             <MenuItem routeLink="/forms/all-artist">
-              <i className="fa fa-microphone" />
+              <FaMicrophoneAlt style={{ ...iconStyle, color: "#FF5722" }} />{" "}
+              {/* Deep Orange */}
               <span>Artist</span>
             </MenuItem>
             <MenuItem routeLink="/forms/homepage">
-              <i className="fa fa-home" />
+              <FaHome style={{ ...iconStyle, color: "#9C27B0" }} />{" "}
+              {/* Purple */}
               <span>Home section</span>
             </MenuItem>
             <MenuItem routeLink="/forms/webUpdate">
-              <i className="fa fa-globe" />
+              <FaGlobe style={{ ...iconStyle, color: "#00BCD4" }} />{" "}
+              {/* Cyan */}
               <span>Website Updates</span>
             </MenuItem>
             <MenuItem routeLink="/forms/tickets">
-              <i className="fa-solid fa-message"></i>
+              <FaEnvelope style={{ ...iconStyle, color: "#FFC107" }} />{" "}
+              {/* Amber */}
               <span> Messages</span>
             </MenuItem>
             <MenuItem routeLink="/forms/video">
-              <i class="fa-solid fa-video"></i>
+              <FaVideo style={{ ...iconStyle, color: "#FF9800" }} />{" "}
+              {/* Orange */}
               <span> Video</span>
             </MenuItem>
             <MenuItem routeLink="/forms/footer">
-              <i class="fa-solid fa-list"></i>
-              <span> Footer Managment</span>
+              <FaList style={{ ...iconStyle, color: "#673AB7" }} />{" "}
+              {/* Deep Purple */}
+              <span> Footer Management</span>
             </MenuItem>
             <MenuItem routeLink="/forms/sales">
-              <i class="fa-solid fa-circle-dollar-to-slot"></i>
+              <FaDollarSign style={{ ...iconStyle, color: "#8BC34A" }} />{" "}
+              {/* Light Green */}
               <span> Sales</span>
             </MenuItem>
-            <SubMenu label="Songs" icon={<i className="fa fa-headphones" />}>
+            <SubMenu
+              label="Songs"
+              icon={<FaHeadphones style={{ ...iconStyle, color: "#E91E63" }} />}
+            >
+              {" "}
+              {/* Pink */}
               <MenuItem routeLink="/forms/basic-form">
-                <i className="fa fa-plus" />
+                <FaPlus style={{ ...iconStyle, color: "#9E9E9E" }} />{" "}
+                {/* Grey */}
                 <span>Add Song</span>
               </MenuItem>
-
               <MenuItem routeLink="/forms/all-songs">
-                <i className="fa fa-pencil-square" />
+                <FaPencilAlt style={{ ...iconStyle, color: "#607D8B" }} />{" "}
+                {/* Blue Grey */}
                 <span>All Songs</span>
               </MenuItem>
               <MenuItem routeLink="/forms/genre">
-                <i className="fa fa-pencil-square" />
+                <FaPencilAlt style={{ ...iconStyle, color: "#795548" }} />{" "}
+                {/* Brown */}
                 <span>Genre</span>
               </MenuItem>
             </SubMenu>
-            <SubMenu label="Albums" icon={<i className="fa fa-folder-open" />}>
+            <SubMenu
+              label="Albums"
+              icon={<FaFolderOpen style={{ ...iconStyle, color: "#7B1FA2" }} />}
+            >
+              {" "}
+              {/* Dark Purple */}
               <MenuItem routeLink="/forms/all-album">
-                <i className="fa fa-pencil-square" />
+                <FaPencilAlt style={{ ...iconStyle, color: "#FBC02D" }} />{" "}
+                {/* Yellow Dark */}
                 <span>All Albums</span>
               </MenuItem>
-
               <MenuItem routeLink="/forms/add-album">
-                <i className="fa fa-plus" />
+                <FaPlus style={{ ...iconStyle, color: "#A1887F" }} />{" "}
+                {/* Light Brown */}
                 <span>Add Album</span>
               </MenuItem>
             </SubMenu>
 
-            <SubMenu label="Add on" icon={<i className="fa fa-plus" />}>
+            <SubMenu
+              label="Add on"
+              icon={<FaPlus style={{ ...iconStyle, color: "#536DFE" }} />}
+            >
+              {" "}
+              {/* Indigo */}
               <MenuItem routeLink="/contactInfo">
-                <i className="fa fa-pencil-square" />
+                <FaInfoCircle style={{ ...iconStyle, color: "#00E5FF" }} />{" "}
+                {/* Light Blue Accent */}
                 <span>Contact Info</span>
               </MenuItem>
               <MenuItem routeLink="/privacyPolicy">
-                <i className="fa fa-pencil-square" />
+                <FaShieldAlt style={{ ...iconStyle, color: "#C6FF00" }} />{" "}
+                {/* Light Green Accent */}
                 <span>Privacy Policy</span>
               </MenuItem>
-
               <MenuItem routeLink="/terms">
-                <i className="fa fa-pencil-square" />
+                <FaScroll style={{ ...iconStyle, color: "#FFD54F" }} />{" "}
+                {/* Amber Light */}
                 <span>Terms And Conditions</span>
               </MenuItem>
             </SubMenu>
-
-            {/* <NavTitle>
-                            <span>Extras</span>
-                        </NavTitle> */}
-            {/* <SubMenu
-                            label="Pages"
-                            icon={<i className="fa fa-paperclip" />}
-                        >
-                            <MenuItem routeLink="/login">
-                                <i className="fa fa-sign-in" />
-                                <span>Login</span>
-                            </MenuItem>
-                            <MenuItem routeLink="/register">
-                                <i className="fa fa-sign-in" />
-                                <span>Register</span>
-                            </MenuItem>
-                            <MenuItem routeLink="/page404">
-                                <i className="fa fa-paper-plane" />
-                                <span>Page 404</span>
-                            </MenuItem>
-                            <MenuItem routeLink="/page500">
-                                <i className="fa fa-paper-plane" />
-                                <span>Page 500</span>
-                            </MenuItem>
-                        </SubMenu> */}
           </Menu>
         </SidebarBg>
       </Sidebar>

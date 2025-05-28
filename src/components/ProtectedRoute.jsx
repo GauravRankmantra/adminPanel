@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
     const checkAuth = async () => {
       try {
         const res = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/auth",
+          "https://backend-music-xg6e.onrender.com/api/v1/auth/checkAdminToken",
           {
             withCredentials: true, // Include cookies in the request
           }

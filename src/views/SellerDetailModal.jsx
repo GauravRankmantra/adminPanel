@@ -1,6 +1,6 @@
 // src/components/SellerDetailModal.js
 import React from 'react';
-import { Modal, Button, Image, ListGroup, Badge, Row, Col, Table } from 'react-bootstrap';
+import { Modal, Button, Image, ListGroup, Badge, Row, Col, Table ,Alert} from 'react-bootstrap';
 import moment from 'moment'; // For formatting dates
 
 const SellerDetailModal = ({ show, onHide, seller }) => {
