@@ -31,6 +31,9 @@ import SalesFilterPanel from "./views/SalesFilterPanel";
 import FeaturedVideoAdmin from "./views/FeaturedVideoAdmin";
 import ManageSeller from "./views/ManageSeller";
 import FooterManagement from "./components/FooterManagement";
+import DonationTable from "./views/DonationTable";
+import SponsorTable from "./views/SponsorTable";
+import Subsciber from "./views/Subsciber";
 
 const routes = [
   {
@@ -50,6 +53,21 @@ const routes = [
   {
     path: "/components/progressbars",
     component: ProgressBars,
+  },
+
+  {
+    path: "/forms/donation",
+    component: DonationTable,
+  },
+
+  
+  {
+    path: "/forms/subsciber",
+    component: Subsciber,
+  },
+  {
+    path: "/forms/sponsor",
+    component: SponsorTable,
   },
   {
     path: "/components/modals",

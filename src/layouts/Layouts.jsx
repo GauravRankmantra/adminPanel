@@ -13,6 +13,9 @@ import {
   SidebarToggle,
   SubMenu,
 } from "../components/Sidebar/Sidebar";
+import { BiSolidDonateHeart } from "react-icons/bi";
+import { MdSubscriptions } from "react-icons/md";
+
 
 import { Fragment } from "react";
 // Import React Icons
@@ -35,6 +38,7 @@ import {
   FaShieldAlt,
   FaScroll,
   FaBars,
+  FaDonate,
 } from "react-icons/fa";
 
 const Layouts = () => {
@@ -126,10 +130,24 @@ const Layouts = () => {
               {/* Cyan */}
               <span>Website Updates</span>
             </MenuItem>
+
+            <MenuItem routeLink="/forms/donation">
+              <BiSolidDonateHeart style={{ ...iconStyle, color: "#FFD700" }} />{" "}
+              <span>Donation</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/sponsor">
+              <FaDonate style={{ ...iconStyle, color: "#FF5722" }} />{" "}
+              <span>Sponsors</span>
+            </MenuItem>
+
             <MenuItem routeLink="/forms/tickets">
               <FaEnvelope style={{ ...iconStyle, color: "#FFC107" }} />{" "}
               {/* Amber */}
               <span> Messages</span>
+            </MenuItem>
+            <MenuItem routeLink="/forms/subsciber">
+              <MdSubscriptions  style={{ ...iconStyle, color: "#BFD700" }} />{" "}
+              <span>Subscribers</span>
             </MenuItem>
             <MenuItem routeLink="/forms/video">
               <FaVideo style={{ ...iconStyle, color: "#FF9800" }} />{" "}

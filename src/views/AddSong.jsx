@@ -197,6 +197,7 @@ const AddSong = () => {
     data.append("coverImage", formData.coverImage);
     data.append("price", formData.price);
     data.append("freeDownload", formData.freeDownload);
+    data.append("admin", true);
 
     try {
       const response = await axios.post(

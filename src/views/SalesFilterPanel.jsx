@@ -22,7 +22,7 @@ import {
 import AdminRevenueCharts from "../components/AdminRevenueCharts";
 
 const apiUrl = "https://backend-music-xg6e.onrender.com/";
-// const apiUrl = "http://localhost:5000/";
+// const apiUrl = "https://backend-music-xg6e.onrender.com/";
 
 const statusEnum = ["pending", "paid", "rejected"]; // Left as is, per instructions
 
