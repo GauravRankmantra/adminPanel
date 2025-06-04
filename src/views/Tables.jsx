@@ -35,6 +35,7 @@ const Tables = () => {
   const [deleting, setDeleting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
+  const [showdetailMmodal, setShowDetailModal] = useState(false);
 
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -110,11 +111,13 @@ const Tables = () => {
 
   const handleShowModal = (user) => {
     setSelectedUser(user);
-    setShowModal(true);
+    setShowDetailModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setShowDetailModal(false);
+
     setSelectedUser(null);
   };
 
@@ -265,13 +268,19 @@ const Tables = () => {
 
                             <button
                               className="me-2"
-                              onClick={() => openEditModal(user)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openEditModal(user);
+                              }}
                             >
                               <img src={editIcon} alt="Edit" />
                             </button>
                             <button
                               size="sm"
-                              onClick={() => openDeleteModal(user)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openDeleteModal(user);
+                              }}
                             >
                               <img src={deleteIcon} alt="Delete" />
                               {/* {deleting && userToDelete?._id === user._id ? (
@@ -439,7 +448,7 @@ const Tables = () => {
         </Modal>
 
         <UserDetailsModal
-          show={showModal}
+          show={showdetailMmodal}
           handleClose={handleCloseModal}
           user={selectedUser}
         />

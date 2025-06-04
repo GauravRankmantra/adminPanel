@@ -32,6 +32,7 @@ const ArtistsPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const[showdetailMmodal,setShowDetailModal]=useState(false);
   const [selectedArtist, setSelectedArtist] = useState(null);
   const [role, setRole] = useState("artist");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -148,11 +149,12 @@ const ArtistsPage = () => {
 
   const handleShowModal = (user) => {
     setSelectedUser(user);
-    setShowModal(true);
+    setShowDetailModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setShowDetailModal(false);
     setSelectedUser(null);
   };
   const handleSave = async () => {
@@ -258,7 +260,8 @@ const ArtistsPage = () => {
                           <td>{artist.role}</td>
 
                           <button
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation()
                               setSelectedArtist(artist);
                               setShowModal(true);
                             }}
@@ -266,7 +269,8 @@ const ArtistsPage = () => {
                             <img src={editIcon} alt="edit" />
                           </button>
                           <button
-                            onClick={() => {
+                            onClick={(e) => {
+                         e.stopPropagation()
                               setArtistToDelete(artist);
                               setShowDeleteModal(true);
                             }}
@@ -453,7 +457,7 @@ const ArtistsPage = () => {
       </Modal>
 
       <UserDetailsModal
-        show={showModal}
+        show={showdetailMmodal}
         handleClose={handleCloseModal}
         user={selectedUser}
       />
