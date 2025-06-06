@@ -276,7 +276,7 @@ const Dashboard = () => {
           <SongsUploadedChart />
         </Col>
       </Row>
-      <Row className="justify-content-center gy-4 gx-4 mb-4">
+      {/* <Row className="justify-content-center gy-4 gx-4 mb-4">
         <Col md={12} lg={6} xl={6}>
           <Row className="justify-content-center gy-4 gx-4">
             <Col sm={12} md={6}>
@@ -287,9 +287,9 @@ const Dashboard = () => {
             </Col>
           </Row>
         </Col>
-      </Row>
+      </Row> */}
 
-      <Row className="justify-content-center gy-4 gx-4 mb-10">
+      {/* <Row className="justify-content-center gy-4 gx-4 mb-10">
         {" "}
         <Col md={12} lg={8} xl={8}>
           <Row className="justify-content-center gy-4 gx-4">
@@ -323,7 +323,7 @@ const Dashboard = () => {
             </Col>
           </Row>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 };

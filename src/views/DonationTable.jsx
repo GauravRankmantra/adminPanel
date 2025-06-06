@@ -10,41 +10,8 @@ const DonationTable = () => {
   const [error, setError] = useState("");
   const limit = 10; // Items per page
 
-  async function executeComplexTask() {
-  console.log('Task started');
-  try {
-    const step1 = await new Promise(resolve => {
-      setTimeout(() => {
-        console.log('Step 1 complete');
-        resolve(10);
-      }, 50);
-    });
 
-    const step2 = await new Promise((_, reject) => {
-      console.log('Step 2 initiated');
-      setTimeout(() => {
-        console.log('Step 2 failed!');
-        reject(new Error('Critical failure'));
-      }, 20); // Faster than Step 1's resolve
-    });
 
-    console.log('Step 3 complete:', step1 + step2); // Will this run?
-
-  } catch (error) {
-    console.error('Caught in executeComplexTask:', error.message);
-    return 'Task failed gracefully'; // Returning from async catch
-  } finally {
-    console.log('Task finished (finally block)');
-  }
-}
-
-console.log('Before calling task');
-const resultPromise = executeComplexTask();
-console.log('After calling task');
-
-resultPromise.then(res => console.log('Task result:', res));
-
-console.log('End of script');
   const fetchDonations = async () => {
     setLoading(true);
     setError("");

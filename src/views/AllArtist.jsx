@@ -32,7 +32,7 @@ const ArtistsPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const[showdetailMmodal,setShowDetailModal]=useState(false);
+  const [showdetailMmodal, setShowDetailModal] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState(null);
   const [role, setRole] = useState("artist");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -47,7 +47,6 @@ const ArtistsPage = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [saving, setSaving] = useState(false);
 
-  
   const limit = 10;
 
   useEffect(() => {
@@ -170,6 +169,7 @@ const ArtistsPage = () => {
     formData.append("role", role);
     formData.append("isFeatured", isFeatured);
     formData.append("isTrending", isTrending);
+  
     if (coverImage) formData.append("coverImage", coverImage);
 
     try {
@@ -261,7 +261,7 @@ const ArtistsPage = () => {
 
                           <button
                             onClick={(e) => {
-                              e.stopPropagation()
+                              e.stopPropagation();
                               setSelectedArtist(artist);
                               setShowModal(true);
                             }}
@@ -270,7 +270,7 @@ const ArtistsPage = () => {
                           </button>
                           <button
                             onClick={(e) => {
-                         e.stopPropagation()
+                              e.stopPropagation();
                               setArtistToDelete(artist);
                               setShowDeleteModal(true);
                             }}

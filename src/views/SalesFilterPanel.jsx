@@ -1,244 +1,377 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
-  Form,
-  Button,
   Table,
-  Spinner,
   Container,
   Row,
   Col,
-  Card,
-  Badge, // Added Card for a nicer spinner container
+  Spinner,
+  Alert,
+  Pagination,
+  Form,
+  InputGroup,
+  Button,
 } from "react-bootstrap";
-import axios from "axios";
-import { MdEdit } from "react-icons/md"; // Kept for consistency, though not used in current UI
-import {
-  FaFilter,
-  FaMoneyBillWave,
-  FaShoppingCart,
-  FaDollarSign,
-  FaInfoCircle,
-} from "react-icons/fa"; // Added more icons
+import { FaInfoCircle, FaSearch, FaFilter } from "react-icons/fa"; // Import icons
+import TransactionDetailModal from "./TransactionDetailModal";
 import AdminRevenueCharts from "../components/AdminRevenueCharts";
 
-const apiUrl = "https://backend-music-xg6e.onrender.com/";
-// const apiUrl = "https://backend-music-xg6e.onrender.com/";
+// Helper function for currency formatting
+const formatCurrency = (amount, currency, locale = "en-US") => {
+  if (amount === null || amount === undefined) return "N/A";
+  // Ensure amount is treated as a number for formatting
+  const numericAmount = parseFloat(amount);
+  if (isNaN(numericAmount)) return "Invalid Amount";
 
-const statusEnum = ["pending", "paid", "rejected"]; // Left as is, per instructions
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(numericAmount);
+  } catch (e) {
+    console.error("Error formatting currency:", e);
+    return `${numericAmount.toFixed(2)} ${currency}`; // Fallback
+  }
+};
+
+// Helper function for date formatting
+const formatDate = (isoString) => {
+  if (!isoString) return "N/A";
+  try {
+    return new Date(isoString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  } catch (e) {
+    return isoString; // Fallback
+  }
+};
 
 const SalesFilterPanel = () => {
-  const [filter, setFilter] = useState("pending"); // Left as is, per instructions
-  const [sales, setSales] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [editingId, setEditingId] = useState(null); // Left as is, per instructions
-  const [updatedStatus, setUpdatedStatus] = useState(""); // Left as is, per instructions
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  const [purchaseData, setPurchaseData] = useState([]); // Data for AdminRevenueCharts
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
-  // Fetch sales based on status filter
-  const fetchSales = async () => {
-    setLoading(true);
-    try {
-      // Note: The filter is currently not applied to the API call as per previous instructions.
-      // If you intend to use the filter for the table, you'll need to re-enable `?status=${filter}` in the URL.
-      const res = await axios.get(`${apiUrl}api/v1/sale`, {
-        withCredentials: true,
-      });
-      setSales(res.data);
-      setPurchaseData(res.data); // Assuming AdminRevenueCharts needs all sales data
-    } catch (err) {
-      console.error("Failed to fetch sales:", err);
-      // Optional: Add a toast notification for fetch error
-      // toast.error("Failed to load sales data.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Update status for a specific sale (currently not used in the UI, left as is)
-  const handleStatusUpdate = async (id) => {
-    try {
-      await axios.patch(
-        `${apiUrl}api/v1/sale/${id}`,
-        { payoutStatus: updatedStatus },
-        { withCredentials: true }
-      );
-      setEditingId(null);
-      fetchSales(); // Refresh sales after update
-    } catch (err) {
-      console.error("Failed to update status:", err);
-      // Optional: Add a toast notification for update error
-      // toast.error("Failed to update sale status.");
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
   useEffect(() => {
-    fetchSales();
-    // The filter dependency is removed here because the API call currently doesn't use it.
-    // If you re-enable filtering for the table, remember to add 'filter' back here.
+    const fetchPayments = async () => {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          "https://backend-music-xg6e.onrender.com/api/v1/sale"
+        );
+        // Assuming your API returns an array directly, or response.data.payments
+        setPayments(response.data || []);
+      } catch (err) {
+        setError("Failed to fetch payments. Please try again.");
+        console.error("API Error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPayments();
   }, []);
 
+  const handleRowClick = (transaction) => {
+    setSelectedTransaction(transaction);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedTransaction(null);
+  };
+
+  // --- Filtering Logic ---
+  const filteredPayments = payments?.filter((payment) => {
+    const matchesSearch =
+      payment.paymentIntentId
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      payment.receiptEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      payment.buyerId?.fullName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      payment.sellerId?.fullName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      payment.songId?.title?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      filterStatus === "all" ||
+      (filterStatus === "succeeded" && payment.paymentStatus === "succeeded") ||
+      (filterStatus === "pending" && payment.paymentStatus === "pending") ||
+      (filterStatus === "pending_payout" && payment.payoutStatus === "pending"); // Added payout status filter
+
+    return matchesSearch && matchesStatus;
+  });
+
+  // --- Pagination Logic ---
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredPayments.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(filteredPayments.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
-    <>
-      {/* Admin Revenue Charts Section */}
-      {/* This component will receive all sales data to compute revenue stats */}
-      <AdminRevenueCharts apiData={purchaseData} />
+    <Container fluid className="py-4">
+      <AdminRevenueCharts apiData={payments} />
+      <Row className="mb-4">
+        <Col>
+          <h2 className="text-center text-primary">Payment Transactions</h2>
+        </Col>
+      </Row>
 
-      <Container className="my-5 p-4 bg-white rounded shadow-lg">
-        {/* Sales Overview Header */}
-        <Row className="mb-4 align-items-center">
-          <Col>
-            <h3 className="mb-0 text-primary d-flex align-items-center">
-              <FaShoppingCart className="me-3 fs-3 text-info" />{" "}
-              {/* Shopping cart icon */}
-              Sales Transactions
-            </h3>
-          </Col>
-          {/* Filter section commented out as per instructions */}
-          {/* <Col md="auto" className="ms-md-auto">
-            <Form.Group controlId="statusFilter" className="mb-0">
-              <Form.Label className="visually-hidden">Filter by Status</Form.Label>
-              <Form.Select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="form-select-sm"
-              >
-                {statusEnum.map((status) => (
-                  <option key={status} value={status}>
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col> */}
-        </Row>
-
-        {/* Loading State for Sales Table */}
-        {loading ? (
-          <Card className="text-center py-5 my-4 shadow-sm border-0 rounded-3">
-            <Card.Body>
-              <Spinner animation="border" variant="primary" className="mb-3" />
-              <p className="lead text-muted">Loading sales transactions...</p>
-              <p className="text-muted small">
-                Please wait while we fetch the latest data.
-              </p>
-            </Card.Body>
-          </Card>
-        ) : (
-          /* Sales Table */
-          <Table
-            striped
-            bordered
-            hover
-            responsive
-            className="bg-light rounded shadow-sm"
+      {/* Search and Filter Controls */}
+      <Row className="mb-3">
+        <Col md={6}>
+          <InputGroup>
+            <InputGroup.Text>
+              <FaSearch />
+            </InputGroup.Text>
+            <Form.Control
+              type="text"
+              placeholder="Search by Payment ID, Email, Buyer, Seller, Song..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1); // Reset page on search
+              }}
+            />
+          </InputGroup>
+        </Col>
+        <Col md={3}>
+          <Form.Select
+            value={filterStatus}
+            onChange={(e) => {
+              setFilterStatus(e.target.value);
+              setCurrentPage(1); // Reset page on filter change
+            }}
           >
-            <thead className="table-dark">
-              <tr>
-                <th>
-                  Song{" "}
-                  <FaInfoCircle
-                    className="ms-1 text-muted small"
-                    title="Song Title"
+            <option value="all">All Statuses</option>
+            <option value="succeeded">Payment Succeeded</option>
+            <option value="pending">Payment Pending</option>
+            <option value="pending_payout">Payout Pending</option>{" "}
+            {/* New filter option */}
+          </Form.Select>
+        </Col>
+        <Col md={3}>
+          <Button
+            variant="outline-secondary"
+            onClick={() => {
+              setSearchTerm("");
+              setFilterStatus("all");
+              setCurrentPage(1);
+            }}
+          >
+            <FaFilter className="me-1" />
+            Clear Filters
+          </Button>
+        </Col>
+      </Row>
+
+      {loading && (
+        <Row className="justify-content-center my-5">
+          <Col xs="auto">
+            <Spinner animation="border" role="status" className="me-2" />
+            <span>Loading payments...</span>
+          </Col>
+        </Row>
+      )}
+
+      {error && (
+        <Row className="justify-content-center my-3">
+          <Col md={8}>
+            <Alert variant="danger" className="text-center">
+              {error}
+            </Alert>
+          </Col>
+        </Row>
+      )}
+
+      {!loading && !error && filteredPayments.length === 0 && (
+        <Row className="justify-content-center my-3">
+          <Col md={8}>
+            <Alert variant="info" className="text-center">
+              No payments found matching your criteria.
+            </Alert>
+          </Col>
+        </Row>
+      )}
+
+      {!loading && !error && filteredPayments.length > 0 && (
+        <>
+          <Row>
+            <Col>
+              <Table striped bordered hover responsive className="shadow-sm">
+                <thead className="table-dark">
+                  <tr>
+                    <th>#</th>
+                    <th>Payment ID</th>
+                    <th>Customer Email</th>
+                    <th>Customer Paid</th>
+                    <th>Processed Amount</th>
+                    <th>Net Earning</th>
+                    <th>Seller Earning</th>
+                    <th>Admin Earning</th>
+                    <th>Payment Status</th>
+                    <th>Payout Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.map((payment, index) => (
+                    <tr
+                      key={payment._id}
+                      onClick={() => handleRowClick(payment)}
+                      style={{ cursor: "pointer" }}
+                      className="align-middle"
+                    >
+                      <td>{indexOfFirstItem + index + 1}</td>
+                      <td>{payment.paymentIntentId || "N/A"}</td>
+                      <td>{payment.receiptEmail || "N/A"}</td>
+                      <td>
+                        {formatCurrency(
+                          payment.customerFacingAmount,
+                          payment.customerFacingCurrency
+                        )}
+                      </td>
+                      <td>
+                        {formatCurrency(
+                          payment.processedAmount,
+                          payment.processedCurrency
+                        )}
+                      </td>
+                      <td>
+                        {formatCurrency(
+                          payment.netAmount,
+                          payment.processedCurrency // Net amount is in processed currency
+                        )}
+                      </td>
+                      <td>
+                        {formatCurrency(
+                          payment.sellerEarning,
+                          payment.processedCurrency // Assuming sellerEarning is in USD or primary currency
+                        )}
+                      </td>
+                      <td>
+                        {formatCurrency(
+                          payment.adminEarning,
+                          payment.processedCurrency // Assuming adminEarning is in USD or primary currency
+                        )}
+                      </td>
+                      <td>
+                        <span
+                          className={`badge bg-${
+                            payment.paymentStatus === "succeeded"
+                              ? "success"
+                              : payment.paymentStatus === "pending"
+                              ? "warning"
+                              : "danger"
+                          }`}
+                        >
+                          {payment.paymentStatus || "N/A"}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          className={`badge bg-${
+                            payment.payoutStatus === "paid"
+                              ? "success"
+                              : payment.payoutStatus === "pending"
+                              ? "warning"
+                              : "info"
+                          }`}
+                        >
+                          {payment.payoutStatus || "N/A"}
+                        </span>
+                      </td>
+                      <td>{formatDate(payment.createdDateTime)}</td>
+                      <td className="text-center">
+                        <Button
+                          variant="outline-info"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click from triggering
+                            handleRowClick(payment);
+                          }}
+                        >
+                          <FaInfoCircle />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <Row className="justify-content-center mt-3">
+              <Col xs="auto">
+                <Pagination>
+                  <Pagination.First
+                    onClick={() => paginate(1)}
+                    disabled={currentPage === 1}
                   />
-                </th>
-                <th>
-                  Buyer{" "}
-                  <FaInfoCircle
-                    className="ms-1 text-muted small"
-                    title="Purchasing User"
+                  <Pagination.Prev
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
                   />
-                </th>
-                <th>
-                  Seller{" "}
-                  <FaInfoCircle
-                    className="ms-1 text-muted small"
-                    title="Selling Artist"
+                  {[...Array(totalPages).keys()].map((number) => (
+                    <Pagination.Item
+                      key={number + 1}
+                      active={number + 1 === currentPage}
+                      onClick={() => paginate(number + 1)}
+                    >
+                      {number + 1}
+                    </Pagination.Item>
+                  ))}
+                  <Pagination.Next
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={currentPage === totalPages}
                   />
-                </th>
-                <th>
-                  Amount{" "}
-                  <FaDollarSign
-                    className="ms-1 text-success small"
-                    title="Total Amount Paid by Buyer"
+                  <Pagination.Last
+                    onClick={() => paginate(totalPages)}
+                    disabled={currentPage === totalPages}
                   />
-                </th>
-                <th>
-                  Received{" "}
-                  <FaDollarSign
-                    className="ms-1 text-info small"
-                    title="Actual Amount Received After Payment Gateway Fees"
-                  />
-                </th>
-                <th>
-                  Seller Earning{" "}
-                  <FaDollarSign
-                    className="ms-1 text-warning small"
-                    title="70% of Received Amount for Seller"
-                  />
-                </th>
-                <th>
-                  Platform Fee{" "}
-                  <FaDollarSign
-                    className="ms-1 text-danger small"
-                    title="Stripe's Processing Fee"
-                  />
-                </th>
-                <th>
-                  Admin Earning{" "}
-                  <FaDollarSign
-                    className="ms-1 text-primary small"
-                    title="30% of Received Amount Minus Stripe Fee"
-                  />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sales.map((sale) => (
-                <tr key={sale._id}>
-                  <td>
-                    {sale.songId?.title || (
-                      <span className="text-muted fst-italic">N/A</span>
-                    )}
-                  </td>
-                  <td>
-                    {sale.buyerId?.fullName || (
-                      <span className="text-muted fst-italic">N/A</span>
-                    )}
-                  </td>
-                  <td>
-                    {sale.sellerId?.fullName || (
-                      <span className="text-muted fst-italic">N/A</span>
-                    )}
-                    {sale.sellerId?.admin && (
-                      <Badge bg="info" size="sm" className="ms-2">
-                        AD
-                      </Badge> // Bootstrap primary badge for "AD"
-                    )}
-                  </td>
-                  <td>${sale.amountPaid?.toFixed(2) || "0.00"}</td>
-                  <td>${sale.amountReceved?.toFixed(2) || "0.00"}</td>
-                  <td>${sale.sellerEarning?.toFixed(2) || "0.00"}</td>
-                  <td>${sale.platformShare?.toFixed(2) || "0.00"}</td>
-                  <td>${sale.adminEarning?.toFixed(2) || "0.00"}</td>
-                </tr>
-              ))}
-              {sales.length === 0 && (
-                <tr>
-                  <td
-                    colSpan="8"
-                    className="text-center py-4 text-muted fst-italic"
-                  >
-                    <FaInfoCircle className="me-2" /> No sales transactions
-                    found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
-        )}
-      </Container>
-    </>
+                </Pagination>
+              </Col>
+            </Row>
+          )}
+        </>
+      )}
+
+      {selectedTransaction && (
+        <TransactionDetailModal
+          show={showModal}
+          onHide={handleCloseModal}
+          transaction={selectedTransaction}
+        />
+      )}
+    </Container>
   );
 };
 
