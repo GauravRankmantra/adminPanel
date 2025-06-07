@@ -54,9 +54,9 @@ const Profile = () => {
                     <p>{user?.downloadedSongsThisMonth ?? 0}</p>
                   </Col>
                 </Row>
-                <Button variant="outline-primary" className="mt-3 px-4 rounded-pill">
+                {/* <Button variant="outline-primary" className="mt-3 px-4 rounded-pill">
                   Edit Profile
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </Card>

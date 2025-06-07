@@ -3,6 +3,7 @@ import { Bar, BarChart, Line, LineChart } from "recharts";
 import StatsCard from "@/components/StatsCard/StatsCard";
 import Traffic from "@/components/Traffic/Traffic";
 import axios from "axios";
+import moment from "moment";
 
 import Download from "@/components/Download/Download";
 import Revenue from "@/components/Revenue/Revenue";
@@ -15,7 +16,7 @@ import SongsUploadedChart from "../components/SongsUploadedChart";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const data1 = [
     {
       name: "Page A",
@@ -99,7 +100,80 @@ const Dashboard = () => {
   const [totalNewUser, setTotalNewUser] = useState(0);
   const [totalSongs, setTotalSongs] = useState(0);
   const [totalAlbum, setTotalAlbum] = useState(0);
+  const [summary, setSummary] = useState({});
+  const [payments, setPayments] = useState([]);
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        // Replace with your actual API endpoint
+        const response = await axios.get(
+          "https://backend-music-xg6e.onrender.com/api/v1/sale"
+        );
+        // Assuming your API returns an array directly, or response.data.payments
+        setPayments(response.data || []);
+      } catch (err) {
+        setError("Failed to fetch payments. Please try again.");
+        console.error("API Error:", err);
+      }
+    };
+    fetchPayments();
 
+    if (payments.length === 0) {
+      setSummary({ totalEarning: 0, pendingPayout: 0 });
+      return;
+    }
+
+    const now = moment();
+    const startOfWeek = moment().startOf("isoWeek");
+
+    let totalEarning = 0;
+    let pendingPayout = 0;
+
+    // Use a map to aggregate earnings by date for both weekly and all-time
+    const weeklyMap = new Map();
+    const allTimeMap = new Map();
+
+    payments.forEach((item) => {
+      const date = moment(item.createdAt);
+      const dateStr = date.format("YYYY-MM-DD"); // Format for X-axis
+
+      // Aggregate weekly data
+      if (
+        date.isSameOrAfter(startOfWeek, "day") &&
+        date.isSameOrBefore(now, "day")
+      ) {
+        weeklyMap.set(
+          dateStr,
+          (weeklyMap.get(dateStr) || 0) + item.adminEarning
+        );
+      }
+
+      // Aggregate all time data
+      allTimeMap.set(
+        dateStr,
+        (allTimeMap.get(dateStr) || 0) + item.adminEarning
+      );
+
+      totalEarning += item.adminEarning;
+      if (item.payoutStatus === "pending") {
+        pendingPayout += item.adminEarning;
+      }
+    });
+
+    // Convert maps to array format for Recharts
+    const sortedWeekly = Array.from(weeklyMap.entries())
+      .map(([date, earning]) => ({ date, adminEarning: earning }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date)); // Ensure chronological order
+
+    const sortedAllTime = Array.from(allTimeMap.entries())
+      .map(([date, earning]) => ({ date, adminEarning: earning }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date)); // Ensure chronological order
+
+    // setWeeklyData(sortedWeekly);
+    // setAllTimeData(sortedAllTime);
+    setSummary({ totalEarning, pendingPayout });
+    // setLoading(false);
+  }, [payments]);
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -185,18 +259,30 @@ const Dashboard = () => {
       </Alert>
 
       <Row className="gy-4 gx-4 mb-4">
-        <Col onClick={()=>navigate('/forms/sales')} sm={12} md={6} lg={3} xl={3}>
+        <Col
+          onClick={() => navigate("/forms/sales")}
+          sm={12}
+          md={6}
+          lg={3}
+          xl={3}
+        >
           <StatsCard
             type="revenue-counter"
             bgColor="#5c6bc0"
             symbol="$"
-            counter={0}
+            counter={Math.ceil(summary.totalEarning )|| 0.00}
             isCounter={true}
             title="Revenue"
             icon="fa-solid fa-dollar-sign"
           />
         </Col>
-        <Col onClick={()=>navigate('/forms/sales')} sm={12} md={6} lg={3} xl={3}>
+        {/* <Col
+          onClick={() => navigate("/forms/sales")}
+          sm={12}
+          md={6}
+          lg={3}
+          xl={3}
+        >
           <StatsCard
             type="revenue-counter"
             bgColor="#66bb6a"
@@ -211,8 +297,8 @@ const Dashboard = () => {
               </BarChart>
             }
           />
-        </Col>
-        <Col onClick={()=>navigate('/tables')} sm={12} md={6} lg={3} xl={3}>
+        </Col> */}
+        <Col onClick={() => navigate("/tables")} sm={12} md={6} lg={3} xl={3}>
           <StatsCard
             type="revenue-counter"
             bgColor="#ffa726"
@@ -222,7 +308,7 @@ const Dashboard = () => {
             icon="fa-solid fa-user-group"
           />
         </Col>
-        <Col onClick={()=>navigate('/tables')}  sm={12} md={6} lg={3} xl={3}>
+        <Col onClick={() => navigate("/tables")} sm={12} md={6} lg={3} xl={3}>
           <StatsCard
             type="revenue-counter"
             bgColor="#42a5f5"
@@ -241,7 +327,13 @@ const Dashboard = () => {
             }
           />
         </Col>
-        <Col onClick={()=>navigate('/forms/all-songs')} sm={12} md={6} lg={3} xl={3}>
+        <Col
+          onClick={() => navigate("/forms/all-songs")}
+          sm={12}
+          md={6}
+          lg={3}
+          xl={3}
+        >
           <StatsCard
             type="revenue-counter"
             bgColor="#ffa726"
@@ -251,7 +343,13 @@ const Dashboard = () => {
             icon="fa-solid fa-music"
           />
         </Col>
-        <Col  onClick={()=>navigate('/forms/all-album')} sm={12} md={6} lg={3} xl={3}>
+        <Col
+          onClick={() => navigate("/forms/all-album")}
+          sm={12}
+          md={6}
+          lg={3}
+          xl={3}
+        >
           <StatsCard
             type="revenue-counter"
             bgColor="#a83239"
