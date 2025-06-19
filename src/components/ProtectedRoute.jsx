@@ -9,14 +9,16 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/auth/checkAdminToken",
-          {
-            withCredentials: true, // Include cookies in the request
+        const userStr = localStorage.getItem("user");
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          if (user.role === "admin") {
+            console.log(user.role === "admin");
+            setIsAuthenticated(true);
+            return;
           }
-        );
-        console.log("token check response ", res);
-        setIsAuthenticated(true);
+        }
+        setIsAuthenticated(false); // Moved this outside so it's not skipped
       } catch {
         setIsAuthenticated(false);
       }
@@ -24,6 +26,7 @@ const ProtectedRoute = ({ children }) => {
     checkAuth();
   }, []);
 
+  // ✅ Correct loading state
   if (isAuthenticated === null) return <Loading />;
 
   return isAuthenticated ? children : <Navigate to="/login" />;

@@ -12,13 +12,13 @@ const UserProfile = () => {
     setLoggingOut(true);
     try {
       // Make the logout API call
-      await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/auth/logout",
-        {},
-        {
-          withCredentials: true, // Ensure cookies are sent
-        }
-      );
+      // await axios.post(
+      //   "https://backend-music-xg6e.onrender.com/api/v1/auth/logout",
+      //   {},
+      //   {
+      //     withCredentials: true, // Ensure cookies are sent
+      //   }
+      // );
       localStorage.removeItem("user");
       navigate("/login");
     } catch (error) {
