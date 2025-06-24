@@ -169,7 +169,7 @@ const ArtistsPage = () => {
     formData.append("role", role);
     formData.append("isFeatured", isFeatured);
     formData.append("isTrending", isTrending);
-  
+
     if (coverImage) formData.append("coverImage", coverImage);
 
     try {

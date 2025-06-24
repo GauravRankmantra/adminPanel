@@ -32,14 +32,14 @@ const API_UPLOAD = `${API_BASE}`;
 
 // Helper function to format views (e.g., 12345 -> 12.3K)
 const formatViews = (num) => {
-  if (typeof num !== 'number' || isNaN(num)) return '0 Views';
+  if (typeof num !== "number" || isNaN(num)) return "0 Views";
   if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + 'M Views';
+    return (num / 1000000).toFixed(1) + "M Views";
   }
   if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'K Views';
+    return (num / 1000).toFixed(1) + "K Views";
   }
-  return num + ' Views';
+  return num + " Views";
 };
 
 const FeaturedVideoAdmin = () => {
@@ -61,7 +61,6 @@ const FeaturedVideoAdmin = () => {
   const [videoToPlayUrl, setVideoToPlayUrl] = useState(null);
   const [videoToPlayTitle, setVideoToPlayTitle] = useState("");
 
-
   useEffect(() => {
     if (selectedThumbnailFile) {
       const objectUrl = URL.createObjectURL(selectedThumbnailFile);
@@ -72,7 +71,6 @@ const FeaturedVideoAdmin = () => {
     }
   }, [selectedThumbnailFile]);
 
-
   // --- Fetch all videos ---
   const fetchVideos = useCallback(async () => {
     setLoading(true);
@@ -80,9 +78,11 @@ const FeaturedVideoAdmin = () => {
       const { data } = await axios.get(API_BASE);
       if (Array.isArray(data)) {
         setVideos(data);
-      } else if (data && typeof data === 'object') {
+      } else if (data && typeof data === "object") {
         setVideos([data]);
-        console.warn("API returned a single video object where an array was expected. Wrapping in array.");
+        console.warn(
+          "API returned a single video object where an array was expected. Wrapping in array."
+        );
       } else {
         setVideos([]);
       }
@@ -140,7 +140,6 @@ const FeaturedVideoAdmin = () => {
     setShowVideoPlayModal(false);
   };
 
-
   const handleShowDeleteConfirm = (video) => {
     setCurrentVideo(video);
     setShowDeleteConfirm(true);
@@ -162,9 +161,8 @@ const FeaturedVideoAdmin = () => {
     }
 
     if (!currentVideo && !selectedThumbnailFile) {
-        return toast.error("Please select a thumbnail image for the new video.");
+      return toast.error("Please select a thumbnail image for the new video.");
     }
-
 
     setUploading(true);
     const formData = new FormData();
@@ -180,9 +178,13 @@ const FeaturedVideoAdmin = () => {
     try {
       let response;
       if (currentVideo) {
-        response = await axios.put(`${API_BASE}/${currentVideo._id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        response = await axios.put(
+          `${API_BASE}/${currentVideo._id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
         toast.success("Video updated successfully!");
       } else {
         response = await axios.post(API_UPLOAD, formData, {
@@ -194,7 +196,11 @@ const FeaturedVideoAdmin = () => {
       handleCloseModal();
     } catch (err) {
       console.error("Video operation failed:", err);
-      toast.error(`Failed to ${currentVideo ? "update" : "upload"} video: ${err.response?.data?.message || err.message}`);
+      toast.error(
+        `Failed to ${currentVideo ? "update" : "upload"} video: ${
+          err.response?.data?.message || err.message
+        }`
+      );
     } finally {
       setUploading(false);
     }
@@ -215,10 +221,11 @@ const FeaturedVideoAdmin = () => {
   };
 
   // --- Filtered Videos for Display ---
-  const filteredVideos = videos.filter(video =>
-    video.title?.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+  const filteredVideos = videos
+    .filter((video) =>
+      video.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <Container className="py-4">
@@ -239,14 +246,19 @@ const FeaturedVideoAdmin = () => {
           <Row className="mb-4">
             <Col>
               <InputGroup>
-                <InputGroup.Text><FaSearch /></InputGroup.Text>
+                <InputGroup.Text>
+                  <FaSearch />
+                </InputGroup.Text>
                 <Form.Control
                   placeholder="Search videos by title..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 {searchTerm && (
-                  <Button variant="outline-secondary" onClick={() => setSearchTerm("")}>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={() => setSearchTerm("")}
+                  >
                     <FaTimes />
                   </Button>
                 )}
@@ -261,11 +273,13 @@ const FeaturedVideoAdmin = () => {
             </div>
           ) : filteredVideos.length === 0 && searchTerm === "" ? (
             <Alert variant="info" className="text-center py-4">
-              <FaVideo className="me-2" /> No videos uploaded yet. Click "Add New Video" to get started!
+              <FaVideo className="me-2" /> No videos uploaded yet. Click "Add
+              New Video" to get started!
             </Alert>
           ) : filteredVideos.length === 0 && searchTerm !== "" ? (
             <Alert variant="warning" className="text-center py-4">
-                <FaExclamationCircle className="me-2" /> No videos found matching "{searchTerm}".
+              <FaExclamationCircle className="me-2" /> No videos found matching
+              "{searchTerm}".
             </Alert>
           ) : (
             <Row xs={1} md={2} lg={3} className="g-4">
@@ -278,16 +292,29 @@ const FeaturedVideoAdmin = () => {
                           src={video.thumbnailUrl}
                           alt={video.title}
                           className="w-100 rounded-top"
-                          style={{ maxHeight: "250px", objectFit: "cover", cursor: 'pointer' }}
+                          style={{
+                            maxHeight: "250px",
+                            objectFit: "cover",
+                            cursor: "pointer",
+                          }}
                           // UPDATED onClick: Open video in modal
-                          onClick={() => handleShowVideoPlayModal(video.url, video.title)}
+                          onClick={() =>
+                            handleShowVideoPlayModal(video.url, video.title)
+                          }
                         />
                       ) : (
                         <div
                           className="w-100 rounded-top bg-light d-flex align-items-center justify-content-center text-muted"
-                          style={{ maxHeight: "250px", height: "150px", objectFit: "cover", cursor: 'pointer' }}
+                          style={{
+                            maxHeight: "250px",
+                            height: "150px",
+                            objectFit: "cover",
+                            cursor: "pointer",
+                          }}
                           // UPDATED onClick: Open video in modal
-                          onClick={() => handleShowVideoPlayModal(video.url, video.title)}
+                          onClick={() =>
+                            handleShowVideoPlayModal(video.url, video.title)
+                          }
                         >
                           <FaVideo size={50} />
                           <p className="ms-2 mb-0">No Thumbnail</p>
@@ -295,12 +322,14 @@ const FeaturedVideoAdmin = () => {
                       )}
                       {/* Play icon overlay */}
                       <div
-                          className="position-absolute top-50 start-50 translate-middle text-white"
-                          style={{ cursor: 'pointer', zIndex: 1 }}
-                          // UPDATED onClick: Open video in modal
-                          onClick={() => handleShowVideoPlayModal(video.url, video.title)}
+                        className="position-absolute top-50 start-50 translate-middle text-white"
+                        style={{ cursor: "pointer", zIndex: 1 }}
+                        // UPDATED onClick: Open video in modal
+                        onClick={() =>
+                          handleShowVideoPlayModal(video.url, video.title)
+                        }
                       >
-                          <FaPlayCircle size={60} style={{ opacity: 0.8 }} />
+                        <FaPlayCircle size={60} style={{ opacity: 0.8 }} />
                       </div>
                       {/* Views Overlay */}
                       <div className="position-absolute bottom-0 end-0 p-2 bg-dark bg-opacity-75 text-white rounded-bottom-start">
@@ -308,11 +337,15 @@ const FeaturedVideoAdmin = () => {
                       </div>
                     </div>
                     <Card.Body className="flex-grow-1 d-flex flex-column justify-content-between">
-                      <Card.Title className="fw-bold text-truncate mb-2" title={video.title}>
+                      <Card.Title
+                        className="fw-bold text-truncate mb-2"
+                        title={video.title}
+                      >
                         {video.title}
                       </Card.Title>
                       <Card.Text className="text-muted small mb-3">
-                        Uploaded: {moment(video.createdAt).format("MMM D,YYYY h:mm A")}
+                        Uploaded:{" "}
+                        {moment(video.createdAt).format("MMM D,YYYY h:mm A")}
                       </Card.Text>
                       <div className="d-flex justify-content-between mt-auto">
                         <Button
@@ -342,9 +375,17 @@ const FeaturedVideoAdmin = () => {
       </Card>
 
       {/* Upload/Edit Video Modal */}
-      <Modal show={showModal} onHide={handleCloseModal} centered backdrop="static" keyboard={false}>
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
         <Modal.Header closeButton className="bg-primary text-white">
-          <Modal.Title>{currentVideo ? "Edit Video" : "Upload New Video"}</Modal.Title>
+          <Modal.Title>
+            {currentVideo ? "Edit Video" : "Upload New Video"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -365,7 +406,9 @@ const FeaturedVideoAdmin = () => {
 
             <Form.Group controlId="formVideoFile" className="mb-3">
               <Form.Label className="fw-bold">
-                {currentVideo ? "Replace Video File (Optional)" : "Select Video File"}
+                {currentVideo
+                  ? "Replace Video File (Optional)"
+                  : "Select Video File"}
               </Form.Label>
               <Form.Control
                 type="file"
@@ -387,14 +430,18 @@ const FeaturedVideoAdmin = () => {
             {/* Thumbnail Upload Field */}
             <Form.Group controlId="formThumbnailFile" className="mb-3">
               <Form.Label className="fw-bold">
-                {currentVideo ? "Replace Thumbnail (Optional)" : "Upload Thumbnail"}
+                {currentVideo
+                  ? "Replace Thumbnail (Optional)"
+                  : "Upload Thumbnail"}
               </Form.Label>
               <Form.Control
                 type="file"
                 accept="image/*"
                 onChange={(e) => setSelectedThumbnailFile(e.target.files[0])}
                 required={!currentVideo}
-                isInvalid={!currentVideo && !selectedThumbnailFile && !uploading}
+                isInvalid={
+                  !currentVideo && !selectedThumbnailFile && !uploading
+                }
               />
               <Form.Control.Feedback type="invalid">
                 Please select a thumbnail image.
@@ -408,11 +455,18 @@ const FeaturedVideoAdmin = () => {
               {/* Thumbnail Preview */}
               {(thumbnailPreviewUrl || currentVideo?.thumbnailUrl) && (
                 <div className="mt-2">
-                  <p className="mb-1 text-muted small">Current/Selected Thumbnail:</p>
+                  <p className="mb-1 text-muted small">
+                    Current/Selected Thumbnail:
+                  </p>
                   <img
                     src={thumbnailPreviewUrl || currentVideo?.thumbnailUrl}
                     alt="Thumbnail Preview"
-                    style={{ maxWidth: '150px', height: 'auto', border: '1px solid #ddd', borderRadius: '4px' }}
+                    style={{
+                      maxWidth: "150px",
+                      height: "auto",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                    }}
                   />
                   {selectedThumbnailFile && (
                     <Form.Text className="d-block text-muted mt-1">
@@ -425,22 +479,33 @@ const FeaturedVideoAdmin = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal} disabled={uploading}>
+          <Button
+            variant="secondary"
+            onClick={handleCloseModal}
+            disabled={uploading}
+          >
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleVideoSubmit}
             disabled={
-                uploading ||
-                newTitle.trim() === "" ||
-                (!currentVideo && !selectedFile) ||
-                (!currentVideo && !selectedThumbnailFile)
+              uploading ||
+              newTitle.trim() === "" ||
+              (!currentVideo && !selectedFile) ||
+              (!currentVideo && !selectedThumbnailFile)
             }
           >
             {uploading ? (
               <>
-                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-1" />
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  className="me-1"
+                />
                 {currentVideo ? "Updating..." : "Uploading..."}
               </>
             ) : currentVideo ? (
@@ -453,13 +518,18 @@ const FeaturedVideoAdmin = () => {
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteConfirm} onHide={handleCloseDeleteConfirm} centered>
+      <Modal
+        show={showDeleteConfirm}
+        onHide={handleCloseDeleteConfirm}
+        centered
+      >
         <Modal.Header closeButton className="bg-danger text-white">
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete the video titled "
-          <span className="fw-bold">{currentVideo?.title}</span>"? This action cannot be undone.
+          <span className="fw-bold">{currentVideo?.title}</span>"? This action
+          cannot be undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDeleteConfirm}>
@@ -472,7 +542,12 @@ const FeaturedVideoAdmin = () => {
       </Modal>
 
       {/* NEW: Video Playback Modal */}
-      <Modal show={showVideoPlayModal} onHide={handleCloseVideoPlayModal} size="lg" centered>
+      <Modal
+        show={showVideoPlayModal}
+        onHide={handleCloseVideoPlayModal}
+        size="lg"
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>{videoToPlayTitle}</Modal.Title>
         </Modal.Header>
@@ -483,7 +558,7 @@ const FeaturedVideoAdmin = () => {
               controls
               autoPlay // Auto-play the video when modal opens
               className="w-100"
-              style={{ maxHeight: '70vh' }} // Limit height to avoid overflow
+              style={{ maxHeight: "70vh" }} // Limit height to avoid overflow
             >
               Your browser does not support the video tag.
             </video>
@@ -497,7 +572,6 @@ const FeaturedVideoAdmin = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </Container>
   );
 };

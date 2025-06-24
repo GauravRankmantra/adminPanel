@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Card,
@@ -10,7 +10,7 @@ import {
   Spinner,
   ListGroup,
   InputGroup,
-} from 'react-bootstrap';
+} from "react-bootstrap";
 import {
   FaEdit,
   FaCheck,
@@ -20,25 +20,25 @@ import {
   FaLink,
   FaHeading,
   FaInfoCircle,
-} from 'react-icons/fa'; // React Icons
-import { toast } from 'react-hot-toast'; // For toast notifications
-import axios from 'axios';
+} from "react-icons/fa"; // React Icons
+import { toast } from "react-hot-toast"; // For toast notifications
+import axios from "axios";
 
 // API Configuration
-const API_BASE_URL = 'https://backend-music-xg6e.onrender.com/api/v1'; // Ensure this matches your backend URL
+const API_BASE_URL = "https://backend-music-xg6e.onrender.com/api/v1"; // Ensure this matches your backend URL
 const FOOTER_API_ENDPOINT = `${API_BASE_URL}/footer`;
 
 // Helper to get authentication token (mock for production readiness)
 const getConfig = () => {
-  const token = localStorage.getItem('adminToken'); // Assuming admin token is stored here
+  const token = localStorage.getItem("adminToken"); // Assuming admin token is stored here
   if (!token) {
-    console.error('Admin token not found. Please log in.');
+    console.error("Admin token not found. Please log in.");
     // In a real app, you'd throw an error or redirect
   }
   return {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
 };
@@ -48,10 +48,11 @@ const FooterManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({ // Data currently being edited in form
-    mainHeading: '',
+  const [formData, setFormData] = useState({
+    // Data currently being edited in form
+    mainHeading: "",
     links: [],
-    subscribe: '',
+    subscribe: "",
   });
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -63,17 +64,19 @@ const FooterManagement = () => {
       const response = await axios.get(FOOTER_API_ENDPOINT);
       const fetchedData = response.data.data;
       setFooterData(fetchedData); // Store original data
-      setFormData({ // Initialize form data with fetched data
-        mainHeading: fetchedData.mainHeading || '',
+      setFormData({
+        // Initialize form data with fetched data
+        mainHeading: fetchedData.mainHeading || "",
         links: fetchedData.links || [],
-        subscribe: fetchedData.subscribe || '',
+        subscribe: fetchedData.subscribe || "",
       });
     } catch (err) {
-      console.error('Error fetching footer:', err);
+      console.error("Error fetching footer:", err);
       setError(
-        err.response?.data?.message || 'Failed to fetch footer data. Please check your backend connection.'
+        err.response?.data?.message ||
+          "Failed to fetch footer data. Please check your backend connection."
       );
-      toast.error('Failed to load footer data.');
+      toast.error("Failed to load footer data.");
     } finally {
       setLoading(false);
     }
@@ -82,7 +85,6 @@ const FooterManagement = () => {
   useEffect(() => {
     fetchFooter();
   }, [fetchFooter]);
-
 
   // --- Handle Form Changes ---
   const handleInputChange = (e) => {
@@ -99,7 +101,7 @@ const FooterManagement = () => {
   const handleAddLink = () => {
     setFormData((prev) => ({
       ...prev,
-      links: [...prev.links, { heading: '', link: '' }],
+      links: [...prev.links, { heading: "", link: "" }],
     }));
   };
 
@@ -116,23 +118,20 @@ const FooterManagement = () => {
     setIsUpdating(true);
     setError(null);
 
-   
-    if (formData.mainHeading === '' && footerData?.mainHeading !== '') {
-        // If it was not empty initially but is now empty
-        setError('Main Heading cannot be empty.');
-        setIsUpdating(false);
-        return;
+    if (formData.mainHeading === "" && footerData?.mainHeading !== "") {
+      // If it was not empty initially but is now empty
+      setError("Main Heading cannot be empty.");
+      setIsUpdating(false);
+      return;
     }
-
 
     // Validate subscribe only if it was touched AND is now empty
-    if (formData.subscribe === '' && footerData?.subscribe !== '') {
-        // If it was not empty initially but is now empty
-        setError('Subscribe section text cannot be empty.');
-        setIsUpdating(false);
-        return;
+    if (formData.subscribe === "" && footerData?.subscribe !== "") {
+      // If it was not empty initially but is now empty
+      setError("Subscribe section text cannot be empty.");
+      setIsUpdating(false);
+      return;
     }
-
 
     // Validate individual links within the array:
     // Every link *within the array* must be complete.
@@ -142,41 +141,41 @@ const FooterManagement = () => {
     //         setIsUpdating(false);
     //         return;
     //     }
-        // if (!link.link.trim()) {
-        //     setError(`Link URL for "${link.heading}" cannot be empty.`);
-        //     setIsUpdating(false);
-        //     return;
-        // }
-        // if (!/^https?:\/\/.+/.test(link.link.trim())) {
-        //     setError(`Link URL "${link.link}" is not a valid URL (must start with http:// or https://).`);
-        //     setIsUpdating(false);
-        //     return;
-        // }
-   // }
+    // if (!link.link.trim()) {
+    //     setError(`Link URL for "${link.heading}" cannot be empty.`);
+    //     setIsUpdating(false);
+    //     return;
+    // }
+    // if (!/^https?:\/\/.+/.test(link.link.trim())) {
+    //     setError(`Link URL "${link.link}" is not a valid URL (must start with http:// or https://).`);
+    //     setIsUpdating(false);
+    //     return;
+    // }
+    // }
     // --- END REVISED CLIENT-SIDE VALIDATION ---
-
 
     try {
       const footerId = footerData?._id;
       if (!footerId) {
-          throw new Error("Footer ID not available for update. Please refresh the page.");
+        throw new Error(
+          "Footer ID not available for update. Please refresh the page."
+        );
       }
 
-      
       const response = await axios.put(
         `${FOOTER_API_ENDPOINT}/${footerId}`,
-        formData, 
+        formData
       );
       setFooterData(response.data.data); // Update original data with new data
-      toast.success('Footer updated successfully!');
+      toast.success("Footer updated successfully!");
       setIsEditing(false); // Exit edit mode on success
     } catch (err) {
-      console.error('Error updating footer:', err);
+      console.error("Error updating footer:", err);
       setError(
         err.response?.data?.message ||
-          'Failed to update footer. Please check your input and try again.'
+          "Failed to update footer. Please check your input and try again."
       );
-      toast.error('Failed to update footer.');
+      toast.error("Failed to update footer.");
     } finally {
       setIsUpdating(false);
     }
@@ -186,9 +185,9 @@ const FooterManagement = () => {
   const handleCancel = () => {
     // Revert formData to the last saved footerData
     setFormData({
-      mainHeading: footerData?.mainHeading || '',
+      mainHeading: footerData?.mainHeading || "",
       links: footerData?.links || [],
-      subscribe: footerData?.subscribe || '',
+      subscribe: footerData?.subscribe || "",
     });
     setError(null); // Clear any validation errors
     setIsEditing(false);
@@ -238,28 +237,39 @@ const FooterManagement = () => {
           )}
         </Card.Header>
         <Card.Body className="p-4">
-          {error && isEditing && ( // Show error specifically within the form if in edit mode
-            <Alert variant="danger" className="mb-3">
-              <FaInfoCircle className="me-2" /> {error}
-            </Alert>
-          )}
+          {error &&
+            isEditing && ( // Show error specifically within the form if in edit mode
+              <Alert variant="danger" className="mb-3">
+                <FaInfoCircle className="me-2" /> {error}
+              </Alert>
+            )}
 
           {!isEditing ? (
             // --- Display Mode ---
             <div>
               <h5 className="text-primary mb-3">Main Heading:</h5>
-              <p className="fs-5 fw-bold mb-4">{footerData?.mainHeading || 'N/A'}</p>
+              <p className="fs-5 fw-bold mb-4">
+                {footerData?.mainHeading || "N/A"}
+              </p>
 
               <h5 className="text-primary mb-3">Footer Links:</h5>
               {footerData?.links && footerData.links.length > 0 ? (
                 <ListGroup className="mb-4 shadow-sm">
                   {footerData.links.map((link, index) => (
-                    <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center py-2 px-3">
+                    <ListGroup.Item
+                      key={index}
+                      className="d-flex justify-content-between align-items-center py-2 px-3"
+                    >
                       <div>
                         <FaHeading className="me-2 text-muted" />
                         <span className="fw-semibold">{link.heading}</span>
                       </div>
-                      <a href={link.link} target="_blank" rel="noopener noreferrer" className="text-info text-decoration-none">
+                      <a
+                        href={link.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-info text-decoration-none"
+                      >
                         <FaLink className="me-2" />
                         {link.link}
                       </a>
@@ -267,11 +277,13 @@ const FooterManagement = () => {
                   ))}
                 </ListGroup>
               ) : (
-                <Alert variant="info" className="text-center py-3">No links configured.</Alert>
+                <Alert variant="info" className="text-center py-3">
+                  No links configured.
+                </Alert>
               )}
 
               <h5 className="text-primary mb-3">Subscribe Section Text:</h5>
-              <p className="fs-5">{footerData?.subscribe || 'N/A'}</p>
+              <p className="fs-5">{footerData?.subscribe || "N/A"}</p>
             </div>
           ) : (
             // --- Edit Mode (Form) ---
@@ -279,7 +291,9 @@ const FooterManagement = () => {
               <Form.Group className="mb-3" controlId="formMainHeading">
                 <Form.Label>Main Heading:</Form.Label>
                 <InputGroup>
-                  <InputGroup.Text><FaHeading /></InputGroup.Text>
+                  <InputGroup.Text>
+                    <FaHeading />
+                  </InputGroup.Text>
                   <Form.Control
                     type="text"
                     name="mainHeading"
@@ -299,12 +313,14 @@ const FooterManagement = () => {
                       <Form.Group controlId={`linkHeading${index}`}>
                         <Form.Label className="small mb-1">Heading</Form.Label>
                         <InputGroup size="sm">
-                          <InputGroup.Text><FaHeading /></InputGroup.Text>
+                          <InputGroup.Text>
+                            <FaHeading />
+                          </InputGroup.Text>
                           <Form.Control
                             type="text"
                             value={link.heading}
                             onChange={(e) =>
-                              handleLinkChange(index, 'heading', e.target.value)
+                              handleLinkChange(index, "heading", e.target.value)
                             }
                             placeholder="Link Title"
                             required // Individual links must be complete
@@ -316,20 +332,25 @@ const FooterManagement = () => {
                       <Form.Group controlId={`linkUrl${index}`}>
                         <Form.Label className="small mb-1">URL</Form.Label>
                         <InputGroup size="sm">
-                          <InputGroup.Text><FaLink /></InputGroup.Text>
+                          <InputGroup.Text>
+                            <FaLink />
+                          </InputGroup.Text>
                           <Form.Control
                             type="text"
                             value={link.link}
                             onChange={(e) =>
-                              handleLinkChange(index, 'link', e.target.value)
+                              handleLinkChange(index, "link", e.target.value)
                             }
                             placeholder="https://example.com"
-                             // Individual links must be complete
+                            // Individual links must be complete
                           />
                         </InputGroup>
                       </Form.Group>
                     </Col>
-                    <Col md={2} className="d-flex align-items-end justify-content-center">
+                    <Col
+                      md={2}
+                      className="d-flex align-items-end justify-content-center"
+                    >
                       <Button
                         variant="outline-danger"
                         onClick={() => handleRemoveLink(index)}
@@ -342,14 +363,20 @@ const FooterManagement = () => {
                   </Row>
                 </Card>
               ))}
-              <Button variant="outline-primary" onClick={handleAddLink} className="mb-4 d-flex align-items-center">
+              <Button
+                variant="outline-primary"
+                onClick={handleAddLink}
+                className="mb-4 d-flex align-items-center"
+              >
                 <FaPlus className="me-2" /> Add New Link
               </Button>
 
               <Form.Group className="mb-4" controlId="formSubscribe">
                 <Form.Label>Subscribe Section Text:</Form.Label>
                 <InputGroup>
-                  <InputGroup.Text><FaInfoCircle /></InputGroup.Text>
+                  <InputGroup.Text>
+                    <FaInfoCircle />
+                  </InputGroup.Text>
                   <Form.Control
                     type="text"
                     name="subscribe"
@@ -362,7 +389,11 @@ const FooterManagement = () => {
               </Form.Group>
 
               <div className="d-flex justify-content-end gap-2">
-                <Button variant="secondary" onClick={handleCancel} disabled={isUpdating}>
+                <Button
+                  variant="secondary"
+                  onClick={handleCancel}
+                  disabled={isUpdating}
+                >
                   <FaTimes className="me-2" /> Cancel
                 </Button>
                 <Button variant="success" type="submit" disabled={isUpdating}>

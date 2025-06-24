@@ -10,8 +10,6 @@ const DonationTable = () => {
   const [error, setError] = useState("");
   const limit = 10; // Items per page
 
-
-
   const fetchDonations = async () => {
     setLoading(true);
     setError("");
@@ -27,9 +25,6 @@ const DonationTable = () => {
       setLoading(false);
     }
   };
-
-
-
 
   useEffect(() => {
     fetchDonations();

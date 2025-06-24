@@ -102,6 +102,7 @@ const Dashboard = () => {
   const [totalAlbum, setTotalAlbum] = useState(0);
   const [summary, setSummary] = useState({});
   const [payments, setPayments] = useState([]);
+
   useEffect(() => {
     const fetchPayments = async () => {
       try {
@@ -173,7 +174,7 @@ const Dashboard = () => {
     // setAllTimeData(sortedAllTime);
     setSummary({ totalEarning, pendingPayout });
     // setLoading(false);
-  }, [payments]);
+  }, []);
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -270,7 +271,7 @@ const Dashboard = () => {
             type="revenue-counter"
             bgColor="#5c6bc0"
             symbol="$"
-            counter={Math.ceil(summary.totalEarning )|| 0.00}
+            counter={Math.ceil(summary.totalEarning) || 0.0}
             isCounter={true}
             title="Revenue"
             icon="fa-solid fa-dollar-sign"
