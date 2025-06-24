@@ -4,6 +4,7 @@ import axios from "axios";
 import SongTable from "../components/SongTable";
 import EditSongModal from "../components/EditSongModal";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
+import Loading from "./Loading";
 
 const SongList = ({ album, albumSongs }) => {
   const [songs, setSongs] = useState(albumSongs);
@@ -38,7 +39,8 @@ const SongList = ({ album, albumSongs }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`
+        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
+        { withCredentials: true }
       );
       setSongs(songs.filter((song) => song._id !== selectedSong._id));
       setShowDeleteModal(false);
@@ -60,7 +62,8 @@ const SongList = ({ album, albumSongs }) => {
 
       await axios.put(
         `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
-        formData
+        formData,
+        { withCredentials: true }
       );
       const updatedSongs = songs.map((song) =>
         song._id === updatedSong._id ? updatedSong : song
@@ -73,6 +76,12 @@ const SongList = ({ album, albumSongs }) => {
       setLoading(false);
     }
   };
+  if (loading)
+    return (
+      <div>
+        <Loading message={"updating Song "} />
+      </div>
+    );
 
   return (
     <div>
