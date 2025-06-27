@@ -24,6 +24,7 @@ import styles from "@/assets/scss/Tables.module.scss";
 import UserDetailsModal from "./UserDetailsModal";
 
 const Tables = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [userData, setUserData] = useState([]);
   const [originalUsers, setOriginalUsers] = useState([]);
   const [searchUsers, SetSearchUsers] = useState([]);
@@ -60,7 +61,7 @@ const Tables = () => {
       const query = searchTerm ? `&search=${searchTerm}` : "";
       const filter = activeFilter !== "all" ? `&role=${activeFilter}` : "";
       const res = await axios.get(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/users?page=${currentPage}&limit=${limit}${query}${filter}`
+        `${apiUrl}/admin/users?page=${currentPage}&limit=${limit}${query}${filter}`
       );
       setUserData(res.data.users);
       setOriginalUsers(res.data.users);
@@ -79,7 +80,7 @@ const Tables = () => {
     if (value.trim().length > 2) {
       try {
         const res = await axios.get(
-          `https://backend-music-xg6e.onrender.com/api/v1/admin/searchUser?query=${value}`
+          `${apiUrl}/admin/searchUser?query=${value}`
         );
         setUserData(res.data.users || []);
       } catch (err) {
@@ -96,9 +97,7 @@ const Tables = () => {
     if (!userToDelete) return;
     setDeleting(true);
     try {
-      await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${userToDelete._id}`
-      );
+      await axios.delete(`${apiUrl}/admin/user/${userToDelete._id}`);
       toast.success("User deleted successfully");
       fetchUsers();
       setShowDeleteModal(false);
@@ -135,14 +134,10 @@ const Tables = () => {
     if (coverImage) formData.append("coverImage", coverImage);
 
     try {
-      await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/user/update/${selectedUser._id}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      await axios.put(`${apiUrl}/user/update/${selectedUser._id}`, formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       toast.success("User updated successfully ✅");
       setShowModal(false);
       fetchUsers();

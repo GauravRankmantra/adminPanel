@@ -24,6 +24,8 @@ import styles from "@/assets/scss/Tables.module.scss";
 import UserDetailsModal from "./UserDetailsModal";
 
 const ArtistsPage = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [artists, setArtists] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -99,7 +101,7 @@ const ArtistsPage = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/artist?page=${page}&limit=${limit}`
+        `${apiUrl}/admin/artist?page=${page}&limit=${limit}`
       );
 
       setArtists(res.data.data);
@@ -121,9 +123,7 @@ const ArtistsPage = () => {
   const debouncedSearch = debounce(async (term) => {
     try {
       searchFlag = true;
-      const res = await axios.get(
-        `https://backend-music-xg6e.onrender.com/api/v1/user/search/user?query=${term}`
-      );
+      const res = await axios.get(`${apiUrl}/user/search/user?query=${term}`);
       const artists = res.data.users.filter((u) => u.role === "artist");
       setSearchResults(artists);
     } catch {
@@ -135,9 +135,7 @@ const ArtistsPage = () => {
 
   const handleDeleteArtist = async () => {
     try {
-      await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${artistToDelete._id}`
-      );
+      await axios.delete(`${apiUrl}/admin/user/${artistToDelete._id}`);
       toast.success("Artist deleted successfully");
       setShowDeleteModal(false);
       fetchArtists(currentPage);
@@ -169,18 +167,14 @@ const ArtistsPage = () => {
     formData.append("role", role);
     formData.append("isFeatured", isFeatured);
     formData.append("isTrending", isTrending);
-  
+
     if (coverImage) formData.append("coverImage", coverImage);
 
     try {
-      await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/user/update/${selectedArtist._id}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      await axios.put(`${apiUrl}/user/update/${selectedArtist._id}`, formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       toast.success("User updated successfully ✅");
       handleClose();

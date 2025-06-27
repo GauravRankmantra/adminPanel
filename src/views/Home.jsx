@@ -11,6 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Home = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [heroData, setHeroData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -126,9 +127,7 @@ const Home = () => {
   // Fetch hero section
   const fetchHeroData = async () => {
     try {
-      const res = await axios.get(
-        "https://backend-music-xg6e.onrender.com/api/v1/home/heroSection"
-      );
+      const res = await axios.get(`${apiUrl}/home/heroSection`);
       if (res.data && res.data.success) {
         setHeroData(res.data.data);
         setOriginalData(res.data.data);
@@ -191,7 +190,7 @@ const Home = () => {
       }
 
       const res = await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/home/heroSection/${originalData._id}`,
+        `${apiUrl}/home/heroSection/${originalData._id}`,
         payload,
         {
           headers: { "Content-Type": "multipart/form-data" },

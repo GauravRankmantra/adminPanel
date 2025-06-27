@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Navbar = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [openNotification, setOpenNotification] = useState(true);
   const [openMessage, setOpenMessage] = useState(true);
   const [openUser, setOpenUser] = useState(true);
@@ -36,9 +37,7 @@ const Navbar = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/ticket?status=Pending"
-        );
+        const res = await axios.get(`${apiUrl}/ticket?status=Pending`);
         setMessages(res.data || []);
         console.log("Fetched messages:", res.data);
       } catch (err) {

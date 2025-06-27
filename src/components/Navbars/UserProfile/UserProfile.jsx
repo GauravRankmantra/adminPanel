@@ -13,7 +13,7 @@ const UserProfile = () => {
     try {
       // Make the logout API call
       // await axios.post(
-      //   "https://backend-music-xg6e.onrender.com/api/v1/auth/logout",
+      //   "${apiUrl}/auth/logout",
       //   {},
       //   {
       //     withCredentials: true, // Ensure cookies are sent

@@ -94,7 +94,7 @@ const Dashboard = () => {
       amt: 2000,
     },
   ];
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalNewUser, setTotalNewUser] = useState(0);
@@ -106,9 +106,7 @@ const Dashboard = () => {
     const fetchPayments = async () => {
       try {
         // Replace with your actual API endpoint
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/sale"
-        );
+        const response = await axios.get(`${apiUrl}/sale`);
         // Assuming your API returns an array directly, or response.data.payments
         setPayments(response.data || []);
       } catch (err) {
@@ -177,9 +175,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/admin/users"
-        );
+        const response = await axios.get(`${apiUrl}/admin/users`);
 
         setTotalUsers(response.data.totalUsers);
       } catch (error) {
@@ -192,9 +188,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/user/new-users"
-        );
+        const response = await axios.get(`${apiUrl}/user/new-users`);
 
         // Set users from API response
         setUsers(response.data.data);
@@ -209,9 +203,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTotalSongs = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/song/totalSongs"
-        );
+        const response = await axios.get(`${apiUrl}/song/totalSongs`);
 
         // Set users from API response
 
@@ -227,9 +219,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTotalSongs = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/albums/getTotalAlbum"
-        );
+        const response = await axios.get(`${apiUrl}/albums/getTotalAlbum`);
 
         setTotalAlbum(response.data.total);
       } catch (error) {
@@ -270,7 +260,7 @@ const Dashboard = () => {
             type="revenue-counter"
             bgColor="#5c6bc0"
             symbol="$"
-            counter={Math.ceil(summary.totalEarning )|| 0.00}
+            counter={Math.ceil(summary.totalEarning) || 0.0}
             isCounter={true}
             title="Revenue"
             icon="fa-solid fa-dollar-sign"

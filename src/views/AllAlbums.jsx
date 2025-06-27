@@ -16,6 +16,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 const AllAlbums = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -32,9 +33,7 @@ const AllAlbums = () => {
   const fetchAlbums = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "https://backend-music-xg6e.onrender.com/api/v1/albums"
-      );
+      const response = await axios.get(`${apiUrl}/albums`);
       setAlbums(response.data.allAlbums);
     } catch (error) {
       setError("Error fetching albums");
@@ -59,10 +58,9 @@ const AllAlbums = () => {
     setShowConfirmModal(false);
 
     try {
-      await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/albums/${selectedAlbum._id}`,
-        { withCredentials: true }
-      );
+      await axios.delete(`${apiUrl}/albums/${selectedAlbum._id}`, {
+        withCredentials: true,
+      });
       toast.success("Album deleted successfully");
       setAlbums((prev) => prev.filter((a) => a._id !== selectedAlbum._id));
     } catch (error) {

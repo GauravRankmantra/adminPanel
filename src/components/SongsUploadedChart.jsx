@@ -5,6 +5,7 @@ import { CardBody } from "react-bootstrap";
 import axios from "axios";
 
 const SongsUploadedChart = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [close, setClose] = useState(false);
   const [chartData, setChartData] = useState({
     series: [
@@ -63,7 +64,7 @@ const SongsUploadedChart = () => {
     const fetchSongsData = async () => {
       try {
         const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/song/songs-uploaded-this-week"
+          `${apiUrl}/song/songs-uploaded-this-week`
         );
         const data = response.data.data;
 

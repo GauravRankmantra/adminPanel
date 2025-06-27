@@ -7,6 +7,7 @@ import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import Loading from "./Loading";
 
 const SongList = ({ album, albumSongs }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [songs, setSongs] = useState(albumSongs);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSong, setSelectedSong] = useState(null);
@@ -38,10 +39,9 @@ const SongList = ({ album, albumSongs }) => {
   const handleDeleteConfirm = async () => {
     try {
       setLoading(true);
-      await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
-        { withCredentials: true }
-      );
+      await axios.delete(`${apiUrl}/song/${selectedSong._id}`, {
+        withCredentials: true,
+      });
       setSongs(songs.filter((song) => song._id !== selectedSong._id));
       setShowDeleteModal(false);
     } catch (error) {
@@ -60,11 +60,9 @@ const SongList = ({ album, albumSongs }) => {
         formData.append("coverImage", coverImage);
       }
 
-      await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
-        formData,
-        { withCredentials: true }
-      );
+      await axios.put(`${apiUrl}/song/${selectedSong._id}`, formData, {
+        withCredentials: true,
+      });
       const updatedSongs = songs.map((song) =>
         song._id === updatedSong._id ? updatedSong : song
       );

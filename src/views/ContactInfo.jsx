@@ -15,6 +15,7 @@ import { Table, Modal } from "react-bootstrap";
 import moment from "moment";
 
 const ContactInfo = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -24,9 +25,7 @@ const ContactInfo = () => {
 
   const fetchMessages = async () => {
     try {
-      const response = await axios.get(
-        "https://backend-music-xg6e.onrender.com/api/v1/contact"
-      );
+      const response = await axios.get(`${apiUrl}/contact`);
       setMessages(response.data.data);
     } catch (error) {
       console.error("Error fetching contact messages:", error);
@@ -58,16 +57,12 @@ const ContactInfo = () => {
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(
-        "https://backend-music-xg6e.onrender.com/api/v1/contact/contact-info"
-      )
-      .then((res) => {
-        const data = res.data;
-        setFormData(data);
-        setInitialData(data);
-        setContactId(data._id);
-      });
+    axios.get(`${apiUrl}/contact/contact-info`).then((res) => {
+      const data = res.data;
+      setFormData(data);
+      setInitialData(data);
+      setContactId(data._id);
+    });
   }, []);
 
   const handleChange = (e) => {
@@ -84,9 +79,7 @@ const ContactInfo = () => {
 
   const handleDeleteMessage = async (id) => {
     try {
-      await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/contact/${id}`
-      );
+      await axios.delete(`${apiUrl}/contact/${id}`);
       setMessages((prevMessages) =>
         prevMessages.filter((msg) => msg._id !== id)
       );
@@ -107,10 +100,7 @@ const ContactInfo = () => {
       return;
     }
 
-    await axios.put(
-      `https://backend-music-xg6e.onrender.com/api/v1/contact/contact-info/${contactId}`,
-      formData
-    );
+    await axios.put(`${apiUrl}/contact/contact-info/${contactId}`, formData);
     setToastMessage("Contact info updated!");
     setShowToast(true);
     setInitialData(formData); // Update initialData after successful save

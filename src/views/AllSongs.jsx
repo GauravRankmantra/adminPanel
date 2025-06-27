@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import editIcon from "../assets/image/edit.png";
 import deleteIcon from "../assets/image/trash.png";
 
-const API_BASE_URL = "https://backend-music-xg6e.onrender.com/api/v1";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const AllSongs = () => {
   const [state, setState] = useState({
@@ -50,7 +50,7 @@ const AllSongs = () => {
       }
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/song`, {
+        const response = await axios.get(`${apiUrl}/song`, {
           params: {
             search: query,
             page,
@@ -122,7 +122,7 @@ const AllSongs = () => {
   const handleDeleteConfirm = async () => {
     try {
       setState((prev) => ({ ...prev, isProcessing: true }));
-      await axios.delete(`${API_BASE_URL}/song/${state.selectedSong._id}`);
+      await axios.delete(`${apiUrl}/song/${state.selectedSong._id}`);
 
       setState((prev) => ({
         ...prev,
@@ -145,7 +145,7 @@ const AllSongs = () => {
       setState((prev) => ({ ...prev, isProcessing: true }));
       const { title, artist, album, duration } = state.selectedSong;
 
-      await axios.put(`${API_BASE_URL}/song/${state.selectedSong._id}`, {
+      await axios.put(`${apiUrl}/song/${state.selectedSong._id}`, {
         title,
         artist: artist.fullName,
         album: album.title,

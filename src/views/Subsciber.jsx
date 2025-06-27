@@ -3,6 +3,7 @@ import axios from "axios";
 import { Table, Pagination, Spinner, Alert, Container } from "react-bootstrap";
 
 const Subsciber = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [donations, setDonations] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -15,7 +16,7 @@ const Subsciber = () => {
     setError("");
     try {
       const { data } = await axios.get(
-        `https://backend-music-xg6e.onrender.com/api/v1/subscribe?page=${page}&limit=${limit}`
+        `${apiUrl}/subscribe?page=${page}&limit=${limit}`
       );
       setDonations(data.data);
       setTotalPages(data.totalPages);

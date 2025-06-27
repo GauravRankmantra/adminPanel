@@ -11,7 +11,7 @@ function App() {
   // useEffect(() => {
   //   const checkAuth = async () => {
   //     const res = await axios.get(
-  //       "https://backend-music-xg6e.onrender.com/api/v1/auth/checkAdminToken",
+  //       "${apiUrl}/auth/checkAdminToken",
   //       { withCredentials: true }
   //     );
   //     if (!res) localStorage.removeItem("user");

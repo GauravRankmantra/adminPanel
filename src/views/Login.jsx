@@ -17,6 +17,7 @@ import { FaUser, FaLock, FaSignInAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoLogIn } from "react-icons/io5";
 
 const Login = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -49,7 +50,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/auth/adminlogin",
+        `${apiUrl}/auth/adminlogin`,
         { email, password },
         { withCredentials: true }
       );

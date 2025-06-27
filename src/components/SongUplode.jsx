@@ -7,6 +7,7 @@ import Error from "../views/Error";
 import Success from "../views/Success";
 
 const SongUpload = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [songs, setSongs] = useState([
     { artist: "", coverImage: null, lowAudio: null, highAudio: null },
   ]);
@@ -83,15 +84,11 @@ const SongUpload = () => {
     });
 
     try {
-      const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/songs/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/songs/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setLoading(false);
       handleSuccess();
       setSongs([

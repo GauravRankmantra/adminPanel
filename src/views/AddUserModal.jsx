@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const AddUserModal = ({ showModalAdd, type, handleClose }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,13 +71,9 @@ const AddUserModal = ({ showModalAdd, type, handleClose }) => {
     }
 
     try {
-      const res = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/user",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axios.post(`${apiUrl}/user`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (res.status === 200) {
         toast.success(

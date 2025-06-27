@@ -14,15 +14,14 @@ import axios from "axios";
 import styles from "@/assets/scss/Traffic.module.scss";
 
 const Traffic = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [range, setRange] = useState("week");
   const [trafficData, setTrafficData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchTrafficData = async (selectedRange) => {
     try {
-      const res = await axios.get(
-        `https://backend-music-xg6e.onrender.com/api/v1/traffic?range=${selectedRange}`
-      );
+      const res = await axios.get(`${apiUrl}/traffic?range=${selectedRange}`);
       const data = res.data.data.sort(
         (a, b) => new Date(a.dayDate) - new Date(b.dayDate)
       );

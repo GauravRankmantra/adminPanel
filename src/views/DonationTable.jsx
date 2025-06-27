@@ -3,6 +3,7 @@ import axios from "axios";
 import { Table, Pagination, Spinner, Alert, Container } from "react-bootstrap";
 
 const DonationTable = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [donations, setDonations] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -10,14 +11,12 @@ const DonationTable = () => {
   const [error, setError] = useState("");
   const limit = 10; // Items per page
 
-
-
   const fetchDonations = async () => {
     setLoading(true);
     setError("");
     try {
       const { data } = await axios.get(
-        `https://backend-music-xg6e.onrender.com/api/v1/donation?page=${page}&limit=${limit}`
+        `${apiUrl}/donation?page=${page}&limit=${limit}`
       );
       setDonations(data.data);
       setTotalPages(data.totalPages);
@@ -27,9 +26,6 @@ const DonationTable = () => {
       setLoading(false);
     }
   };
-
-
-
 
   useEffect(() => {
     fetchDonations();

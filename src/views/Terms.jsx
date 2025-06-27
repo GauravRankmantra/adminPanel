@@ -11,17 +11,16 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const Terms = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [content, setContent] = useState("");
   const [initialContent, setInitialContent] = useState("");
   const [toast, setToast] = useState({ show: false, message: "" });
 
   useEffect(() => {
-    axios
-      .get("https://backend-music-xg6e.onrender.com/api/v1/terms")
-      .then((res) => {
-        setContent(res.data?.content || "");
-        setInitialContent(res.data?.content || "");
-      });
+    axios.get(`${apiUrl}/terms`).then((res) => {
+      setContent(res.data?.content || "");
+      setInitialContent(res.data?.content || "");
+    });
   }, []);
 
   const handleSubmit = async (e) => {
@@ -42,7 +41,7 @@ const Terms = () => {
     }
 
     try {
-      await axios.post("https://backend-music-xg6e.onrender.com/api/v1/terms", {
+      await axios.post(`${apiUrl}/terms`, {
         content,
       });
       setInitialContent(content);

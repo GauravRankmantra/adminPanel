@@ -16,7 +16,8 @@ import SellerDetailModal from "./SellerDetailModal";
 import SalesFilterPanel from "./SalesFilterPanel";
 
 // --- API Constants & Service (Integrated directly) ---
-const BASE_URL = "https://backend-music-xg6e.onrender.com/api/v1";
+const apiUrl = import.meta.env.VITE_API_URL;
+const BASE_URL = `${apiUrl}`;
 
 const API_ENDPOINTS = {
   GET_PENDING_REQUESTS_COUNT: `${BASE_URL}/seller/pending-requests/count`,

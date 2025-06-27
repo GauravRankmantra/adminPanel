@@ -8,6 +8,8 @@ import Error from "../views/Error";
 import Success from "../views/Success";
 
 const AddAlbum = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [genres, setGenres] = useState([]);
   const [artistSuggestions, setArtistSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,9 +39,7 @@ const AddAlbum = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/genre"
-        );
+        const response = await axios.get(`${apiUrl}/genre`);
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching genres:", error);
@@ -53,7 +53,7 @@ const AddAlbum = () => {
       const fetchArtists = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${artistSearch}`
+            `${apiUrl}/user/artist/search?search=${artistSearch}`
           );
           setArtistSuggestions(response.data);
         } catch (error) {
@@ -118,10 +118,7 @@ const AddAlbum = () => {
     data.append("isTranding", formData.isTranding === true);
 
     try {
-      const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/albums",
-        data
-      );
+      const response = await axios.post(`${apiUrl}/albums`, data);
       setLoading(false);
       handleSuccess();
       setFormData({

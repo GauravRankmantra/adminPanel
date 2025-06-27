@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 const Genres = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -28,9 +29,7 @@ const Genres = () => {
   const fetchGenres = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        "https://backend-music-xg6e.onrender.com/api/v1/genre"
-      );
+      const res = await axios.get(`${apiUrl}/genre`);
       setGenres(res.data);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch genres");
@@ -48,9 +47,7 @@ const Genres = () => {
       const id = selectedGenre?._id;
       if (!id) return;
 
-      await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/genre/${id}`
-      );
+      await axios.delete(`${apiUrl}/genre/${id}`);
       toast.success("Genre deleted successfully");
       setShowDeleteModal(false);
       fetchGenres();
@@ -76,15 +73,11 @@ const Genres = () => {
       formData.append("discription", newGenre.discription);
       formData.append("image", newGenre.image);
 
-      await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/genre",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.post(`${apiUrl}/genre`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       toast.success("Genre added successfully");
       setShowAddModal(false);
@@ -118,13 +111,9 @@ const Genres = () => {
         formData.append("discription", editGenre.discription);
       if (editGenre.image) formData.append("image", editGenre.image);
 
-      await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/genre/${id}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      await axios.put(`${apiUrl}/genre/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       toast.success("Genre updated successfully");
       setShowEditModal(false);

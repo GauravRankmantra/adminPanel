@@ -7,9 +7,8 @@ import { MdDelete } from "react-icons/md";
 import { IoIosAddCircle } from "react-icons/io";
 import axios from "axios";
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
 const WebUpdateComponent = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [webUpdates, setWebUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,9 +40,7 @@ const WebUpdateComponent = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        "https://backend-music-xg6e.onrender.com/api/v1/web"
-      );
+      const response = await axios.get(`${apiUrl}/web`);
       if (response.data.success) {
         setWebUpdates(response.data.data);
       } else {
@@ -77,9 +74,7 @@ const WebUpdateComponent = () => {
 
     setDeleteLoading(true);
     try {
-      const response = await axios.delete(
-        `https://backend-music-xg6e.onrender.com/api/v1/web/${deletingId}`
-      );
+      const response = await axios.delete(`${apiUrl}/web/${deletingId}`);
       if (response.data.success) {
         toast.success(
           response.data.message || "Web update deleted successfully."
@@ -139,7 +134,7 @@ const WebUpdateComponent = () => {
     setEditSubmitLoading(true);
     try {
       const response = await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/web/${editingUpdate._id}`,
+        `${apiUrl}/web/${editingUpdate._id}`,
         editForm,
         {
           headers: {
@@ -186,15 +181,11 @@ const WebUpdateComponent = () => {
   const handleAddSubmit = async () => {
     setAddSubmitLoading(true);
     try {
-      const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/web",
-        addForm,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/web`, addForm, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (response.data.success) {
         toast.success(
           response.data.message || "Web update added successfully."

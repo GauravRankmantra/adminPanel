@@ -5,6 +5,7 @@ import { FaPaperPlane, FaTrashAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 
 const Ticket = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [activeUserId, setActiveUserId] = useState(null);
@@ -13,7 +14,7 @@ const Ticket = () => {
   const [unreadCounts, setUnreadCounts] = useState({});
   const chatRef = useRef(null);
 
-  const backendUrl = "https://backend-music-xg6e.onrender.com/api/v1/message";
+  const backendUrl = `${apiUrl}/message`;
 
   const fetchUsers = async () => {
     try {

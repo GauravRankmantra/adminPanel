@@ -11,17 +11,16 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const PrivacyPolicy = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [content, setContent] = useState("");
   const [initialContent, setInitialContent] = useState("");
   const [toast, setToast] = useState({ show: false, message: "" });
 
   useEffect(() => {
-    axios
-      .get("https://backend-music-xg6e.onrender.com/api/v1/privacy")
-      .then((res) => {
-        setContent(res.data?.content || "");
-        setInitialContent(res.data?.content || "");
-      });
+    axios.get(`${apiUrl}/privacy`).then((res) => {
+      setContent(res.data?.content || "");
+      setInitialContent(res.data?.content || "");
+    });
   }, []);
 
   const handleSubmit = async (e) => {
@@ -42,12 +41,9 @@ const PrivacyPolicy = () => {
     }
 
     try {
-      await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/privacy",
-        {
-          content,
-        }
-      );
+      await axios.post(`${apiUrl}/privacy`, {
+        content,
+      });
       setInitialContent(content);
       setToast({ show: true, message: "Privacy policy saved successfully." });
     } catch {

@@ -10,6 +10,7 @@ import { toast, Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddSong = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [genres, setGenres] = useState([]);
   const [artistSuggestions, setArtistSuggestions] = useState([]);
   const [albumSuggestions, setAlbumSuggestions] = useState([]);
@@ -46,9 +47,7 @@ const AddSong = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/genre"
-        );
+        const response = await axios.get(`${apiUrl}/genre`);
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching genres:", error);
@@ -63,7 +62,7 @@ const AddSong = () => {
       const fetchArtists = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${artistSearch}`
+            `${apiUrl}/user/artist/search?search=${artistSearch}`
           );
           setArtistSuggestions(response.data);
           if (response.data?.data?.length === 0) {
@@ -89,7 +88,7 @@ const AddSong = () => {
       const fetchAlbum = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/albums/album/search?search=${albumSearch}`
+            `${apiUrl}/albums/album/search?search=${albumSearch}`
           );
           setAlbumSuggestions(response.data);
           if (response.data?.data?.length === 0) {
@@ -200,15 +199,11 @@ const AddSong = () => {
     data.append("admin", true);
 
     try {
-      const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/song",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/song`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setLoading(false);
       handleSuccess();
       setFormData({
@@ -411,7 +406,7 @@ const AddSong = () => {
                           name="albumSearch"
                           type="text"
                           className="form-control"
-                          placeholder="Enter the Album name.."
+                          placeholder="Search Album...."
                           value={albumSearch}
                           autoComplete="off"
                           onChange={(e) => setAlbumSearch(e.target.value)}

@@ -5,6 +5,7 @@ import { CardBody } from "react-bootstrap";
 import axios from "axios";
 
 const RealTime = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [close, setClose] = useState(false);
   const [chartData, setChartData] = useState({
     series: [
@@ -40,9 +41,7 @@ const RealTime = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/user/new-users"
-        );
+        const response = await axios.get(`${apiUrl}/user/new-users`);
         const data = response.data.data;
 
         // Map data for the chart

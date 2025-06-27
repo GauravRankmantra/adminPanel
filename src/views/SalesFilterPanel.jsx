@@ -18,6 +18,7 @@ import AdminRevenueCharts from "../components/AdminRevenueCharts";
 
 // Helper function for currency formatting
 const formatCurrency = (amount, currency, locale = "en-US") => {
+
   if (amount === null || amount === undefined) return "N/A";
   // Ensure amount is treated as a number for formatting
   const numericAmount = parseFloat(amount);
@@ -54,6 +55,7 @@ const formatDate = (isoString) => {
 };
 
 const SalesFilterPanel = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -71,9 +73,7 @@ const SalesFilterPanel = () => {
     const fetchPayments = async () => {
       try {
         // Replace with your actual API endpoint
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/sale"
-        );
+        const response = await axios.get(`${apiUrl}/sale`);
         // Assuming your API returns an array directly, or response.data.payments
         setPayments(response.data || []);
       } catch (err) {

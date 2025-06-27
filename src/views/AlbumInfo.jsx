@@ -9,6 +9,8 @@ import { CardBody, Col, Row } from "react-bootstrap";
 import AddSong from "./AddSong";
 
 const AlbumInfo = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { albumId } = useParams();
   const [genres, setGenres] = useState([]);
   const [album, setAlbum] = useState(null);
@@ -52,9 +54,7 @@ const AlbumInfo = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/genre"
-        );
+        const response = await axios.get(`${apiUrl}/genre`);
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching genres:", error);
@@ -69,7 +69,7 @@ const AlbumInfo = () => {
       const fetchArtists = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${artistSearch}`
+            `${apiUrl}/user/artist/search?search=${artistSearch}`
           );
           setArtistSuggestions(response.data);
         } catch (error) {
@@ -86,7 +86,7 @@ const AlbumInfo = () => {
       const fetchAlbum = async () => {
         try {
           const response = await axios.get(
-            `https://backend-music-xg6e.onrender.com/api/v1/albums/album/search?search=${albumSearch}`
+            `${apiUrl}/albums/album/search?search=${albumSearch}`
           );
           setAlbumSuggestions(response.data);
         } catch (error) {
@@ -176,15 +176,11 @@ const AlbumInfo = () => {
     data.append("freeDownload", formData.freeDownload);
 
     try {
-      const response = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/song",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/v1/song`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       setSongLoading(false);
       handleSuccess();
@@ -245,15 +241,11 @@ const AlbumInfo = () => {
     setSongLoading(true);
 
     try {
-      const res = await axios.post(
-        "https://backend-music-xg6e.onrender.com/api/v1/song",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await axios.post(`${apiUrl}/song`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       const newSong = res.data.song;
       // console.log(newSong);
       // console.log(album)
@@ -274,9 +266,7 @@ const AlbumInfo = () => {
   useEffect(() => {
     const fetchAlbumInfo = async () => {
       try {
-        const response = await axios.get(
-          `https://backend-music-xg6e.onrender.com/api/v1/albums/${albumId}`
-        );
+        const response = await axios.get(`${apiUrl}/albums/${albumId}`);
         setAlbum(response.data.data);
         setLoading(false);
       } catch (error) {

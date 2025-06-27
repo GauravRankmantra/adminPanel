@@ -10,6 +10,7 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
 const Message = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,9 +21,7 @@ const Message = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(
-          "https://backend-music-xg6e.onrender.com/api/v1/ticket?status=Resolved"
-        );
+        const res = await axios.get(`${apiUrl}/ticket?status=Resolved`);
         setMessages(res.data || []);
         console.log("Fetched messages:", res.data);
       } catch (err) {
