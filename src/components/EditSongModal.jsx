@@ -6,7 +6,11 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const EditSongModal = ({ show, song, artist, album, onHide, onSave }) => {
   // State for the editable song title, initialized from the song prop
+  console.log("detail in edit moal")
+  console.log("artist",artist)
+   console.log("artist",album)
   const [title, setTitle] = useState(song?.title || "");
+  console.log("prope at edit model", show, song, artist, album, onHide, onSave )
   // State for the new cover image file, initialized to null
   const [coverImage, setCoverImage] = useState(null);
 

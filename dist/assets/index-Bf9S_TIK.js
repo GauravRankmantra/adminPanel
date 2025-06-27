@@ -42956,7 +42956,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         l = async (d) => {
           try {
             const g = (
+<<<<<<< HEAD
               await bt.get(`${apiUrl}/traffic?range=${d}`)
+=======
+              await bt.get(
+                `https://backend-music-xg6e.onrender.com/api/v1/traffic?range=${d}`
+              )
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             ).data.data.sort(
               (b, x) => new Date(b.dayDate) - new Date(x.dayDate)
             );
@@ -77342,7 +77348,15 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         X.useEffect(() => {
           (async () => {
             try {
+<<<<<<< HEAD
               const l = (await bt.get("${apiUrl}/user/new-users")).data.data,
+=======
+              const l = (
+                  await bt.get(
+                    "https://backend-music-xg6e.onrender.com/api/v1/user/new-users"
+                  )
+                ).data.data,
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 d = l.map((g) => g.newUsers),
                 f = l.map((g) => g.day);
               r({
@@ -77411,7 +77425,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           (async () => {
             try {
               const l = (
+<<<<<<< HEAD
                   await bt.get("${apiUrl}/song/songs-uploaded-this-week")
+=======
+                  await bt.get(
+                    "https://backend-music-xg6e.onrender.com/api/v1/song/songs-uploaded-this-week"
+                  )
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 ).data.data,
                 d = l.map((g) => g.uploadedSongs),
                 f = l.map((g) => g.date);
@@ -77472,7 +77492,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           if (
             ((async () => {
               try {
+<<<<<<< HEAD
                 const H = await bt.get("${apiUrl}/sale");
+=======
+                const H = await bt.get(
+                  "https://backend-music-xg6e.onrender.com/api/v1/sale"
+                );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 T(H.data || []);
               } catch (H) {
                 setError("Failed to fetch payments. Please try again."),
@@ -77511,7 +77537,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         X.useEffect(() => {
           (async () => {
             try {
+<<<<<<< HEAD
               const N = await bt.get("${apiUrl}/admin/users");
+=======
+              const N = await bt.get(
+                "https://backend-music-xg6e.onrender.com/api/v1/admin/users"
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               a(N.data.totalUsers);
             } catch (N) {
               console.error("Error fetching users", N);
@@ -77521,7 +77553,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         X.useEffect(() => {
           (async () => {
             try {
+<<<<<<< HEAD
               const N = await bt.get("${apiUrl}/user/new-users");
+=======
+              const N = await bt.get(
+                "https://backend-music-xg6e.onrender.com/api/v1/user/new-users"
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               r(N.data.data);
             } catch (N) {
               console.error("Error fetching users", N);
@@ -77531,7 +77569,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         X.useEffect(() => {
           (async () => {
             try {
+<<<<<<< HEAD
               const N = await bt.get("${apiUrl}/song/totalSongs");
+=======
+              const N = await bt.get(
+                "https://backend-music-xg6e.onrender.com/api/v1/song/totalSongs"
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               g(N.data.total);
             } catch (N) {
               console.error("Error fetching total songs", N);
@@ -77541,7 +77585,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         X.useEffect(() => {
           (async () => {
             try {
+<<<<<<< HEAD
               const N = await bt.get("${apiUrl}/albums/getTotalAlbum");
+=======
+              const N = await bt.get(
+                "https://backend-music-xg6e.onrender.com/api/v1/albums/getTotalAlbum"
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               x(N.data.total);
             } catch (N) {
               console.error("Error fetching total songs", N);
@@ -83695,9 +83745,19 @@ to {
           try {
             if (
               (
+<<<<<<< HEAD
                 await bt.post("${apiUrl}/user", P, {
                   headers: { "Content-Type": "multipart/form-data" },
                 })
+=======
+                await bt.post(
+                  "https://backend-music-xg6e.onrender.com/api/v1/user",
+                  P,
+                  {
+                    headers: { "Content-Type": "multipart/form-data" },
+                  }
+                )
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               ).status === 200
             )
               $n.success(
@@ -85320,7 +85380,11 @@ to {
             const Ze = ge ? `&search=${ge}` : "",
               at = Le !== "all" ? `&role=${Le}` : "",
               Mt = await bt.get(
+<<<<<<< HEAD
                 `${apiUrl}/admin/users?page=${l}&limit=${Se}${Ze}${at}`
+=======
+                `https://backend-music-xg6e.onrender.com/api/v1/admin/users?page=${l}&limit=${Se}${Ze}${at}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               );
             t(Mt.data.users), r(Mt.data.users), g(Mt.data.totalPages);
           } catch {
@@ -85332,7 +85396,13 @@ to {
         Be = S7.debounce(async (Ze) => {
           if ((ce(Ze), d(1), Ze.trim().length > 2))
             try {
+<<<<<<< HEAD
               const at = await bt.get(`${apiUrl}/admin/searchUser?query=${Ze}`);
+=======
+              const at = await bt.get(
+                `https://backend-music-xg6e.onrender.com/api/v1/admin/searchUser?query=${Ze}`
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               t(at.data.users || []);
             } catch (at) {
               console.error("Search failed:", at), t(n);
@@ -85343,7 +85413,13 @@ to {
           if (J) {
             T(!0);
             try {
+<<<<<<< HEAD
               await bt.delete(`${apiUrl}/admin/user/${J._id}`),
+=======
+              await bt.delete(
+                `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${J._id}`
+              ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 _n.success("User deleted successfully"),
                 je(),
                 Dt(!1);
@@ -85372,10 +85448,21 @@ to {
             Ze.append("role", ne),
             Ce && Ze.append("coverImage", Ce);
           try {
+<<<<<<< HEAD
             await bt.put(`${apiUrl}/user/update/${V._id}`, Ze, {
               withCredentials: !0,
               headers: { "Content-Type": "multipart/form-data" },
             }),
+=======
+            await bt.put(
+              `https://backend-music-xg6e.onrender.com/api/v1/user/update/${V._id}`,
+              Ze,
+              {
+                withCredentials: !0,
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               _n.success("User updated successfully ✅"),
               N(!1),
               je();
@@ -87394,7 +87481,13 @@ to {
       X.useEffect(() => {
         (async () => {
           try {
+<<<<<<< HEAD
             const ce = await bt.get("${apiUrl}/genre");
+=======
+            const ce = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/genre"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             t(ce.data);
           } catch (ce) {
             console.error("Error fetching genres:", ce),
@@ -87408,7 +87501,11 @@ to {
                 var ce, Le;
                 try {
                   const Ne = await bt.get(
+<<<<<<< HEAD
                     `${apiUrl}/user/artist/search?search=${H}`
+=======
+                    `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${H}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                   );
                   r(Ne.data),
                     ((Le = (ce = Ne.data) == null ? void 0 : ce.data) == null
@@ -87429,7 +87526,11 @@ to {
                 var ce, Le;
                 try {
                   const Ne = await bt.get(
+<<<<<<< HEAD
                     `${apiUrl}/albums/album/search?search=${l}`
+=======
+                    `https://backend-music-xg6e.onrender.com/api/v1/albums/album/search?search=${l}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                   );
                   a(Ne.data),
                     ((Le = (ce = Ne.data) == null ? void 0 : ce.data) == null
@@ -87500,9 +87601,19 @@ to {
             ce.append("freeDownload", P.freeDownload),
             ce.append("admin", !0);
           try {
+<<<<<<< HEAD
             const Se = await bt.post("${apiUrl}/song", ce, {
               headers: { "Content-Type": "multipart/form-data" },
             });
+=======
+            const Se = await bt.post(
+              "https://backend-music-xg6e.onrender.com/api/v1/song",
+              ce,
+              {
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             g(!1),
               te(),
               W({
@@ -96437,7 +96548,11 @@ to {
             d(!0), a("");
             try {
               const W = await bt.post(
+<<<<<<< HEAD
                 "${apiUrl}/auth/adminlogin",
+=======
+                "https://backend-music-xg6e.onrender.com/api/v1/auth/adminlogin",
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 { email: e, password: n },
                 { withCredentials: !0 }
               );
@@ -97750,7 +97865,11 @@ to {
       )
     );
   }
+<<<<<<< HEAD
   const H2 = "${apiUrl}",
+=======
+  const H2 = "https://backend-music-xg6e.onrender.com/api/v1",
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
     qTe = () => {
       var S, I;
       const [e, t] = X.useState({
@@ -98293,7 +98412,13 @@ to {
       X.useEffect(() => {
         (async () => {
           try {
+<<<<<<< HEAD
             const V = await bt.get("${apiUrl}/genre");
+=======
+            const V = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/genre"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             t(V.data);
           } catch (V) {
             console.error("Error fetching genres:", V);
@@ -98305,7 +98430,11 @@ to {
             (async () => {
               try {
                 const V = await bt.get(
+<<<<<<< HEAD
                   `${apiUrl}/user/artist/search?search=${k}`
+=======
+                  `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${k}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 );
                 r(V.data);
               } catch (V) {
@@ -98340,7 +98469,14 @@ to {
             V.append("isFeatured", x.isFeatured === !0),
             V.append("isTranding", x.isTranding === !0);
           try {
+<<<<<<< HEAD
             const te = await bt.post("${apiUrl}/albums", V);
+=======
+            const te = await bt.post(
+              "https://backend-music-xg6e.onrender.com/api/v1/albums",
+              V
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             a(!1),
               M(),
               w({
@@ -98706,7 +98842,13 @@ to {
       const k = async () => {
           r(!0);
           try {
+<<<<<<< HEAD
             const N = await bt.get("${apiUrl}/albums");
+=======
+            const N = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/albums"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             t(N.data.allAlbums);
           } catch {
             a("Error fetching albums");
@@ -98724,9 +98866,18 @@ to {
           if (b) {
             d(b._id), g(!1);
             try {
+<<<<<<< HEAD
               await bt.delete(`${apiUrl}/albums/${b._id}`, {
                 withCredentials: !0,
               }),
+=======
+              await bt.delete(
+                `https://backend-music-xg6e.onrender.com/api/v1/albums/${b._id}`,
+                {
+                  withCredentials: !0,
+                }
+              ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 _n.success("Album deleted successfully"),
                 t((N) => N.filter((S) => S._id !== b._id));
             } catch {
@@ -99066,7 +99217,13 @@ to {
         C = async () => {
           try {
             k(!0),
+<<<<<<< HEAD
               await bt.delete(`${apiUrl}/song/${l._id}`),
+=======
+              await bt.delete(
+                `https://backend-music-xg6e.onrender.com/api/v1/song/${l._id}`
+              ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               r(n.filter((W) => W._id !== l._id)),
               x(!1);
           } catch (W) {
@@ -99081,7 +99238,14 @@ to {
             const V = new FormData();
             V.append("title", W.title),
               H && V.append("coverImage", H),
+<<<<<<< HEAD
               await bt.put(`${apiUrl}/song/${l._id}`, V);
+=======
+              await bt.put(
+                `https://backend-music-xg6e.onrender.com/api/v1/song/${l._id}`,
+                V
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             const te = n.map((J) => (J._id === W._id ? W : J));
             r(te), g(!1);
           } catch (V) {
@@ -99225,7 +99389,13 @@ to {
       X.useEffect(() => {
         (async () => {
           try {
+<<<<<<< HEAD
             const Be = await bt.get("${apiUrl}/genre");
+=======
+            const Be = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/genre"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             n(Be.data);
           } catch (Be) {
             console.error("Error fetching genres:", Be),
@@ -99238,7 +99408,11 @@ to {
             (async () => {
               try {
                 const Be = await bt.get(
+<<<<<<< HEAD
                   `${apiUrl}/user/artist/search?search=${W}`
+=======
+                  `https://backend-music-xg6e.onrender.com/api/v1/user/artist/search?search=${W}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 );
                 k(Be.data);
               } catch (Be) {
@@ -99252,7 +99426,11 @@ to {
             (async () => {
               try {
                 const Be = await bt.get(
+<<<<<<< HEAD
                   `${apiUrl}/albums/album/search?search=${V}`
+=======
+                  `https://backend-music-xg6e.onrender.com/api/v1/albums/album/search?search=${V}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 );
                 T(Be.data);
               } catch (Be) {
@@ -99310,9 +99488,19 @@ to {
             Be.append("price", S.price),
             Be.append("freeDownload", S.freeDownload);
           try {
+<<<<<<< HEAD
             const Xe = await bt.post("${apiUrl}/song", Be, {
               headers: { "Content-Type": "multipart/form-data" },
             });
+=======
+            const Xe = await bt.post(
+              "https://backend-music-xg6e.onrender.com/api/v1/song",
+              Be,
+              {
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             P(!1), ne();
             const wt =
               (Ie = Xe == null ? void 0 : Xe.data) == null ? void 0 : Ie.song;
@@ -99354,7 +99542,13 @@ to {
         X.useEffect(() => {
           (async () => {
             try {
+<<<<<<< HEAD
               const Be = await bt.get(`${apiUrl}/albums/${e}`);
+=======
+              const Be = await bt.get(
+                `https://backend-music-xg6e.onrender.com/api/v1/albums/${e}`
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               i(Be.data.data), l(!1);
             } catch {
               f("Error fetching album details"), l(!1);
@@ -100008,7 +100202,13 @@ to {
       }, []);
       const l = async () => {
           try {
+<<<<<<< HEAD
             const H = await bt.get("${apiUrl}/contact");
+=======
+            const H = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/contact"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             t(H.data.data);
           } catch (H) {
             console.error("Error fetching contact messages:", H);
@@ -100034,7 +100234,13 @@ to {
         [T, M] = X.useState(""),
         [N, S] = X.useState(!1);
       X.useEffect(() => {
+<<<<<<< HEAD
         bt.get("${apiUrl}/contact/contact-info").then((H) => {
+=======
+        bt.get(
+          "https://backend-music-xg6e.onrender.com/api/v1/contact/contact-info"
+        ).then((H) => {
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
           const V = H.data;
           b(V), w(V), O(V._id);
         });
@@ -100046,7 +100252,13 @@ to {
         C = () => (x ? Object.keys(g).some((H) => g[H] !== x[H]) : !1),
         P = async (H) => {
           try {
+<<<<<<< HEAD
             await bt.delete(`${apiUrl}/contact/${H}`),
+=======
+            await bt.delete(
+              `https://backend-music-xg6e.onrender.com/api/v1/contact/${H}`
+            ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               t((V) => V.filter((te) => te._id !== H)),
               M("Message deleted successfully."),
               S(!0);
@@ -100061,7 +100273,14 @@ to {
             M("No changes made."), S(!0);
             return;
           }
+<<<<<<< HEAD
           await bt.put(`${apiUrl}/contact/contact-info/${k}`, g),
+=======
+          await bt.put(
+            `https://backend-music-xg6e.onrender.com/api/v1/contact/contact-info/${k}`,
+            g
+          ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             M("Contact info updated!"),
             S(!0),
             w(g);
@@ -113592,11 +113811,21 @@ to {
         [n, r] = X.useState(""),
         [i, a] = X.useState({ show: !1, message: "" });
       X.useEffect(() => {
+<<<<<<< HEAD
         bt.get("${apiUrl}/privacy").then((d) => {
           var f, g;
           t(((f = d.data) == null ? void 0 : f.content) || ""),
             r(((g = d.data) == null ? void 0 : g.content) || "");
         });
+=======
+        bt.get("https://backend-music-xg6e.onrender.com/api/v1/privacy").then(
+          (d) => {
+            var f, g;
+            t(((f = d.data) == null ? void 0 : f.content) || ""),
+              r(((g = d.data) == null ? void 0 : g.content) || "");
+          }
+        );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
       }, []);
       const l = async (d) => {
         if (
@@ -113610,7 +113839,14 @@ to {
           return;
         }
         try {
+<<<<<<< HEAD
           await bt.post("${apiUrl}/privacy", { content: e }),
+=======
+          await bt.post(
+            "https://backend-music-xg6e.onrender.com/api/v1/privacy",
+            { content: e }
+          ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             r(e),
             a({ show: !0, message: "Privacy policy saved successfully." });
         } catch {
@@ -113681,7 +113917,13 @@ to {
           var se, le;
           try {
             r(!0);
+<<<<<<< HEAD
             const me = await bt.get("${apiUrl}/genre");
+=======
+            const me = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/genre"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             t(me.data);
           } catch (me) {
             $n.error(
@@ -113701,7 +113943,13 @@ to {
           try {
             const me = w == null ? void 0 : w._id;
             if (!me) return;
+<<<<<<< HEAD
             await bt.delete(`${apiUrl}/genre/${me}`),
+=======
+            await bt.delete(
+              `https://backend-music-xg6e.onrender.com/api/v1/genre/${me}`
+            ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               $n.success("Genre deleted successfully"),
               a(!1),
               V();
@@ -113725,9 +113973,19 @@ to {
             me.append("name", S.name),
               me.append("discription", S.discription),
               me.append("image", S.image),
+<<<<<<< HEAD
               await bt.post("${apiUrl}/genre", me, {
                 headers: { "Content-Type": "multipart/form-data" },
               }),
+=======
+              await bt.post(
+                "https://backend-music-xg6e.onrender.com/api/v1/genre",
+                me,
+                {
+                  headers: { "Content-Type": "multipart/form-data" },
+                }
+              ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               $n.success("Genre added successfully"),
               d(!1),
               I({ name: "", discription: "", image: null }),
@@ -113757,9 +114015,19 @@ to {
                 C.discription !== W.discription &&
                   Ae.append("discription", C.discription),
                 C.image && Ae.append("image", C.image),
+<<<<<<< HEAD
                 await bt.put(`${apiUrl}/genre/${se}`, Ae, {
                   headers: { "Content-Type": "multipart/form-data" },
                 }),
+=======
+                await bt.put(
+                  `https://backend-music-xg6e.onrender.com/api/v1/genre/${se}`,
+                  Ae,
+                  {
+                    headers: { "Content-Type": "multipart/form-data" },
+                  }
+                ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
                 $n.success("Genre updated successfully"),
                 g(!1),
                 V();
@@ -114116,11 +114384,21 @@ to {
         [n, r] = X.useState(""),
         [i, a] = X.useState({ show: !1, message: "" });
       X.useEffect(() => {
+<<<<<<< HEAD
         bt.get("${apiUrl}/terms").then((d) => {
           var f, g;
           t(((f = d.data) == null ? void 0 : f.content) || ""),
             r(((g = d.data) == null ? void 0 : g.content) || "");
         });
+=======
+        bt.get("https://backend-music-xg6e.onrender.com/api/v1/terms").then(
+          (d) => {
+            var f, g;
+            t(((f = d.data) == null ? void 0 : f.content) || ""),
+              r(((g = d.data) == null ? void 0 : g.content) || "");
+          }
+        );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
       }, []);
       const l = async (d) => {
         if (
@@ -114134,7 +114412,14 @@ to {
           return;
         }
         try {
+<<<<<<< HEAD
           await bt.post("${apiUrl}/terms", { content: e }),
+=======
+          await bt.post(
+            "https://backend-music-xg6e.onrender.com/api/v1/terms",
+            { content: e }
+          ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             r(e),
             a({ show: !0, message: "Terms & Conditions  saved successfully." });
         } catch {
@@ -114255,7 +114540,13 @@ to {
         ne = async () => {
           var me, Ae;
           try {
+<<<<<<< HEAD
             const _e = await bt.get("${apiUrl}/home/heroSection");
+=======
+            const _e = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/home/heroSection"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             _e.data && _e.data.success
               ? (t(_e.data.data),
                 d(_e.data.data),
@@ -114306,9 +114597,17 @@ to {
             Ee.append("heading", i.heading),
               Ee.append("subHeading", i.subHeading),
               i.coverImage && Ee.append("coverImage", i.coverImage);
+<<<<<<< HEAD
             const ve = await bt.put(`${apiUrl}/home/heroSection/${l._id}`, Ee, {
               headers: { "Content-Type": "multipart/form-data" },
             });
+=======
+            const ve = await bt.put(
+              `https://backend-music-xg6e.onrender.com/api/v1/home/heroSection/${l._id}`,
+              Ee,
+              { headers: { "Content-Type": "multipart/form-data" } }
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             if (ve.data && ve.data.success)
               $n.success("Hero section updated successfully!"), r(!1), ne();
             else {
@@ -114552,7 +114851,11 @@ to {
         d(!0);
         try {
           const Ze = await bt.get(
+<<<<<<< HEAD
             `${apiUrl}/admin/artist?page=${Ye}&limit=${Be}`
+=======
+            `https://backend-music-xg6e.onrender.com/api/v1/admin/artist?page=${Ye}&limit=${Be}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
           );
           t(Ze.data.data), a(Ze.data.totalPages);
         } catch {
@@ -114570,7 +114873,13 @@ to {
           try {
             wt = !0;
             const at = (
+<<<<<<< HEAD
               await bt.get(`${apiUrl}/user/search/user?query=${Ye}`)
+=======
+              await bt.get(
+                `https://backend-music-xg6e.onrender.com/api/v1/user/search/user?query=${Ye}`
+              )
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             ).data.users.filter((Mt) => Mt.role === "artist");
             x(at);
           } catch {
@@ -114581,7 +114890,13 @@ to {
         }, 500),
         Ut = async () => {
           try {
+<<<<<<< HEAD
             await bt.delete(`${apiUrl}/admin/user/${V._id}`),
+=======
+            await bt.delete(
+              `https://backend-music-xg6e.onrender.com/api/v1/admin/user/${V._id}`
+            ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               $n.success("Artist deleted successfully"),
               H(!1),
               Xe(n);
@@ -114609,10 +114924,21 @@ to {
             Ye.append("isTrending", le),
             ge && Ye.append("coverImage", ge);
           try {
+<<<<<<< HEAD
             await bt.put(`${apiUrl}/user/update/${S._id}`, Ye, {
               withCredentials: !0,
               headers: { "Content-Type": "multipart/form-data" },
             }),
+=======
+            await bt.put(
+              `https://backend-music-xg6e.onrender.com/api/v1/user/update/${S._id}`,
+              Ye,
+              {
+                withCredentials: !0,
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            ),
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               $n.success("User updated successfully ✅"),
               Ge();
           } catch (Ze) {
@@ -115031,7 +115357,13 @@ to {
         le = X.useCallback(async () => {
           r(!0), a(null);
           try {
+<<<<<<< HEAD
             const ce = await bt.get("${apiUrl}/web");
+=======
+            const ce = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/web"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             ce.data.success
               ? t(ce.data.data)
               : (a(ce.data.message || "Failed to fetch web updates."),
@@ -115055,7 +115387,13 @@ to {
           if (f) {
             x(!0);
             try {
+<<<<<<< HEAD
               const ce = await bt.delete(`${apiUrl}/web/${f}`);
+=======
+              const ce = await bt.delete(
+                `https://backend-music-xg6e.onrender.com/api/v1/web/${f}`
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               ce.data.success
                 ? (_n.success(
                     ce.data.message || "Web update deleted successfully."
@@ -115102,9 +115440,17 @@ to {
           if (O) {
             I(!0);
             try {
+<<<<<<< HEAD
               const ce = await bt.put(`${apiUrl}/web/${O._id}`, M, {
                 headers: { "Content-Type": "application/json" },
               });
+=======
+              const ce = await bt.put(
+                `https://backend-music-xg6e.onrender.com/api/v1/web/${O._id}`,
+                M,
+                { headers: { "Content-Type": "application/json" } }
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               ce.data.success
                 ? (_n.success(
                     ce.data.message || "Web update updated successfully."
@@ -115140,9 +115486,19 @@ to {
         ge = async () => {
           Q(!0);
           try {
+<<<<<<< HEAD
             const ce = await bt.post("${apiUrl}/web", V, {
               headers: { "Content-Type": "application/json" },
             });
+=======
+            const ce = await bt.post(
+              "https://backend-music-xg6e.onrender.com/api/v1/web",
+              V,
+              {
+                headers: { "Content-Type": "application/json" },
+              }
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             ce.data.success
               ? (_n.success(
                   ce.data.message || "Web update added successfully."
@@ -115497,7 +115853,11 @@ to {
         [f, g] = X.useState([]),
         [b, x] = X.useState({}),
         w = X.useRef(null),
+<<<<<<< HEAD
         k = "${apiUrl}/message",
+=======
+        k = "https://backend-music-xg6e.onrender.com/api/v1/message",
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
         O = async () => {
           try {
             const P = await bt.get(`${k}/users`);
@@ -116788,7 +117148,13 @@ to {
       X.useEffect(() => {
         (async () => {
           try {
+<<<<<<< HEAD
             const J = await bt.get("${apiUrl}/sale");
+=======
+            const J = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/sale"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             t(J.data || []);
           } catch (J) {
             a("Failed to fetch payments. Please try again."),
@@ -117125,7 +117491,11 @@ to {
         ],
       });
     },
+<<<<<<< HEAD
     qx = "${apiUrl}/AdminVideo",
+=======
+    qx = "https://backend-music-xg6e.onrender.com/api/v1/AdminVideo",
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
     Tje = `${qx}`,
     jje = (e) =>
       typeof e != "number" || isNaN(e)
@@ -118126,7 +118496,11 @@ to {
           })
         : null;
     },
+<<<<<<< HEAD
     fu = "${apiUrl}",
+=======
+    fu = "https://backend-music-xg6e.onrender.com/api/v1",
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
     pu = {
       GET_PENDING_REQUESTS_COUNT: `${fu}/seller/pending-requests/count`,
       GET_ACTIVE_SELLERS_COUNT: `${fu}/seller/active-sellers/count`,
@@ -118663,7 +119037,11 @@ to {
         ],
       });
     },
+<<<<<<< HEAD
     Ije = "${apiUrl}",
+=======
+    Ije = "https://backend-music-xg6e.onrender.com/api/v1",
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
     D3 = `${Ije}/footer`,
     Dje = () => {
       const [e, t] = X.useState(null),
@@ -119104,7 +119482,11 @@ to {
           d(!0), g("");
           try {
             const { data: k } = await bt.get(
+<<<<<<< HEAD
               `${apiUrl}/donation?page=${n}&limit=${b}`
+=======
+              `https://backend-music-xg6e.onrender.com/api/v1/donation?page=${n}&limit=${b}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             );
             t(k.data), a(k.totalPages);
           } catch {
@@ -119228,7 +119610,11 @@ to {
           d(!0), g("");
           try {
             const { data: k } = await bt.get(
+<<<<<<< HEAD
               `${apiUrl}/sponsor?page=${n}&limit=${b}`
+=======
+              `https://backend-music-xg6e.onrender.com/api/v1/sponsor?page=${n}&limit=${b}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             );
             t(k.data), a(k.totalPages);
           } catch {
@@ -119352,7 +119738,11 @@ to {
           d(!0), g("");
           try {
             const { data: k } = await bt.get(
+<<<<<<< HEAD
               `${apiUrl}/subscribe?page=${n}&limit=${b}`
+=======
+              `https://backend-music-xg6e.onrender.com/api/v1/subscribe?page=${n}&limit=${b}`
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             );
             t(k.data), a(k.totalPages);
           } catch {
@@ -119587,7 +119977,13 @@ to {
           (async () => {
             r(!0), a(null);
             try {
+<<<<<<< HEAD
               const f = await bt.get("${apiUrl}/ticket?status=Resolved");
+=======
+              const f = await bt.get(
+                "https://backend-music-xg6e.onrender.com/api/v1/ticket?status=Resolved"
+              );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
               t(f.data || []), console.log("Fetched messages:", f.data);
             } catch (f) {
               console.error("Failed to fetch messages:", f),
@@ -119861,7 +120257,13 @@ to {
         (async () => {
           M(!0), S(null);
           try {
+<<<<<<< HEAD
             const W = await bt.get("${apiUrl}/ticket?status=Pending");
+=======
+            const W = await bt.get(
+              "https://backend-music-xg6e.onrender.com/api/v1/ticket?status=Pending"
+            );
+>>>>>>> 24134659de9356ca7c55968ba3c0a8a433f7063a
             O(W.data || []), console.log("Fetched messages:", W.data);
           } catch (W) {
             console.error("Failed to fetch messages:", W),

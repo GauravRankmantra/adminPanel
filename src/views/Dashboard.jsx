@@ -102,6 +102,7 @@ const Dashboard = () => {
   const [totalAlbum, setTotalAlbum] = useState(0);
   const [summary, setSummary] = useState({});
   const [payments, setPayments] = useState([]);
+
   useEffect(() => {
     const fetchPayments = async () => {
       try {
@@ -171,7 +172,7 @@ const Dashboard = () => {
     // setAllTimeData(sortedAllTime);
     setSummary({ totalEarning, pendingPayout });
     // setLoading(false);
-  }, [payments]);
+  }, []);
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {

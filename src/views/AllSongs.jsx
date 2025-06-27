@@ -16,6 +16,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import editIcon from "../assets/image/edit.png";
 import deleteIcon from "../assets/image/trash.png";
+import EditSongModal from "../components/EditSongModal";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -138,25 +139,24 @@ const AllSongs = () => {
     }
   };
 
-  const handleEditSave = async () => {
-    if (!state.selectedSong) return;
+  const handleEditSave = async (updatedSong, coverImage) => {
+    console.log("cover", coverImage);
+    const formData = new FormData();
+    formData.append("title", updatedSong.title);
+    if (coverImage) {
+      formData.append("coverImage", coverImage);
+    }
 
     try {
-      setState((prev) => ({ ...prev, isProcessing: true }));
-      const { title, artist, album, duration } = state.selectedSong;
+      await axios.put(
+        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
+        formData,
+        { withCredentials: true }
+      );
 
-      await axios.put(`${apiUrl}/song/${state.selectedSong._id}`, {
-        title,
-        artist: artist.fullName,
-        album: album.title,
-        duration: Number(duration),
-      });
-
+      fetchSongs();
       setState((prev) => ({
         ...prev,
-        songs: prev.songs.map((song) =>
-          song._id === state.selectedSong._id ? state.selectedSong : song
-        ),
         showEditModal: false,
         isProcessing: false,
       }));
@@ -342,112 +342,22 @@ const AllSongs = () => {
       </Row>
 
       {/* Edit Modal */}
-      <Modal
-        show={showEditModal}
-        onHide={() => setState((prev) => ({ ...prev, showEditModal: false }))}
-        aria-labelledby="edit-song-modal"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Song</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedSong && (
-            <Form>
-              <Form.Group className="mb-3" controlId="formTitle">
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={selectedSong.title}
-                  onChange={(e) =>
-                    setState((prev) => ({
-                      ...prev,
-                      selectedSong: {
-                        ...prev.selectedSong,
-                        title: e.target.value,
-                      },
-                    }))
-                  }
-                />
-              </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formArtist">
-                <Form.Label>Artist</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={selectedSong.artist?.fullName || ""}
-                  onChange={(e) =>
-                    setState((prev) => ({
-                      ...prev,
-                      selectedSong: {
-                        ...prev.selectedSong,
-                        artist: {
-                          ...prev.selectedSong.artist,
-                          fullName: e.target.value,
-                        },
-                      },
-                    }))
-                  }
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formAlbum">
-                <Form.Label>Album</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={selectedSong.album?.title || ""}
-                  onChange={(e) =>
-                    setState((prev) => ({
-                      ...prev,
-                      selectedSong: {
-                        ...prev.selectedSong,
-                        album: {
-                          ...prev.selectedSong.album,
-                          title: e.target.value,
-                        },
-                      },
-                    }))
-                  }
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formDuration">
-                <Form.Label>Duration (seconds)</Form.Label>
-                <Form.Control
-                  type="number"
-                  min="0"
-                  value={selectedSong.duration}
-                  onChange={(e) =>
-                    setState((prev) => ({
-                      ...prev,
-                      selectedSong: {
-                        ...prev.selectedSong,
-                        duration: e.target.value,
-                      },
-                    }))
-                  }
-                />
-              </Form.Group>
-            </Form>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() =>
-              setState((prev) => ({ ...prev, showEditModal: false }))
-            }
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleEditSave}
-            disabled={isProcessing}
-          >
-            {isProcessing ? "Saving..." : "Save Changes"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {selectedSong && (
+        <EditSongModal
+          show={showEditModal}
+          song={selectedSong}
+          artist={selectedSong?.artist[0]?.fullName}
+          album={selectedSong?.album?.title}
+          onHide={() =>
+            setState((prev) => ({
+              ...prev,
+              showEditModal: false,
+            }))
+          }
+          onSave={handleEditSave}
+        />
+      )}
 
       {/* Delete Confirmation Modal */}
       <Modal
