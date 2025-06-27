@@ -149,7 +149,7 @@ const AllSongs = () => {
 
     try {
       await axios.put(
-        `https://backend-music-xg6e.onrender.com/api/v1/song/${selectedSong._id}`,
+        `${apiUrl}/song/${selectedSong._id}`,
         formData,
         { withCredentials: true }
       );
