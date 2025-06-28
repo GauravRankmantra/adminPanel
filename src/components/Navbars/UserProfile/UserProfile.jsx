@@ -5,6 +5,7 @@ import styles from "@/assets/scss/UesrProfile.module.scss";
 import { useState } from "react";
 
 const UserProfile = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -31,7 +32,7 @@ const UserProfile = () => {
   return (
     <div className={styles.user_menu}>
       <Nav className="p-0 flex-column">
-        <Nav.Link href="/profile" className={styles.menu}>
+        <Nav.Link href="/Profile" className={styles.menu}>
           <i className="fa fa-user"></i>
           <span>My Profile</span>
         </Nav.Link>
