@@ -162,7 +162,7 @@ const routes = [
     component: LeafletMaps,
   },
   {
-    path: "/Profile",
+    path: "/profile-admin",
     component: Profile,
   },
   {
